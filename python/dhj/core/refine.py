@@ -100,6 +100,7 @@ class AdaptiveRefinement:
                 print(f"Initial VI completed in {len(conv_upper)} iterations")
                 print(f"Final convergence: ||V̄||_∞ = {conv_upper[-1]:.8e}, ||V_||_∞ = {conv_lower[-1]:.8e}")
             print(f"Saved initial visualization: {os.path.join(self.out_dir, 'value_function_phase_0_complete.png')}")
+            self.vi.print_statistics("Classification after phase 0:")
             boundary, refinable = self._boundary_and_refinable(eta_min)
             self.phase_log.append(phase=0, n_leaves=self.cell_tree.get_num_leaves(),
                                   boundary_cells=len(boundary), refinable_cells=len(refinable),
@@ -183,6 +184,7 @@ class AdaptiveRefinement:
             phase_time = time.time() - phase_start
             n_leaves = self.cell_tree.get_num_leaves()
             print(f"  Phase {refinement_iter + 1} completed in {phase_time:.2f}s with {n_leaves} leaf cells")
+            self.vi.print_statistics(f"Classification after phase {refinement_iter + 1}:")
             refinement_iter += 1
 
             boundary_after, refinable_after = self._boundary_and_refinable(eta_min)

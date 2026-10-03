@@ -209,19 +209,30 @@ public:
         timers_.plotting += now_seconds() - t0;
     }
 
-    void print_statistics() const {
-        std::size_t safe = 0, unsafe = 0, boundary = 0;
+    // Same rule as the classification panel: safe if V_lower > 0, unsafe if
+    // V_upper <= 0, otherwise unclassified. Cell-count percentages treat every
+    // leaf equally; volume percentages weight each leaf by the product of its
+    // side lengths (the fraction of the state box). One pass over the leaves,
+    // negligible next to a value-iteration sweep. Printed to stdout, which the
+    // run logger copies into run.log.
+    void print_statistics(const char* heading = "Final Cell Classification:") const {
+        std::size_t safe = 0, unsafe = 0, unclassified = 0;
+        double safe_v = 0.0, unsafe_v = 0.0, unclassified_v = 0.0;
         for (std::uint32_t id : tree_.leaves()) {
             const auto& c = tree_.cell(id);
-            if (c.V_lower > 0.0) ++safe;
-            else if (c.V_upper < 0.0) ++unsafe;
-            else ++boundary;
+            double vol = 1.0;
+            for (std::size_t d = 0; d < N; ++d) vol *= c.range(d);
+            if (c.V_lower > 0.0) { ++safe; safe_v += vol; }
+            else if (c.V_upper <= 0.0) { ++unsafe; unsafe_v += vol; }
+            else { ++unclassified; unclassified_v += vol; }
         }
-        const double d = tree_.num_leaves() ? static_cast<double>(tree_.num_leaves()) : 1.0;
-        std::printf("\nFinal Cell Classification:\n");
-        std::printf("  Safe:     %6zu (%5.1f%%)\n", safe, 100.0 * safe / d);
-        std::printf("  Unsafe:   %6zu (%5.1f%%)\n", unsafe, 100.0 * unsafe / d);
-        std::printf("  Boundary: %6zu (%5.1f%%)\n", boundary, 100.0 * boundary / d);
+        const double n = tree_.num_leaves() ? static_cast<double>(tree_.num_leaves()) : 1.0;
+        const double v = (safe_v + unsafe_v + unclassified_v) > 0.0 ? (safe_v + unsafe_v + unclassified_v) : 1.0;
+        std::printf("\n%s\n", heading);
+        std::printf("  Safe:         %8zu cells (%5.1f%%),  %5.1f%% of state space\n", safe, 100.0 * safe / n, 100.0 * safe_v / v);
+        std::printf("  Unsafe:       %8zu cells (%5.1f%%),  %5.1f%% of state space\n", unsafe, 100.0 * unsafe / n, 100.0 * unsafe_v / v);
+        std::printf("  Unclassified: %8zu cells (%5.1f%%),  %5.1f%% of state space\n", unclassified, 100.0 * unclassified / n,
+                    100.0 * unclassified_v / v);
     }
 
 private:

@@ -424,19 +424,43 @@ class SafetyValueIterator:
             if c.V_lower is not None and c.V_upper is not None:
                 if c.V_lower > 0:
                     safe += 1
-                elif c.V_upper < 0:
+                elif c.V_upper <= 0:
                     unsafe += 1
                 else:
                     boundary += 1
         return safe, unsafe, boundary
 
-    def print_statistics(self):
-        safe, unsafe, boundary = self.classification_counts()
-        total = max(1, self.cell_tree.get_num_leaves())
-        print("\nFinal Cell Classification:")
-        print(f"  Safe:     {safe:6d} ({100 * safe / total:5.1f}%)")
-        print(f"  Unsafe:   {unsafe:6d} ({100 * unsafe / total:5.1f}%)")
-        print(f"  Boundary: {boundary:6d} ({100 * boundary / total:5.1f}%)")
+    def print_statistics(self, heading="Final Cell Classification:"):
+        """Safe / unsafe / unclassified, same rule as the classification panel.
+
+        Reports both the share of leaves and the share of state-space volume
+        (product of each leaf's side lengths). One pass over the leaves.
+        stdout is copied into run.log.
+        """
+        safe = unsafe = unclassified = 0
+        safe_v = unsafe_v = unclassified_v = 0.0
+        dim = self.dyn.dim
+        for c in self.cell_tree.get_leaves():
+            vol = 1.0
+            for d in range(dim):
+                vol *= c.get_range(d)
+            if c.V_lower is not None and c.V_upper is not None and c.V_lower > 0:
+                safe += 1
+                safe_v += vol
+            elif c.V_lower is not None and c.V_upper is not None and c.V_upper <= 0:
+                unsafe += 1
+                unsafe_v += vol
+            else:
+                unclassified += 1
+                unclassified_v += vol
+        n = max(1, safe + unsafe + unclassified)
+        v = safe_v + unsafe_v + unclassified_v
+        if v <= 0.0:
+            v = 1.0
+        print(f"\n{heading}")
+        print(f"  Safe:         {safe:8d} cells ({100 * safe / n:5.1f}%),  {100 * safe_v / v:5.1f}% of state space")
+        print(f"  Unsafe:       {unsafe:8d} cells ({100 * unsafe / n:5.1f}%),  {100 * unsafe_v / v:5.1f}% of state space")
+        print(f"  Unclassified: {unclassified:8d} cells ({100 * unclassified / n:5.1f}%),  {100 * unclassified_v / v:5.1f}% of state space")
 
     def emit_output(self, png_filename: str, iteration: int, phase: int, csv_name: Optional[str] = ""):
         """Figure (if a plotter is set) and optional CSV dump of the leaves."""

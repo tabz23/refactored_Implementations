@@ -88,6 +88,7 @@ public:
                             conv.conv_lower.back());
             }
             std::printf("Saved initial visualization: %s/value_function_phase_0_complete.png\n", output_dir_.c_str());
+            vi_.print_statistics("Classification after phase 0:");
             const auto boundary = vi_.identify_boundary_cells();
             const auto refinable = filter_refinable(boundary, eta_min);
             phase_log_.append(0, tree_.num_leaves(), boundary.size(), refinable.size(), 0, conv.iterations, conv.converged,
@@ -167,6 +168,9 @@ public:
             const double phase_time = now_seconds() - phase_start;
             std::printf("  Phase %d completed in %.2fs with %zu leaf cells\n", refinement_iter + 1, phase_time,
                         tree_.num_leaves());
+            char cls_head[80];
+            std::snprintf(cls_head, sizeof cls_head, "Classification after phase %d:", refinement_iter + 1);
+            vi_.print_statistics(cls_head);
             ++refinement_iter;
 
             const auto boundary_after = vi_.identify_boundary_cells();
