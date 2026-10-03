@@ -222,6 +222,7 @@ def main(argv=None):
                    help="800 matches the paper scripts. A smaller value writes a smaller PNG")
     args = p.parse_args(argv)
 
+
     if args.results_root:
         for dirpath, dirnames, filenames in os.walk(args.results_root):
             if "params.json" in filenames and os.path.isdir(os.path.join(dirpath, "checkpoints")):
