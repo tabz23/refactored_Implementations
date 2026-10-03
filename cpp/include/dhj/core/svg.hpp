@@ -176,8 +176,8 @@ public:
 
 private:
     // Raster PNG at style_.save_dpi. Figure matches the Python figsize (5 in per
-    // slice, 14 in tall). Cell edges are not stroked: at a low dpi a 1 px edge
-    // covers the small cells.
+    // slice, 14 in tall). Cells are filled only: a 1 px edge hides the color
+    // once cells are only a few pixels wide.
     void plot_raster(const CellTree<N>& tree, const std::string& png_filename, int iteration) const {
         const std::vector<Slice> slices = dyn_.slices();
         const int ncol = std::max(1, static_cast<int>(slices.size()));

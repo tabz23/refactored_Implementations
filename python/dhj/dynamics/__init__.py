@@ -8,13 +8,14 @@ from .base import Dynamics, Overlay, Slice  # noqa: F401
 from .double_integrator import DoubleIntegrator4D
 from .dubins import DubinsCar
 from .evasion import Evasion
-from .van_der_pol import VanDerPol
+from .van_der_pol import VanDerPol, VanDerPolVelocityAvoid
 
 REGISTRY = {
     DubinsCar.name: DubinsCar,
     Evasion.name: Evasion,
     DoubleIntegrator4D.name: DoubleIntegrator4D,
     VanDerPol.name: VanDerPol,
+    VanDerPolVelocityAvoid.name: VanDerPolVelocityAvoid,
 }
 
 
@@ -31,4 +32,6 @@ def make_dynamics(name: str, args) -> Dynamics:
         return DoubleIntegrator4D(dt=args.dt, tau=args.tau, a_max=args.a_max, v_max=args.v_max)
     if cls is VanDerPol:
         return VanDerPol(dt=args.dt, tau=args.tau)
+    if cls is VanDerPolVelocityAvoid:
+        return VanDerPolVelocityAvoid(dt=args.dt, tau=args.tau)
     return cls(dt=args.dt, tau=args.tau)

@@ -102,3 +102,32 @@ class VanDerPol(Dynamics):
                  target_position=self.target_position.tolist(),
                  target_radius=self.target_radius)
         return d
+
+
+class VanDerPolVelocityAvoid(VanDerPol):
+    """JuliaReach / Althoff safety spec: autonomous van der Pol, unsafe set y >= 2.75.
+
+    No target. Use with --mode avoid_nodiscount. The published check is that the
+    box x in [1.25, 1.55], y in [2.35, 2.45] never reaches y = 2.75.
+    l(x, y) = 2.75 - y, so L_l = 1 in the infinity norm.
+    """
+
+    name = "van_der_pol_avoid"
+
+    def __init__(self, dt: float, tau: float, mu: float = 1.0, y_unsafe: float = 2.75):
+        super().__init__(dt, tau, mu=mu)
+        self.y_unsafe = y_unsafe
+        self.L_l = 1.0
+        self.L_r = 1.0
+
+    def failure_function(self, state) -> float:
+        return self.y_unsafe - state[1]
+
+    def overlays(self):
+        return []
+
+    def describe(self) -> dict:
+        d = super().describe()
+        d["y_unsafe"] = self.y_unsafe
+        d["spec"] = "juliareach_velocity_avoid"
+        return d

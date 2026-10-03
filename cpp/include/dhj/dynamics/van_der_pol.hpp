@@ -93,11 +93,36 @@ public:
                "], \"target_radius\": " + py_repr(target_radius_);
     }
 
-private:
+protected:
     double mu_, obstacle_radius_, target_radius_;
     std::array<double, 2> obstacle_position_{}, target_position_{};
     Bounds bounds_{};
     std::vector<double> actions_;
+};
+
+// JuliaReach / Althoff spec: no target, unsafe set y >= 2.75.
+// l = 2.75 - y is 1-Lipschitz in the infinity norm. Use with avoid_nodiscount.
+class VanDerPolVelocityAvoid : public VanDerPol {
+public:
+    explicit VanDerPolVelocityAvoid(double dt, double tau, double y_unsafe = 2.75)
+        : VanDerPol(dt, tau), y_unsafe_(y_unsafe) {
+        L_l_ = 1.0;
+        L_r_ = 1.0;
+    }
+
+    const char* name() const override { return "van_der_pol_avoid"; }
+
+    double failure_function(const State& s) const override { return y_unsafe_ - s[1]; }
+
+    std::vector<Overlay> overlays() const override { return {}; }
+
+    std::string describe_extra_json() const override {
+        return "\"mu\": " + py_repr(mu_) + ", \"y_unsafe\": " + py_repr(y_unsafe_) +
+               ", \"spec\": \"juliareach_velocity_avoid\"";
+    }
+
+private:
+    double y_unsafe_;
 };
 
 }  // namespace dhj
