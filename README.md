@@ -132,11 +132,7 @@ the leaf set — are recomputed on the first local sweep. `run.log` and
 
 ## Faithfulness to the paper scripts — things to know
 
-* **Phase 0 tolerance.** The paper scripts call `value_iteration()` for phase 0
-  without passing `convergence_tol`, so phase 0 runs at the argparse default
-  `1e-3`, while the local sweeps use `--delta-min`. This is reproduced via
-  `--phase0-tol` (default `1e-3`). Pass `--phase0-tol <delta-min>` for the
-  "intended" behaviour.
+* **Phase 0 tolerance.** Phase 0 uses `--delta-min`, the same residual tolerance as later phases. `--phase0-tol` overrides that for phase 0 only.
 * **Avoid-mode figures.** `avoid_nodiscount.py` left the upper/lower value
   panels blank (the drawing loop is commented out). The new code draws them;
   the classification panel and all numbers are unchanged. No target circle is

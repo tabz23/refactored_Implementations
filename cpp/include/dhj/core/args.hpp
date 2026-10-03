@@ -37,7 +37,8 @@ struct Args {
     int vi_iterations = 20000;
     bool conservative = false;
     double delta_max = 1e-6;
-    double phase0_tol = 1e-3;
+    double phase0_tol = 1e-3;   // unused unless --phase0-tol is passed; otherwise phase 0 uses tolerance
+    bool phase0_tol_set = false;
     // execution
     int workers = 0;         // 0 => hardware threads - 1
     bool precompute = false;
@@ -84,7 +85,7 @@ struct Args {
         "  --vi-iterations INT           VI sweeps per phase (default: 20000)\n"
         "  --conservative                conservative stopping (Algorithm 3)\n"
         "  --delta-max FLOAT             delta_max for conservative stopping (default: 1e-6)\n"
-        "  --phase0-tol FLOAT            convergence tol of phase 0 (default: 1e-3, as the paper scripts)\n"
+        "  --phase0-tol FLOAT            phase-0 residual tol (default: same as --delta-min)\n"
         "execution:\n"
         "  --workers INT                 worker threads (default: hardware threads - 1)\n"
         "  --precompute                  precompute successor sets up front\n"
@@ -167,7 +168,7 @@ inline Args parse_args(int argc, char** argv) {
         else if (f == "--vi-iterations") { a.vi_iterations = static_cast<int>(parse_long(need(i), "--vi-iterations")); ++i; }
         else if (f == "--conservative") { a.conservative = true; }
         else if (f == "--delta-max") { a.delta_max = parse_double(need(i), "--delta-max"); ++i; }
-        else if (f == "--phase0-tol") { a.phase0_tol = parse_double(need(i), "--phase0-tol"); ++i; }
+        else if (f == "--phase0-tol") { a.phase0_tol = parse_double(need(i), "--phase0-tol"); a.phase0_tol_set = true; ++i; }
         else if (f == "--workers") { a.workers = static_cast<int>(parse_long(need(i), "--workers")); ++i; }
         else if (f == "--precompute") { a.precompute = true; }
         else if (f == "--seq-queries") { a.seq_queries = true; }
@@ -190,6 +191,7 @@ inline Args parse_args(int argc, char** argv) {
         a.workers = static_cast<int>(hc > 1 ? hc - 1 : 1);
     }
     if (a.results_root.empty()) a.results_root = default_results_root(argv[0]);
+    if (!a.phase0_tol_set) a.phase0_tol = a.tolerance;
     return a;
 }
 

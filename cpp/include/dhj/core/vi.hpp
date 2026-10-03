@@ -130,8 +130,8 @@ public:
 
     // ---------------------------------------------------------------- VI --
 
-    // Algorithm 1 / phase 0. Note: the refinement loop passes --phase0-tol
-    // (default 1e-3, the argparse default the paper scripts actually used).
+    // Algorithm 1 / phase 0. The refinement loop passes the same residual
+    // tolerance as later phases (--delta-min), unless --phase0-tol is set.
     VIResult value_iteration(int max_iterations, double convergence_tol, int plot_freq, bool conservative_mode,
                              double delta_max) {
         initialize_cells();

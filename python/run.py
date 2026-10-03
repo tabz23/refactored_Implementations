@@ -70,9 +70,8 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--conservative", action="store_true", default=False,
                    help="conservative stopping condition (Algorithm 3)")
     p.add_argument("--delta-max", type=float, default=1e-6, help="delta_max for the conservative stop")
-    p.add_argument("--phase0-tol", type=float, default=1e-3,
-                   help="convergence tolerance used by phase 0 (the paper scripts ran phase 0 at the "
-                        "argparse default 1e-3, not at --delta-min; keep 1e-3 to reproduce them)")
+    p.add_argument("--phase0-tol", type=float, default=None,
+                   help="residual tolerance for phase 0 (default: same as --delta-min)")
     p.add_argument("--workers", type=int, default=None, help="worker processes (default: CPU count - 1)")
     p.add_argument("--precompute", action="store_true", help="precompute all successor sets up front")
     # output / checkpointing
@@ -129,6 +128,8 @@ def make_plotter(args, mode: Mode, dyn):
 
 def main(argv=None):
     args = build_parser().parse_args(argv)
+    if args.phase0_tol is None:
+        args.phase0_tol = args.tolerance
     mode = Mode(args.mode)
     if args.workers is None:
         args.workers = max(1, cpu_count() - 1)

@@ -450,9 +450,17 @@ private:
                     const int ry = std::max(1, static_cast<int>(ov.radius * sy));
                     int cr = 0, cg = 0, cb = 139;
                     if (ov.color == "orange") { cr = 255; cg = 165; cb = 0; }
+                    // About 11 px at 300 dpi: visible when the figure is fitted to the
+                    // window, and about half the previous 21 px stroke. Target stays dashed.
+                    const int hw = std::max(2, scale);
                     for (int a = 0; a < 720; ++a) {
+                        if (ov.dashed && ((a / 36) % 2) != 0) continue;
                         const double th = a * 3.14159265358979323846 / 360.0;
-                        put(cx + static_cast<int>(rx * std::cos(th)), cy + static_cast<int>(ry * std::sin(th)), cr, cg, cb);
+                        const int px = cx + static_cast<int>(std::lround(rx * std::cos(th)));
+                        const int py = cy + static_cast<int>(std::lround(ry * std::sin(th)));
+                        for (int dy = -hw; dy <= hw; ++dy)
+                            for (int dx = -hw; dx <= hw; ++dx)
+                                if (dx * dx + dy * dy <= hw * hw) put(px + dx, py + dy, cr, cg, cb);
                     }
                 }
                 for (int x = ox; x < ox + panel_w; ++x) { put(x, oy, 0, 0, 0); put(x, oy + panel_h - 1, 0, 0, 0); }
