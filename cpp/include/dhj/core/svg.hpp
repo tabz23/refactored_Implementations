@@ -122,6 +122,149 @@ inline bool write_png(const std::string& path, int w, int h, const std::vector<u
     return static_cast<bool>(out);
 }
 
+// 5x7 glyphs, 35 chars row-major, '#' set. Used by the low-dpi PNG path, which
+// has no font library. U+03B8 (952) is theta, the Dubins / evasion angle name.
+inline const char* raster_glyph35(int cp) {
+    switch (cp) {
+    case ' ': return "...................................";
+    case '(': return "..#...#...#....#....#.....#.....#..";
+    case ')': return "..#.....#.....#....#....#...#...#..";
+    case '+': return ".......#....#..#####..#....#.......";
+    case ',': return ".....................#....#...#....";
+    case '-': return "...............#####...............";
+    case '.': return "..........................##...##..";
+    case '/': return "....#....#...#...#...#...#....#....";
+    case '0': return ".###.#...##..###.#.###..##...#.###.";
+    case '1': return "..#...##....#....#....#....#...###.";
+    case '2': return ".###.#...#....#...#...#...#...#####";
+    case '3': return "#####....#....#..###....#....######";
+    case '4': return "...#...##..#.#.#..#.#####...#....#.";
+    case '5': return "######....#....####.....##...#.###.";
+    case '6': return "..##..#...#....####.#...##...#.###.";
+    case '7': return "#####....#...#...#...#....#....#...";
+    case '8': return ".###.#...##...#.###.#...##...#.###.";
+    case '9': return ".###.#...##...#.####....#...#..##..";
+    case ':': return "......##...##........##...##.......";
+    case '=': return "..........#####.....#####..........";
+    case 'A': return ".###.#...##...#######...##...##...#";
+    case 'B': return "####.#...##...#####.#...##...#####.";
+    case 'C': return ".###.#...##....#....#....#...#.###.";
+    case 'D': return "####.#...##...##...##...##...#####.";
+    case 'E': return "######....#....####.#....#....#####";
+    case 'F': return "######....#....####.#....#....#....";
+    case 'G': return ".###.#...##....#.####...##...#.###.";
+    case 'H': return "#...##...##...#######...##...##...#";
+    case 'I': return ".###...#....#....#....#....#...###.";
+    case 'J': return "..###...#....#....#....#.#..#..##..";
+    case 'K': return "#...##..#.#.#..##...#.#..#..#.#...#";
+    case 'L': return "#....#....#....#....#....#....#####";
+    case 'M': return "#...###.###.#.##.#.##...##...##...#";
+    case 'N': return "#...###..##.#.##..###...##...##...#";
+    case 'O': return ".###.#...##...##...##...##...#.###.";
+    case 'P': return "####.#...##...#####.#....#....#....";
+    case 'Q': return ".###.#...##...##...##.#.##..#..##.#";
+    case 'R': return "####.#...##...#####.#.#..#..#.#...#";
+    case 'S': return ".#####....#.....###.....#....#####.";
+    case 'T': return "#####..#....#....#....#....#....#..";
+    case 'U': return "#...##...##...##...##...##...#.###.";
+    case 'V': return "#...##...##...##...##...#.#.#...#..";
+    case 'W': return "#...##...##...##.#.##.#.##.#.#.#.#.";
+    case 'X': return "#...##...#.#.#...#...#.#.#...##...#";
+    case 'Y': return "#...##...#.#.#...#....#....#....#..";
+    case 'Z': return "#####....#...#...#...#...#....#####";
+    case '_': return "..............................#####";
+    case 'a': return "...........###.....#.#####...#.####";
+    case 'b': return "#....#....####.#...##...##...#####.";
+    case 'c': return "...........###.#....#....#...#.###.";
+    case 'd': return "....#....#.#####...##...##...#.####";
+    case 'e': return "...........###.#...#######.....###.";
+    case 'f': return "..##..#..#.#...####..#....#....#...";
+    case 'g': return "......#####...##...#.####....#.###.";
+    case 'h': return "#....#....####.#...##...##...##...#";
+    case 'i': return "..#........##....#....#....#...###.";
+    case 'j': return "...#........##....#....#.#..#..##..";
+    case 'k': return "#....#....#..#.#.#..##...#.#..#..#.";
+    case 'l': return ".##....#....#....#....#....#...###.";
+    case 'm': return "..........##.#.#.#.##.#.##...##...#";
+    case 'n': return "..........####.#...##...##...##...#";
+    case 'o': return "...........###.#...##...##...#.###.";
+    case 'p': return ".....####.#...##...#####.#....#....";
+    case 'q': return "......#####...##...#.####....#....#";
+    case 'r': return "..........#.##.##..##....#....#....";
+    case 's': return "...........#####.....###.....#####.";
+    case 't': return ".#....#...###...#....#....#..#..##.";
+    case 'u': return "..........#...##...##...##..##.##.#";
+    case 'v': return "..........#...##...##...#.#.#...#..";
+    case 'w': return "..........#...##...##.#.##.#.#.#.#.";
+    case 'x': return "..........#...#.#.#...#...#.#.#...#";
+    case 'y': return "..........#...##...#.####....#.###.";
+    case 'z': return "..........#####...#...#...#...#####";
+    case 948: return "..#...#.#.#...##.#.##...#.#.#...#..";
+    case 952: return ".###.#...#######...##...##...#.###.";
+    default: return "######...##...##...##...##...######";
+    }
+}
+
+inline int raster_next_cp(const std::string& s, std::size_t& i) {
+    if (i >= s.size()) return 0;
+    const unsigned char c = static_cast<unsigned char>(s[i++]);
+    if (c < 0x80) return c;
+    if (c == 0xCE && i < s.size()) {
+        const unsigned char c2 = static_cast<unsigned char>(s[i]);
+        if (c2 == 0xB4) { ++i; return 948; }  // δ
+        if (c2 == 0xB8) { ++i; return 952; }  // θ
+    }
+    while (i < s.size() && (static_cast<unsigned char>(s[i]) & 0xC0) == 0x80) ++i;
+    return '?';
+}
+
+inline int raster_text_width(const std::string& s, int scale) {
+    int n = 0;
+    for (std::size_t i = 0; i < s.size();) {
+        raster_next_cp(s, i);
+        ++n;
+    }
+    if (n <= 0) return 0;
+    return n * 6 * scale - scale;
+}
+
+inline std::vector<double> raster_ticks(double lo, double hi) {
+    std::vector<double> t;
+    if (!(hi > lo) || !std::isfinite(lo) || !std::isfinite(hi)) {
+        t.push_back(lo);
+        return t;
+    }
+    const double span = hi - lo;
+    const double raw = std::max(span / 4.0, span * 1e-6);
+    const double mag = std::pow(10.0, std::floor(std::log10(raw)));
+    const double nrm = raw / mag;
+    const double step = nrm >= 5.0 ? 5.0 * mag : (nrm >= 2.0 ? 2.0 * mag : mag);
+    const double first = std::ceil(lo / step - 1e-8) * step;
+    for (int k = 0; k < 12; ++k) {
+        const double v = first + static_cast<double>(k) * step;
+        if (v > hi + step * 1e-6) break;
+        if (v >= lo - span * 1e-6) t.push_back(v);
+    }
+    if (t.size() < 2) {
+        t.clear();
+        t.push_back(lo);
+        t.push_back(hi);
+    }
+    return t;
+}
+
+inline std::string raster_tick_text(double v) {
+    if (!std::isfinite(v)) return "nan";
+    if (std::fabs(v) < 1e-12) return "0";
+    const double r = std::round(v);
+    if (std::fabs(v - r) <= 1e-8 * std::max(1.0, std::fabs(v))) {
+        char b[32];
+        std::snprintf(b, sizeof b, "%.0f", r);
+        return b;
+    }
+    return py_fixed(v, 1);
+}
+
 template <std::size_t N>
 class SlicePlotter {
 public:
@@ -175,18 +318,18 @@ public:
     }
 
 private:
-    // Raster PNG at style_.save_dpi. Figure matches the Python figsize (5 in per
-    // slice, 14 in tall). Cells are filled only: a 1 px edge hides the color
-    // once cells are only a few pixels wide.
+    // Raster PNG at style_.save_dpi. Same chrome as the SVG figure: title, axis
+    // names, ticks, and a colour bar. Cells stay fill-only; a 1 px edge hides
+    // the colour once cells are only a few pixels wide.
     void plot_raster(const CellTree<N>& tree, const std::string& png_filename, int iteration) const {
         const std::vector<Slice> slices = dyn_.slices();
         const int ncol = std::max(1, static_cast<int>(slices.size()));
-        const int dpi = style_.save_dpi;
+        const int dpi = std::max(1, style_.save_dpi);
         const int width = std::max(1, 5 * ncol * dpi);
         const int height = std::max(1, 14 * dpi);
-        const int margin_x = std::max(8, width / 40);
-        const int margin_y = std::max(8, height / 28);
-        const int panel = std::min((width - 2 * margin_x) / ncol, (height - 2 * margin_y) / 3);
+        const int scale = std::max(1, dpi / 60);
+        const int gth = 7 * scale;
+        const int tick_len = std::max(3, 3 * scale);
         std::vector<unsigned char> img(static_cast<std::size_t>(width) * height * 3, 255);
         auto put = [&](int x, int y, int r, int g, int b) {
             if (x < 0 || y < 0 || x >= width || y >= height) return;
@@ -203,10 +346,47 @@ private:
             for (int y = y0; y < y1; ++y)
                 for (int x = x0; x < x1; ++x) put(x, y, r, g, b);
         };
+        auto draw_text = [&](int x, int y, const std::string& s, int sc, int anchor) {
+            const int w = raster_text_width(s, sc);
+            int cx = anchor == 1 ? x - w / 2 : (anchor == 2 ? x - w : x);
+            for (std::size_t i = 0; i < s.size();) {
+                const char* g = raster_glyph35(raster_next_cp(s, i));
+                for (int row = 0; row < 7; ++row)
+                    for (int col = 0; col < 5; ++col) {
+                        if (g[row * 5 + col] != '#') continue;
+                        for (int sy = 0; sy < sc; ++sy)
+                            for (int sx = 0; sx < sc; ++sx)
+                                put(cx + col * sc + sx, y + row * sc + sy, 0, 0, 0);
+                    }
+                cx += 6 * sc;
+            }
+        };
         const auto pd = dyn_.plot_dims();
         const auto& gb = dyn_.state_bounds();
         const double x_min = gb[pd[0]][0], x_max = gb[pd[0]][1];
         const double y_min = gb[pd[1]][0], y_max = gb[pd[1]][1];
+        const std::string x_name = dyn_.state_name(pd[0]);
+        const std::string y_name = dyn_.state_name(pd[1]);
+        const std::vector<double> xticks = raster_ticks(x_min, x_max);
+        const std::vector<double> yticks = raster_ticks(y_min, y_max);
+        int max_yt = raster_text_width(y_name, scale);
+        for (double v : yticks) max_yt = std::max(max_yt, raster_text_width(raster_tick_text(v), scale));
+        const int bar_w = std::max(8, 5 * scale);
+        const int cbar_lbl = raster_text_width("-0.0e+00", scale);
+        const std::string fig_title = "Safety Value Function - Iteration " + std::to_string(iteration);
+        int title_scale = std::min(scale + 1, 4);
+        while (title_scale > 1 && raster_text_width(fig_title, title_scale) > width - 8) --title_scale;
+        const int banner = 7 * title_scale + 12;
+        const int col_w = std::max(1, width / ncol);
+        const int pad_l = 6 + gth + 6 + max_yt + 4 + tick_len;
+        const int pad_r = 8 + bar_w + 4 + cbar_lbl + 6;
+        const int row_title = gth + 8;
+        const int row_bottom = tick_len + 4 + gth + 4 + gth + 8;
+        const int row_h = std::max(1, (height - banner) / 3);
+        const int panel_w = std::max(8, col_w - pad_l - pad_r);
+        const int panel_h = std::max(8, row_h - row_title - row_bottom);
+        draw_text(width / 2, 6, fig_title, title_scale, 1);
+
         for (int col = 0; col < ncol; ++col) {
             const Slice& sl = slices[static_cast<std::size_t>(col)];
             std::vector<std::uint32_t> hits;
@@ -229,10 +409,10 @@ private:
             double umin, umax, lmin, lmax;
             range_of(upper, umin, umax);
             range_of(lower, lmin, lmax);
-            const int ox = margin_x + col * ((width - 2 * margin_x) / ncol);
+            const int ox = col * col_w + pad_l;
             for (int row = 0; row < 3; ++row) {
-                const int oy = margin_y + row * ((height - 2 * margin_y) / 3);
-                const double sx = panel / (x_max - x_min), sy = panel / (y_max - y_min);
+                const int oy = banner + row * row_h + row_title;
+                const double sx = panel_w / (x_max - x_min), sy = panel_h / (y_max - y_min);
                 if (row < 2 && style_.draw_value_cells) {
                     const double vmin = row == 0 ? umin : lmin, vmax = row == 0 ? umax : lmax;
                     for (std::size_t i = 0; i < hits.size(); ++i) {
@@ -275,11 +455,55 @@ private:
                         put(cx + static_cast<int>(rx * std::cos(th)), cy + static_cast<int>(ry * std::sin(th)), cr, cg, cb);
                     }
                 }
-                for (int x = ox; x < ox + panel; ++x) { put(x, oy, 0, 0, 0); put(x, oy + panel - 1, 0, 0, 0); }
-                for (int y = oy; y < oy + panel; ++y) { put(ox, y, 0, 0, 0); put(ox + panel - 1, y, 0, 0, 0); }
+                for (int x = ox; x < ox + panel_w; ++x) { put(x, oy, 0, 0, 0); put(x, oy + panel_h - 1, 0, 0, 0); }
+                for (int y = oy; y < oy + panel_h; ++y) { put(ox, y, 0, 0, 0); put(ox + panel_w - 1, y, 0, 0, 0); }
+
+                const char* row_name = row == 0 ? "Upper Bound" : (row == 1 ? "Lower Bound" : "Cell Classification");
+                std::string ptitle = std::string(row_name) + " (" + sl.label + ")";
+                int psc = scale;
+                while (psc > 1 && raster_text_width(ptitle, psc) > panel_w) --psc;
+                draw_text(ox + panel_w / 2, oy - 7 * psc - 3, ptitle, psc, 1);
+
+                for (double tv : xticks) {
+                    const int px = ox + static_cast<int>(std::lround((tv - x_min) * sx));
+                    if (px < ox || px >= ox + panel_w) continue;
+                    for (int t = 1; t <= tick_len; ++t) put(px, oy + panel_h - 1 + t, 0, 0, 0);
+                    draw_text(px, oy + panel_h + tick_len + 2, raster_tick_text(tv), scale, 1);
+                }
+                draw_text(ox + panel_w / 2, oy + panel_h + tick_len + 4 + gth, x_name, scale, 1);
+                for (double tv : yticks) {
+                    const int py = oy + static_cast<int>(std::lround((y_max - tv) * sy));
+                    if (py < oy || py >= oy + panel_h) continue;
+                    for (int t = 1; t <= tick_len; ++t) put(ox - t, py, 0, 0, 0);
+                    int ly = py - gth / 2;
+                    if (ly < oy) ly = oy;
+                    if (ly > oy + panel_h - gth) ly = oy + panel_h - gth;
+                    draw_text(ox - tick_len - 3, ly, raster_tick_text(tv), scale, 2);
+                }
+                draw_text(col * col_w + 4, oy + panel_h / 2 - gth / 2, y_name, scale, 0);
+
+                if (row < 2) {
+                    const double vmin = row == 0 ? umin : lmin, vmax = row == 0 ? umax : lmax;
+                    const int bx = ox + panel_w + 8;
+                    for (int y = 0; y < panel_h; ++y) {
+                        const double t = panel_h <= 1 ? 1.0 : 1.0 - static_cast<double>(y) / (panel_h - 1);
+                        int rgb[3];
+                        rd_yl_gn(t, rgb);
+                        for (int x = 0; x < bar_w; ++x) put(bx + x, oy + y, rgb[0], rgb[1], rgb[2]);
+                    }
+                    for (int x = bx; x < bx + bar_w; ++x) { put(x, oy, 0, 0, 0); put(x, oy + panel_h - 1, 0, 0, 0); }
+                    for (int y = oy; y < oy + panel_h; ++y) { put(bx, y, 0, 0, 0); put(bx + bar_w - 1, y, 0, 0, 0); }
+                    const int lx = bx + bar_w + 4;
+                    draw_text(lx, oy, py_exp(vmax, 1), scale, 0);
+                    draw_text(lx, oy + panel_h - gth, py_exp(vmin, 1), scale, 0);
+                    if (vmin < 0.0 && vmax > 0.0) {
+                        const double zt = (0.0 - vmin) / (vmax - vmin);
+                        int zy = oy + static_cast<int>(std::lround((1.0 - zt) * (panel_h - 1))) - gth / 2;
+                        if (zy > oy + gth + 2 && zy < oy + panel_h - 2 * gth - 2) draw_text(lx, zy, py_exp(0.0, 1), scale, 0);
+                    }
+                }
             }
         }
-        (void)iteration;
         std::string path = png_filename;
         const std::size_t dot = path.rfind('.');
         if (dot != std::string::npos) path.resize(dot);

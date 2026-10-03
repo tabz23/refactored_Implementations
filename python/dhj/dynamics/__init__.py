@@ -5,6 +5,7 @@ To add a new system:
   2. import it here and add it to REGISTRY under the name used on the CLI.
 """
 from .base import Dynamics, Overlay, Slice  # noqa: F401
+from .bicycle import Bicycle5D
 from .double_integrator import DoubleIntegrator4D
 from .dubins import DubinsCar
 from .evasion import Evasion
@@ -14,6 +15,7 @@ REGISTRY = {
     DubinsCar.name: DubinsCar,
     Evasion.name: Evasion,
     DoubleIntegrator4D.name: DoubleIntegrator4D,
+    Bicycle5D.name: Bicycle5D,
     VanDerPol.name: VanDerPol,
     VanDerPolVelocityAvoid.name: VanDerPolVelocityAvoid,
 }
@@ -30,6 +32,8 @@ def make_dynamics(name: str, args) -> Dynamics:
         return Evasion(dt=args.dt, tau=args.tau, v_const=args.velocity, obstacle_radius=1.0)
     if cls is DoubleIntegrator4D:
         return DoubleIntegrator4D(dt=args.dt, tau=args.tau, a_max=args.a_max, v_max=args.v_max)
+    if cls is Bicycle5D:
+        return Bicycle5D(dt=args.dt, tau=args.tau, a_max=args.a_max, v_max=args.v_max)
     if cls is VanDerPol:
         return VanDerPol(dt=args.dt, tau=args.tau)
     if cls is VanDerPolVelocityAvoid:

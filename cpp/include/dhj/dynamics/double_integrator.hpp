@@ -70,10 +70,11 @@ public:
         return {obs, tgt};
     }
 
-    // (x, y) panels at six velocity pins.
+    // (x, y) panels: velocity corners, rest, full speed along x, half-speed axes, and (h, h).
     std::vector<Slice> slices() const override {
-        const double v = 0.5 * v_max_;
-        const double pins[6][2] = {{0.0, 0.0}, {v, 0.0}, {-v, 0.0}, {0.0, v}, {0.0, -v}, {v, v}};
+        const double v = v_max_;
+        const double h = 0.5 * v_max_;
+        const double pins[8][2] = {{-v, -v}, {v, v}, {0.0, 0.0}, {-v, 0.0}, {v, 0.0}, {0.0, h}, {h, 0.0}, {h, h}};
         std::vector<Slice> out;
         for (const auto& p : pins)
             out.push_back(Slice{{{2, p[0]}, {3, p[1]}}, "vx=" + py_fixed(p[0], 2) + ", vy=" + py_fixed(p[1], 2)});

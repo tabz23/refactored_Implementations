@@ -69,8 +69,9 @@ class DoubleIntegrator4D(Dynamics):
                         linestyle="--", when="reach_avoid")]
 
     def slices(self):
-        v = 0.5 * self.v_max
-        pins = [(0.0, 0.0), (v, 0.0), (-v, 0.0), (0.0, v), (0.0, -v), (v, v)]
+        v = self.v_max
+        h = 0.5 * self.v_max
+        pins = [(-v, -v), (v, v), (0.0, 0.0), (-v, 0.0), (v, 0.0), (0.0, h), (h, 0.0), (h, h)]
         return [Slice({2: vx, 3: vy}, f"vx={vx:.2f}, vy={vy:.2f}") for vx, vy in pins]
 
     def describe(self) -> dict:

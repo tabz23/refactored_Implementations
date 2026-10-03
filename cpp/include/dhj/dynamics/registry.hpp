@@ -9,6 +9,7 @@
 #include <vector>
 
 #include "../core/args.hpp"
+#include "bicycle.hpp"
 #include "double_integrator.hpp"
 #include "dubins.hpp"
 #include "evasion.hpp"
@@ -17,7 +18,7 @@
 namespace dhj {
 
 inline std::vector<std::string> registered_dynamics() {
-    return {"dubins", "evasion", "double_integrator", "van_der_pol", "van_der_pol_avoid"};
+    return {"dubins", "evasion", "double_integrator", "bicycle", "van_der_pol", "van_der_pol_avoid"};
 }
 
 // Calls fn(dyn) with the dynamics selected by args.dynamics. Returns false if
@@ -36,6 +37,11 @@ bool with_dynamics(const Args& args, Fn&& fn) {
     }
     if (args.dynamics == "double_integrator") {
         DoubleIntegrator4D dyn(args.dt, args.tau, args.a_max, args.v_max);
+        fn(dyn);
+        return true;
+    }
+    if (args.dynamics == "bicycle") {
+        Bicycle5D dyn(args.dt, args.tau, args.a_max, /*omega_max=*/1.0, args.v_max);
         fn(dyn);
         return true;
     }
