@@ -94,12 +94,12 @@ def draw(run: Path, iters, times, cells, classified, with_class: bool):
             marker="s",
             markersize=5.5,
             linewidth=1.8,
-            label="% of state space classified safe/unsafe",
+            label="% of state space classified as safe/unsafe",
         )
-        ax2.set_ylabel("% of state space classified safe/unsafe", fontsize=16, color="#d62728")
+        ax2.set_ylabel("% of state space classified as safe/unsafe", fontsize=16, color="#d62728")
         ax2.set_ylim(0, 100)
         ax2.tick_params(axis="y", labelsize=16, colors="#d62728", width=1.2, length=6)
-        ax.legend([time_line, class_line], [time_line.get_label(), class_line.get_label()],
+        ax.legend([class_line, time_line], [class_line.get_label(), time_line.get_label()],
                   loc="upper left", frameon=True, fontsize=16)
         name = "runtime_algorithm2_classified.png"
     else:
