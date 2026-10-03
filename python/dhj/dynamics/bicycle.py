@@ -77,11 +77,15 @@ class Bicycle5D(Dynamics):
                         linestyle="--", when="reach_avoid")]
 
     def slices(self):
-        pins = [(0.0, self.v_max, 0.0),
-                (np.pi, self.v_max, 0.0),
-                (0.0, 0.0, 0.0),
-                (0.0, self.v_max, self.delta_max),
-                (0.5 * np.pi, self.v_max, 0.0)]
+        # All at full speed. Stopped (v = 0) is omitted: the car can then
+        # accelerate either way and the slice does not keep a tail.
+        v, dmax = self.v_max, self.delta_max
+        pins = [(0.0, v, 0.0),
+                (np.pi, v, 0.0),
+                (0.5 * np.pi, v, 0.0),
+                (-0.5 * np.pi, v, 0.0),
+                (0.0, v, dmax),
+                (0.0, v, -dmax)]
         return [Slice({2: th, 3: v, 4: d}, f"θ={th:.2f}, v={v:.2f}, δ={d:.2f}") for th, v, d in pins]
 
     def describe(self) -> dict:

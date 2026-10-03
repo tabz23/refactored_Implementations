@@ -86,14 +86,18 @@ public:
         return {obs, tgt};
     }
 
-    // (x, y) panels: forward, opposite heading, stopped, turning, and heading +y.
+    // (x, y) panels, all at full speed so the car is committed to a direction.
+    // Straight at the target, straight away, both sideways headings, then both
+    // steering stops while aimed at the target. No stopped slice: v = 0 can
+    // accelerate either way and does not keep a tail.
     std::vector<Slice> slices() const override {
-        const double pins[5][3] = {
+        const double pins[6][3] = {
             {0.0, v_max_, 0.0},
             {kPi, v_max_, 0.0},
-            {0.0, 0.0, 0.0},
-            {0.0, v_max_, delta_max_},
             {0.5 * kPi, v_max_, 0.0},
+            {-0.5 * kPi, v_max_, 0.0},
+            {0.0, v_max_, delta_max_},
+            {0.0, v_max_, -delta_max_},
         };
         std::vector<Slice> out;
         for (const auto& p : pins) {
