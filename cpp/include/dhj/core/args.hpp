@@ -50,6 +50,7 @@ struct Args {
     std::string tag;
     bool no_plot = false;
     int plot_dpi = 800;    // 800: vector SVG (Python: 800 dpi). Smaller: raster PNG
+    int plot_slice = -1;   // -1: every slice the dynamics declares. Otherwise one index.
     bool dump_csv = false;
     // checkpoints
     int checkpoint_every = 1;
@@ -100,6 +101,7 @@ struct Args {
         "  --no-plot                     skip figures\n"
         "  --plot-dpi INT                800 = vector SVG / 800 dpi (default). A smaller\n"
         "                                value writes a raster PNG at that dpi\n"
+        "  --plot-slice INT              draw only this slice (default: all; 0 is θ=0 for Dubins)\n"
         "  --dump-csv                    write value_function_phase_N.csv per phase\n"
         "checkpoints (algorithm 2):\n"
         "  --checkpoint-every N          checkpoint every N phases (default: 1; 0 = never)\n"
@@ -193,6 +195,7 @@ inline Args parse_args(int argc, char** argv) {
         else if (f == "--tag") { a.tag = need(i); ++i; }
         else if (f == "--no-plot") { a.no_plot = true; }
         else if (f == "--plot-dpi") { a.plot_dpi = static_cast<int>(parse_long(need(i), "--plot-dpi")); ++i; }
+        else if (f == "--plot-slice") { a.plot_slice = static_cast<int>(parse_long(need(i), "--plot-slice")); ++i; }
         else if (f == "--dump-csv") { a.dump_csv = true; }
         else if (f == "--checkpoint-every") { a.checkpoint_every = static_cast<int>(parse_long(need(i), "--checkpoint-every")); ++i; }
         else if (f == "--keep-checkpoints") { a.keep_checkpoints = static_cast<int>(parse_long(need(i), "--keep-checkpoints")); ++i; }
@@ -253,6 +256,7 @@ inline std::string args_json(const Args& a, const std::string& indent) {
     j += in + "\"out_dir\": " + (a.out_dir.empty() ? std::string("null") : s(a.out_dir)) + ",\n";
     j += in + "\"phase0_tol\": " + py_repr(a.phase0_tol) + ",\n";
     j += in + "\"plot_dpi\": " + std::to_string(a.plot_dpi) + ",\n";
+    j += in + "\"plot_slice\": " + std::to_string(a.plot_slice) + ",\n";
     j += in + "\"plot_freq\": " + std::to_string(a.plot_freq) + ",\n";
     j += in + "\"precompute\": " + b(a.precompute) + ",\n";
     j += in + "\"refinements\": " + std::to_string(a.refinements) + ",\n";

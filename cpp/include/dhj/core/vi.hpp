@@ -54,7 +54,11 @@ public:
         : mode_(args.mode), args_(args), dyn_(dyn), tree_(tree), reach_(reach), output_dir_(std::move(output_dir)),
           pool_(pool), timers_(timers), gamma_(args.gamma), n_actions_(dyn.num_actions()),
           periodic_(dyn.periodic_mask()),
-          plotter_(dyn, PlotStyle{true, mode_discounted(args.mode), mode_has_target(args.mode), args.plot_dpi}) {
+          plotter_(dyn, PlotStyle{true, false, mode_has_target(args.mode), args.plot_dpi, args.plot_slice}) {
+        if (args.plot_slice >= 0 && static_cast<std::size_t>(args.plot_slice) >= dyn.slices().size()) {
+            std::fprintf(stderr, "error: --plot-slice %d is out of range (%zu slices)\n", args.plot_slice, dyn.slices().size());
+            std::exit(2);
+        }
         std::error_code ec;
         std::filesystem::create_directories(output_dir_, ec);
         std::printf("Initialized with gamma=%g, L_f=%g, L_l=%g,  L_r=%g\n", gamma_, dyn.L_f(), dyn.L_l(), dyn.L_r());

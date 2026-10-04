@@ -15,6 +15,7 @@
 #include <cmath>
 #include <cstdint>
 #include <cstdio>
+#include <cstdlib>
 #include <cstring>
 #include <fstream>
 #include <string>
@@ -35,6 +36,7 @@ struct PlotStyle {
     // 800 keeps the vector SVG (and, in Python, the 800 dpi figure). A smaller
     // value writes a raster PNG at that dpi instead.
     int save_dpi = 800;
+    int slice_index = -1;   // -1 draws every slice
 };
 
 // matplotlib's RdYlGn (11-anchor ColorBrewer map, linear interpolation).
@@ -276,7 +278,7 @@ public:
             plot_raster(tree, png_filename, iteration);
             return;
         }
-        const std::vector<Slice> slices = dyn_.slices();
+        const std::vector<Slice> slices = selected_slices();
         const int ncol = static_cast<int>(slices.size());
         constexpr int kPanel = 460, kPadL = 60, kPadR = 96, kPadT = 44, kPadB = 52;
         const int cell_w = kPanel + kPadL + kPadR, cell_h = kPanel + kPadT + kPadB;
@@ -318,11 +320,21 @@ public:
     }
 
 private:
+    std::vector<Slice> selected_slices() const {
+        const std::vector<Slice> all = dyn_.slices();
+        if (style_.slice_index < 0) return all;
+        if (static_cast<std::size_t>(style_.slice_index) >= all.size()) {
+            std::fprintf(stderr, "error: --plot-slice %d is out of range (%zu slices)\n", style_.slice_index, all.size());
+            std::exit(2);
+        }
+        return {all[static_cast<std::size_t>(style_.slice_index)]};
+    }
+
     // Raster PNG at style_.save_dpi. Same chrome as the SVG figure: title, axis
     // names, ticks, and a colour bar. Cells stay fill-only; a 1 px edge hides
     // the colour once cells are only a few pixels wide.
     void plot_raster(const CellTree<N>& tree, const std::string& png_filename, int iteration) const {
-        const std::vector<Slice> slices = dyn_.slices();
+        const std::vector<Slice> slices = selected_slices();
         const int ncol = std::max(1, static_cast<int>(slices.size()));
         const int dpi = std::max(1, style_.save_dpi);
         const int width = std::max(1, 5 * ncol * dpi);
