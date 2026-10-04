@@ -36,6 +36,7 @@ struct Args {
     int refinements = 100;
     int vi_iterations = 20000;
     bool conservative = false;
+    bool conservative_set = false;   // true if --conservative or --no-conservative was passed
     double delta_max = 1e-6;
     double phase0_tol = 1e-3;   // unused unless --phase0-tol is passed; otherwise phase 0 uses tolerance
     bool phase0_tol_set = false;
@@ -83,7 +84,9 @@ struct Args {
         "  --initial-resolution INT      initial coarse grid (default: 15)\n"
         "  --refinements INT             max refinement phases (default: 100)\n"
         "  --vi-iterations INT           VI sweeps per phase (default: 20000)\n"
-        "  --conservative                conservative stopping (Algorithm 3)\n"
+        "  --conservative                conservative stopping (Algorithm 3);\n"
+        "                                default on for ra_discount, off otherwise\n"
+        "  --no-conservative             force conservative stopping off\n"
         "  --delta-max FLOAT             delta_max for conservative stopping (default: 1e-6)\n"
         "  --phase0-tol FLOAT            phase-0 residual tol (default: same as --delta-min)\n"
         "execution:\n"
@@ -166,7 +169,20 @@ inline Args parse_args(int argc, char** argv) {
         else if (f == "--initial-resolution") { a.initial_resolution = static_cast<int>(parse_long(need(i), "--initial-resolution")); ++i; }
         else if (f == "--refinements") { a.refinements = static_cast<int>(parse_long(need(i), "--refinements")); ++i; }
         else if (f == "--vi-iterations") { a.vi_iterations = static_cast<int>(parse_long(need(i), "--vi-iterations")); ++i; }
-        else if (f == "--conservative") { a.conservative = true; }
+        else if (f == "--conservative") {
+            if (a.conservative_set && !a.conservative) {
+                std::fprintf(stderr, "error: pass only one of --conservative and --no-conservative\n");
+                std::exit(2);
+            }
+            a.conservative = true; a.conservative_set = true;
+        }
+        else if (f == "--no-conservative") {
+            if (a.conservative_set && a.conservative) {
+                std::fprintf(stderr, "error: pass only one of --conservative and --no-conservative\n");
+                std::exit(2);
+            }
+            a.conservative = false; a.conservative_set = true;
+        }
         else if (f == "--delta-max") { a.delta_max = parse_double(need(i), "--delta-max"); ++i; }
         else if (f == "--phase0-tol") { a.phase0_tol = parse_double(need(i), "--phase0-tol"); a.phase0_tol_set = true; ++i; }
         else if (f == "--workers") { a.workers = static_cast<int>(parse_long(need(i), "--workers")); ++i; }
@@ -192,6 +208,7 @@ inline Args parse_args(int argc, char** argv) {
     }
     if (a.results_root.empty()) a.results_root = default_results_root(argv[0]);
     if (!a.phase0_tol_set) a.phase0_tol = a.tolerance;
+    if (!a.conservative_set) a.conservative = mode_discounted(a.mode);
     return a;
 }
 

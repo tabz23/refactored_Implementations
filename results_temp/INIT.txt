@@ -1,0 +1,1 @@
+Temporary comparison. Only change: V_lower is initialized to min(l_lower, r_lower). V_upper stays l_upper. Same commands as the undiscounted Dubins res20, evasion res30, and van der Pol res40 runs.

@@ -84,8 +84,11 @@ class SafetyValueIterator:
         for cell_id, l_lower, l_upper, r_lower, r_upper in results:
             c = by_id[cell_id]
             c.l_lower, c.l_upper, c.r_lower, c.r_upper = l_lower, l_upper, r_lower, r_upper
-            c.V_lower = c.l_lower
-            c.V_upper = c.l_upper
+            if self.mode.discounted:
+                c.V_lower, c.V_upper = c.l_lower, c.l_upper
+            else:
+                c.V_lower = min(c.l_lower, c.r_lower)
+                c.V_upper = min(c.l_upper, c.r_upper)
         el = time.time() - t0
         self.timers["cell_init"] += el
         print(f"   Initialized in {el:.2f}s ({len(cells) / el if el > 0 else float('inf'):.1f} cells/s)")
@@ -380,7 +383,8 @@ class SafetyValueIterator:
                               conservative_mode: bool, delta_max: float):
         """Re-initialise every leaf, refresh the successor cache, sweep to convergence."""
         leaves = self.cell_tree.get_leaves()
-        print(f"  Reinitializing ALL {len(leaves)} cells to l_lower/l_upper (Lemma 1 requirement)")
+        kind = "V = l" if self.mode.discounted else "V = min(l, r)"
+        print(f"  Reinitializing ALL {len(leaves)} cells ({kind})")
         t0 = time.time()
         self.initialize_cells()
         reinit = time.time() - t0

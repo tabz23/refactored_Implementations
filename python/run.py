@@ -68,7 +68,9 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--refinements", type=int, default=100, help="maximum number of refinement phases")
     p.add_argument("--vi-iterations", type=int, default=20000, help="max VI sweeps per phase")
     p.add_argument("--conservative", action="store_true", default=False,
-                   help="conservative stopping condition (Algorithm 3)")
+                   help="conservative stopping (Algorithm 3); default on for ra_discount")
+    p.add_argument("--no-conservative", action="store_true", default=False,
+                   help="force conservative stopping off")
     p.add_argument("--delta-max", type=float, default=1e-6, help="delta_max for the conservative stop")
     p.add_argument("--phase0-tol", type=float, default=None,
                    help="residual tolerance for phase 0 (default: same as --delta-min)")
@@ -127,10 +129,15 @@ def make_plotter(args, mode: Mode, dyn):
 
 
 def main(argv=None):
-    args = build_parser().parse_args(argv)
+    parser = build_parser()
+    args = parser.parse_args(argv)
+    if args.conservative and args.no_conservative:
+        parser.error("pass only one of --conservative and --no-conservative")
     if args.phase0_tol is None:
         args.phase0_tol = args.tolerance
     mode = Mode(args.mode)
+    if not args.conservative and not args.no_conservative:
+        args.conservative = mode.discounted
     if args.workers is None:
         args.workers = max(1, cpu_count() - 1)
     if args.iterations is None:

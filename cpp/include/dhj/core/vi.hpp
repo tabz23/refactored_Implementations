@@ -160,7 +160,8 @@ public:
     VIResult local_value_iteration(const std::vector<std::uint32_t>& new_cells, int max_iterations,
                                    double convergence_tol, bool conservative_mode, double delta_max) {
         const std::size_t n = tree_.num_leaves();
-        std::printf("  Reinitializing ALL %zu cells to l_lower/l_upper (Lemma 1 requirement)\n", n);
+        std::printf("  Reinitializing ALL %zu cells (%s)\n", n,
+                    mode_discounted(mode_) ? "V = l" : "V = min(l, r)");
         const double t0 = now_seconds();
         initialize_cells();
         const double reinit = now_seconds() - t0;
@@ -253,8 +254,14 @@ private:
                 c.l_upper = l_center + L_l * r;
                 c.r_lower = r_center - L_r * r;
                 c.r_upper = r_center + L_r * r;
-                c.V_lower = c.l_lower;
-                c.V_upper = c.l_upper;
+                // Discounted runs decrease from l. Undiscounted runs increase from min(l, r).
+                if (mode_discounted(mode_)) {
+                    c.V_lower = c.l_lower;
+                    c.V_upper = c.l_upper;
+                } else {
+                    c.V_lower = std::min(c.l_lower, c.r_lower);
+                    c.V_upper = std::min(c.l_upper, c.r_upper);
+                }
             }
         });
         timers_.cell_init += now_seconds() - t0;

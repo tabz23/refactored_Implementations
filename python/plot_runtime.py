@@ -70,45 +70,50 @@ def style_axes(ax):
 
 
 def draw(run: Path, iters, times, cells, classified, with_class: bool):
-    fig, ax = plt.subplots(figsize=(10.2, 5.6), dpi=160)
-    time_line, = ax.plot(
-        iters, times, color="#1f77b4", marker="o", markersize=7, linewidth=2.0, label="Iteration time"
-    )
+    # The classified figure is 25% shorter so it fits the paper column.
+    height = 4.2 if with_class else 5.6
+    fig, ax = plt.subplots(figsize=(10.2, height), dpi=160)
+    ax.plot(iters, times, color="#1f77b4", marker="o", markersize=7, linewidth=2.0)
     ax.set_yscale("log")
     style_axes(ax)
     ax.set_xticks(iters)
     ax.set_xlim(min(iters) - 0.5, max(iters) + 0.5)
     ax.tick_params(axis="y", labelsize=16)
     ymin, ymax = ax.get_ylim()
+    number_labels = []
     for x, n in zip(iters, cells):
-        ax.text(x, ymax * 1.02, g_label(n), rotation=55, ha="left", va="bottom", fontsize=13, clip_on=False)
-    # Centered |G| above the cell-count labels, in the same math style as the paper.
-    fig.text(0.5, 0.96, r"$|\mathcal{G}|$", ha="center", va="top", fontsize=28)
+        number_labels.append(
+            ax.text(x, ymax * 1.02, g_label(n), rotation=55, ha="left", va="bottom", fontsize=13, clip_on=False)
+        )
 
     if with_class:
         ax2 = ax.twinx()
-        class_line, = ax2.plot(
-            iters,
-            classified,
-            color="#d62728",
-            marker="s",
-            markersize=5.5,
-            linewidth=1.8,
-            label="% of state space classified as safe/unsafe",
-        )
-        ax2.set_ylabel("% of state space classified as safe/unsafe", fontsize=16, color="#d62728")
+        class_label = "% of the full\nstate-space volume\nclassified as safe/unsafe"
+        ax2.plot(iters, classified, color="#d62728", marker="s", markersize=5.5, linewidth=1.8)
+        ax2.set_ylabel(class_label, fontsize=20, color="#d62728", labelpad=12)
         ax2.set_ylim(0, 100)
         ax2.tick_params(axis="y", labelsize=16, colors="#d62728", width=1.2, length=6)
-        ax.legend([class_line, time_line], [class_line.get_label(), time_line.get_label()],
-                  loc="upper left", frameon=True, fontsize=16)
+        ax.set_ylabel("Time (s)", fontsize=20, color="#1f77b4")
+        ax.tick_params(axis="y", labelsize=16, colors="#1f77b4", width=1.2, length=6)
         name = "runtime_algorithm2_classified.png"
     else:
         name = "runtime_algorithm2.png"
 
     fig.tight_layout()
-    fig.subplots_adjust(top=0.78)
+    # Header only needs the rotated cell counts. |G| sits at their left.
+    fig.subplots_adjust(top=0.80, right=0.80 if with_class else 0.97)
+    fig.canvas.draw()
+    renderer = fig.canvas.get_renderer()
+    axbb = ax.get_window_extent(renderer)
+    g_label_artist = fig.text(0, 0, r"$|\mathcal{G}|$", ha="right", va="bottom", fontsize=28)
+    fig.canvas.draw()
+    # Just left of the axes and just above the top spine, beside the upper tick.
+    g_label_artist.set_position((
+        (axbb.x0 - 2) / fig.bbox.width,
+        (axbb.y1 + 8) / fig.bbox.height,
+    ))
     path = run / name
-    fig.savefig(path, bbox_inches="tight")
+    fig.savefig(path, bbox_inches="tight", pad_inches=0.25)
     plt.close(fig)
     print("wrote", path)
 
