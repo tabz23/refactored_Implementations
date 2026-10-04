@@ -1,0 +1,185 @@
+
+######################################################################
+# run started 2026-10-04T01:40:18
+# command: ./build/dhj --mode ra_nodiscount --dynamics dubins --dt 0.3 --tau 0.3 --initial-resolution 120 --epsilon 0.05 --delta-min 1e-8 --delta-max 1e-8 --gamma 0.96 --refinements 0 --vi-iterations 100033 --checkpoint-every 0 --keep-checkpoints 0 --plot-dpi 300 --workers 12 --phase0-tol 1e-3 --results-root /Users/i.k.tabbara/Documents/python directory/HSCC_2027/refactored_Implementations/results_hscc_2027_newbellmans
+# cwd: /Users/i.k.tabbara/Documents/python directory/HSCC_2027/refactored_Implementations/cpp
+######################################################################
+DISCRETE HJ REACH-AVOID SOLVER (C++)
+Mode: ra_nodiscount (RA_nodiscount.py semantics)
+Algorithm: 2, Workers: 12
+Output directory: /Users/i.k.tabbara/Documents/python directory/HSCC_2027/refactored_Implementations/results_hscc_2027_newbellmans/ra_nodiscount/dubins_res120_eps0.05_dmin1e-08_dmax1e-08_gamma0.96_dt0.3_tau0.3_std
+Conservative mode: False
+Dynamics: dubins (3-D)
+  Time discretization: 1 steps of dt=0.3 s over tau=0.3 s
+======================================================================
+ALGORITHM 2/3: Adaptive Refinement
+======================================================================
+Environment: dubins
+Initializing grid with resolution 120^3...
+  Building spatial index for 1728000 cells...
+   Spatial index built in 0.45s
+
+Gronwall Reachability Initialized:
+  Lipschitz constant L = 1
+  Checkpoint interval dt = 0.3
+  Control horizon tau = 0.3
+  Number of checkpoints = 1
+  Checkpoint times: ['0.300']
+  Growth factors: ['1.349859']
+Initialized with gamma=0.96, L_f=1, L_l=1.41421,  L_r=1.41421
+Contraction factor: gamma*L_f = 0.9600
+Using 12 parallel workers
+
+======================================================================
+ADAPTIVE REFINEMENT CONFIGURATION
+======================================================================
+  Error tolerance eps: 0.05
+  Minimum cell size eta_min: 0.017678
+  Maximum refinements: 0
+  VI iterations per refinement: 100033
+  Conservative mode: False
+
+======================================================================
+PHASE 0: INITIAL VALUE ITERATION
+======================================================================
+Grid: 1728000 cells
+  Precomputing successor sets...
+
+Precomputing successor sets with HYBRID approach...
+  Step 1: Computing 5184000 trajectories in parallel...
+   Trajectories + spatial queries computed in 1.23s (4213788.1 tasks/s)
+    Breakdown: 49.5% ODE, 50.5% queries
+
+Starting OPTIMIZED PARALLEL value iteration (max 100033 iterations)...
+Conservative mode: False
+Convergence tolerance: 0.001
+Number of cells: 1728000
+Iteration   1: ||V_upper^k - V_upper^k-1||_inf = 4.69404731197106173113, ||V_lower^k - V_lower^k-1||_inf = 4.76809536094036801046
+Iteration   2: ||V_upper^k - V_upper^k-1||_inf = 4.51452536389515302062, ||V_lower^k - V_lower^k-1||_inf = 4.65268016262715100595
+Iteration   3: ||V_upper^k - V_upper^k-1||_inf = 4.15957583859156532213, ||V_lower^k - V_lower^k-1||_inf = 4.54545560019557193243
+Iteration   4: ||V_upper^k - V_upper^k-1||_inf = 3.76120681231360798336, ||V_lower^k - V_lower^k-1||_inf = 4.35434729210525173215
+Iteration   5: ||V_upper^k - V_upper^k-1||_inf = 3.28181919770052221708, ||V_lower^k - V_lower^k-1||_inf = 3.97359003622404838296
+Iteration   6: ||V_upper^k - V_upper^k-1||_inf = 2.75147804500301340624, ||V_lower^k - V_lower^k-1||_inf = 3.70434925133074433035
+Iteration   7: ||V_upper^k - V_upper^k-1||_inf = 2.25325960606333053349, ||V_lower^k - V_lower^k-1||_inf = 3.31418322216689098525
+Iteration   8: ||V_upper^k - V_upper^k-1||_inf = 1.74569588437141609560, ||V_lower^k - V_lower^k-1||_inf = 2.94000596857663420991
+Iteration   9: ||V_upper^k - V_upper^k-1||_inf = 1.26230625256377004817, ||V_lower^k - V_lower^k-1||_inf = 2.52967352074650264626
+Iteration  10: ||V_upper^k - V_upper^k-1||_inf = 0.83600147053220474902, ||V_lower^k - V_lower^k-1||_inf = 2.17106447555285786422
+Iteration  11: ||V_upper^k - V_upper^k-1||_inf = 0.44192771823167742440, ||V_lower^k - V_lower^k-1||_inf = 1.82887001116142977608
+Iteration  12: ||V_upper^k - V_upper^k-1||_inf = 0.36400430043783849055, ||V_lower^k - V_lower^k-1||_inf = 1.50455666962943723775
+Iteration  13: ||V_upper^k - V_upper^k-1||_inf = 0.36400430043783849055, ||V_lower^k - V_lower^k-1||_inf = 1.17922954260772305801
+Iteration  14: ||V_upper^k - V_upper^k-1||_inf = 0.36400430043783849055, ||V_lower^k - V_lower^k-1||_inf = 0.86215842920193774823
+Iteration  15: ||V_upper^k - V_upper^k-1||_inf = 0.36400430043783849055, ||V_lower^k - V_lower^k-1||_inf = 0.48642007472714432481
+Iteration  16: ||V_upper^k - V_upper^k-1||_inf = 0.36400430043783849055, ||V_lower^k - V_lower^k-1||_inf = 0.26925647920423312343
+Iteration  17: ||V_upper^k - V_upper^k-1||_inf = 0.36400430043783815748, ||V_lower^k - V_lower^k-1||_inf = 0.26925647920423312343
+Iteration  18: ||V_upper^k - V_upper^k-1||_inf = 0.36400430043783815748, ||V_lower^k - V_lower^k-1||_inf = 0.26925647920423312343
+Iteration  19: ||V_upper^k - V_upper^k-1||_inf = 0.36400430043783815748, ||V_lower^k - V_lower^k-1||_inf = 0.26925647920423312343
+Iteration  20: ||V_upper^k - V_upper^k-1||_inf = 0.36394418716252441293, ||V_lower^k - V_lower^k-1||_inf = 0.26925647920423312343
+Iteration  21: ||V_upper^k - V_upper^k-1||_inf = 0.36054987068588761900, ||V_lower^k - V_lower^k-1||_inf = 0.26925647920423312343
+Iteration  22: ||V_upper^k - V_upper^k-1||_inf = 0.36054485519675671945, ||V_lower^k - V_lower^k-1||_inf = 0.26925647920423312343
+Iteration  23: ||V_upper^k - V_upper^k-1||_inf = 0.35928126425721940151, ||V_lower^k - V_lower^k-1||_inf = 0.26925647920423312343
+Iteration  24: ||V_upper^k - V_upper^k-1||_inf = 0.35355339059327439699, ||V_lower^k - V_lower^k-1||_inf = 0.26925647920423312343
+Iteration  25: ||V_upper^k - V_upper^k-1||_inf = 0.26209510437468175326, ||V_lower^k - V_lower^k-1||_inf = 0.26925647920423312343
+Iteration  26: ||V_upper^k - V_upper^k-1||_inf = 0.24798438531387873018, ||V_lower^k - V_lower^k-1||_inf = 0.26925647920423312343
+Iteration  27: ||V_upper^k - V_upper^k-1||_inf = 0.23475758153298531550, ||V_lower^k - V_lower^k-1||_inf = 0.26925647920423312343
+Iteration  28: ||V_upper^k - V_upper^k-1||_inf = 0.21213203435596522661, ||V_lower^k - V_lower^k-1||_inf = 0.26925647920423312343
+Iteration  29: ||V_upper^k - V_upper^k-1||_inf = 0.17970279261673860471, ||V_lower^k - V_lower^k-1||_inf = 0.26925647920423312343
+Iteration  30: ||V_upper^k - V_upper^k-1||_inf = 0.09674315577100012220, ||V_lower^k - V_lower^k-1||_inf = 0.26299779269163914286
+Iteration  31: ||V_upper^k - V_upper^k-1||_inf = 0.07334052663222329072, ||V_lower^k - V_lower^k-1||_inf = 0.24874845761668817890
+Iteration  32: ||V_upper^k - V_upper^k-1||_inf = 0.07334052663222329072, ||V_lower^k - V_lower^k-1||_inf = 0.24874845761668817890
+Iteration  33: ||V_upper^k - V_upper^k-1||_inf = 0.05109571212129382367, ||V_lower^k - V_lower^k-1||_inf = 0.24456127609518996113
+Iteration  34: ||V_upper^k - V_upper^k-1||_inf = 0.03079057250070293961, ||V_lower^k - V_lower^k-1||_inf = 0.13392940806819608746
+Iteration  35: ||V_upper^k - V_upper^k-1||_inf = 0.00502822546389602998, ||V_lower^k - V_lower^k-1||_inf = 0.13392940806819608746
+Iteration  36: ||V_upper^k - V_upper^k-1||_inf = 0.00000000000000055511, ||V_lower^k - V_lower^k-1||_inf = 0.12283712585624440017
+Iteration  37: ||V_upper^k - V_upper^k-1||_inf = 0.00000000000000055511, ||V_lower^k - V_lower^k-1||_inf = 0.12283712585624440017
+Iteration  38: ||V_upper^k - V_upper^k-1||_inf = 0.00000000000000055511, ||V_lower^k - V_lower^k-1||_inf = 0.12283712585624440017
+Iteration  39: ||V_upper^k - V_upper^k-1||_inf = 0.00000000000000055511, ||V_lower^k - V_lower^k-1||_inf = 0.12283712585624440017
+Iteration  40: ||V_upper^k - V_upper^k-1||_inf = 0.00000000000000055511, ||V_lower^k - V_lower^k-1||_inf = 0.12283712585624440017
+Iteration  41: ||V_upper^k - V_upper^k-1||_inf = 0.00000000000000055511, ||V_lower^k - V_lower^k-1||_inf = 0.12283712585624440017
+Iteration  42: ||V_upper^k - V_upper^k-1||_inf = 0.00000000000000055511, ||V_lower^k - V_lower^k-1||_inf = 0.12283712585624440017
+Iteration  43: ||V_upper^k - V_upper^k-1||_inf = 0.00000000000000055511, ||V_lower^k - V_lower^k-1||_inf = 0.12283712585624440017
+Iteration  44: ||V_upper^k - V_upper^k-1||_inf = 0.00000000000000000000, ||V_lower^k - V_lower^k-1||_inf = 0.11947471051159874733
+Iteration  45: ||V_upper^k - V_upper^k-1||_inf = 0.00000000000000000000, ||V_lower^k - V_lower^k-1||_inf = 0.09700651761150501373
+Iteration  46: ||V_upper^k - V_upper^k-1||_inf = 0.00000000000000000000, ||V_lower^k - V_lower^k-1||_inf = 0.09468104388869823251
+Iteration  47: ||V_upper^k - V_upper^k-1||_inf = 0.00000000000000000000, ||V_lower^k - V_lower^k-1||_inf = 0.08954786037614725913
+Iteration  48: ||V_upper^k - V_upper^k-1||_inf = 0.00000000000000000000, ||V_lower^k - V_lower^k-1||_inf = 0.08925561326220077252
+Iteration  49: ||V_upper^k - V_upper^k-1||_inf = 0.00000000000000000000, ||V_lower^k - V_lower^k-1||_inf = 0.08925561326220077252
+Iteration  50: ||V_upper^k - V_upper^k-1||_inf = 0.00000000000000000000, ||V_lower^k - V_lower^k-1||_inf = 0.07701371560642346348
+Iteration  51: ||V_upper^k - V_upper^k-1||_inf = 0.00000000000000000000, ||V_lower^k - V_lower^k-1||_inf = 0.07701371560642346348
+Iteration  52: ||V_upper^k - V_upper^k-1||_inf = 0.00000000000000000000, ||V_lower^k - V_lower^k-1||_inf = 0.07701371560642346348
+Iteration  53: ||V_upper^k - V_upper^k-1||_inf = 0.00000000000000000000, ||V_lower^k - V_lower^k-1||_inf = 0.07701371560642346348
+Iteration  54: ||V_upper^k - V_upper^k-1||_inf = 0.00000000000000000000, ||V_lower^k - V_lower^k-1||_inf = 0.07390153519997269549
+Iteration  55: ||V_upper^k - V_upper^k-1||_inf = 0.00000000000000000000, ||V_lower^k - V_lower^k-1||_inf = 0.06799279811766201220
+Iteration  56: ||V_upper^k - V_upper^k-1||_inf = 0.00000000000000000000, ||V_lower^k - V_lower^k-1||_inf = 0.06425164397987859211
+Iteration  57: ||V_upper^k - V_upper^k-1||_inf = 0.00000000000000000000, ||V_lower^k - V_lower^k-1||_inf = 0.05858548187636514193
+Iteration  58: ||V_upper^k - V_upper^k-1||_inf = 0.00000000000000000000, ||V_lower^k - V_lower^k-1||_inf = 0.05179562260519698924
+Iteration  59: ||V_upper^k - V_upper^k-1||_inf = 0.00000000000000000000, ||V_lower^k - V_lower^k-1||_inf = 0.05054691533764749112
+Iteration  60: ||V_upper^k - V_upper^k-1||_inf = 0.00000000000000000000, ||V_lower^k - V_lower^k-1||_inf = 0.05054691533764749112
+Iteration  61: ||V_upper^k - V_upper^k-1||_inf = 0.00000000000000000000, ||V_lower^k - V_lower^k-1||_inf = 0.04893559065627184346
+Iteration  62: ||V_upper^k - V_upper^k-1||_inf = 0.00000000000000000000, ||V_lower^k - V_lower^k-1||_inf = 0.04893559065627184346
+Iteration  63: ||V_upper^k - V_upper^k-1||_inf = 0.00000000000000000000, ||V_lower^k - V_lower^k-1||_inf = 0.02466380402946827255
+Iteration  64: ||V_upper^k - V_upper^k-1||_inf = 0.00000000000000000000, ||V_lower^k - V_lower^k-1||_inf = 0.00000000000000066613
+
+==================================================
+ STANDARD CONVERGENCE ACHIEVED
+==================================================
+  ||V_upper^k - V_upper^k-1||_inf = 0.00000000000000000000e+00 < tolerance = 0.001
+  ||V_lower^k - V_lower^k-1||_inf = 6.66133814775093924254e-16 < tolerance = 0.001
+  Converged in 64 iterations
+
+Value iteration completed in 64 iterations
+total time for running value_iteration the first time (phase 0) on the initial grid including grid initialization, setting up cpu parallelism, successor set computation and value iteration is 2.66263 seconds
+Initial VI completed in 64 iterations
+Final convergence: ||V_upper||_inf = 0.00000000e+00, ||V_lower||_inf = 6.66133815e-16
+Saved initial visualization: /Users/i.k.tabbara/Documents/python directory/HSCC_2027/refactored_Implementations/results_hscc_2027_newbellmans/ra_nodiscount/dubins_res120_eps0.05_dmin1e-08_dmax1e-08_gamma0.96_dt0.3_tau0.3_std/value_function_phase_0_complete.png
+
+Classification after phase 0:
+  Safe:           983988 cells ( 56.9%),   56.9% of state space
+  Unsafe:         458296 cells ( 26.5%),   26.5% of state space
+  Unclassified:   285716 cells ( 16.5%),   16.5% of state space
+
+======================================================================
+INITIAL QUEUE STATE
+======================================================================
+Total boundary cells: 285716
+  Refinable (>eta_min=0.017678): 285716
+  Below threshold: 0
+
+======================================================================
+ADAPTIVE REFINEMENT COMPLETE
+======================================================================
+Refinement Summary:
+  Phases completed: 0
+  Parent cells refined: 0
+  Child cells created: 0
+  Final cells: 1728000
+Final Boundary State:
+  Boundary cells: 285716
+  Still refinable: 285716
+  Below threshold: 0
+
+Final Cell Classification:
+  Safe:           983988 cells ( 56.9%),   56.9% of state space
+  Unsafe:         458296 cells ( 26.5%),   26.5% of state space
+  Unclassified:   285716 cells ( 16.5%),   16.5% of state space
+
+ All results saved to: /Users/i.k.tabbara/Documents/python directory/HSCC_2027/refactored_Implementations/results_hscc_2027_newbellmans/ra_nodiscount/dubins_res120_eps0.05_dmin1e-08_dmax1e-08_gamma0.96_dt0.3_tau0.3_std/
+ALGORITHM 2 COMPLETE
+Total time: 2.71 seconds
+
+======================================================================
+TIMING BREAKDOWN (RA_nodiscount)
+======================================================================
+  grid construction      :      0.466 s
+  spatial index builds   :      0.445 s
+  cell initialization    :      0.004 s
+  ODE integration        :      0.609 s  (5184000 solves)
+  successor set queries  :      0.621 s
+  value iteration        :      0.859 s  (64 sweeps)
+  cell splitting         :      0.000 s
+  plotting / output      :      0.552 s
+  checkpoint writes      :      0.000 s
+  ------------------------------------------------
+  TOTAL                  :      3.382 s
+  final leaf cells       :    1728000
+TOTAL WALL TIME: 3.38 seconds
+# run finished 2026-10-04T01:40:21
