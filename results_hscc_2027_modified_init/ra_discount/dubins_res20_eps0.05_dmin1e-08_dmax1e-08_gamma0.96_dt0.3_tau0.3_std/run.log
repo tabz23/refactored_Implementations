@@ -1,7 +1,7 @@
 
 ######################################################################
-# run started 2026-10-04T19:21:33
-# command: ./build/dhj --mode ra_discount --dynamics dubins --dt 0.3 --tau 0.3 --initial-resolution 20 --epsilon 0.05 --delta-min 1e-8 --phase0-tol 1e-8 --delta-max 1e-8 --gamma 0.96 --refinements 13 --vi-iterations 100033 --checkpoint-every 0 --keep-checkpoints 0 --workers 12 --results-root /Users/i.k.tabbara/Documents/python directory/HSCC_2027/refactored_Implementations/results_hscc_2027_modified_init
+# run started 2026-10-04T20:09:41
+# command: ./build/dhj --mode ra_discount --dynamics dubins --dt 0.3 --tau 0.3 --initial-resolution 20 --epsilon 0.05 --delta-min 1e-8 --phase0-tol 1e-8 --delta-max 1e-8 --gamma 0.96 --refinements 13 --vi-iterations 100033 --checkpoint-every 0 --keep-checkpoints 0 --workers 12 --plot-slice 0 --results-root /Users/i.k.tabbara/Documents/python directory/HSCC_2027/refactored_Implementations/results_hscc_2027_modified_init
 # cwd: /Users/i.k.tabbara/Documents/python directory/HSCC_2027/refactored_Implementations/cpp
 ######################################################################
 DISCRETE HJ REACH-AVOID SOLVER (C++)
@@ -47,7 +47,7 @@ Grid: 8000 cells
 
 Precomputing successor sets with HYBRID approach...
   Step 1: Computing 24000 trajectories in parallel...
-   Trajectories + spatial queries computed in 0.01s (3709141.5 tasks/s)
+   Trajectories + spatial queries computed in 0.01s (3988698.7 tasks/s)
     Breakdown: 59.4% ODE, 40.6% queries
 
 Starting OPTIMIZED PARALLEL value iteration (max 100033 iterations)...
@@ -119,7 +119,7 @@ Iteration  55: ||V_upper^k - V_upper^k-1||_inf = 0.00000000000000000000, ||V_low
   V_lower increased from min(l_lower, r_lower); smallest step 0.000e+00
 
 Value iteration completed in 55 iterations
-total time for running value_iteration the first time (phase 0) on the initial grid including grid initialization, setting up cpu parallelism, successor set computation and value iteration is 0.0268492 seconds
+total time for running value_iteration the first time (phase 0) on the initial grid including grid initialization, setting up cpu parallelism, successor set computation and value iteration is 0.0143354 seconds
 Initial VI completed in 55 iterations
 Final convergence: ||V_upper||_inf = 0.00000000e+00, ||V_lower||_inf = 0.00000000e+00
 Saved initial visualization: /Users/i.k.tabbara/Documents/python directory/HSCC_2027/refactored_Implementations/results_hscc_2027_modified_init/ra_discount/dubins_res20_eps0.05_dmin1e-08_dmax1e-08_gamma0.96_dt0.3_tau0.3_std/value_function_phase_0_complete.png
@@ -157,14 +157,14 @@ Boundary cells: 7080
   Rebuilding spatial index...
   Building spatial index for 15080 cells...
    Spatial index built in 0.00s
-    Spatial index rebuilt in 0.002s
+    Spatial index rebuilt in 0.003s
   Initializing 14160 new cells...
   Initializing 14160 new cells in parallel...
-   Initialized in 0.00s (193641025.6 cells/s)
+   Initialized in 0.00s (83049853.4 cells/s)
     Initialization completed in 0.000s
   Starting local value iteration...
   Reinitializing ALL 15080 cells (V_lower = min(l, r), V_upper = l)
-   Reinitialized 15080 cells in 0.00s (277972350.2 cells/s)
+   Reinitialized 15080 cells in 0.00s (315533980.6 cells/s)
   Local VI: updating all 15080 cells
     Conservative mode: False
     Convergence tolerance: 1e-08
@@ -172,9 +172,9 @@ Boundary cells: 7080
     Updating successor cache for 14160 updated cells...
     Updating successor cache for 14160 new cells (HYBRID)...
       Affected cells: 14704
-   Trajectories + spatial queries computed in 0.01s (3610398.5 tasks/s)
-    Breakdown: 54.9% ODE, 45.1% queries
-     Cache updated in 0.01s (3362750.5 tasks/s)
+   Trajectories + spatial queries computed in 0.01s (4653574.0 tasks/s)
+    Breakdown: 55.6% ODE, 44.4% queries
+     Cache updated in 0.01s (4256015.1 tasks/s)
     Local Iteration   1: ||V_upper^k - V_upper^k-1||_inf = 0.11770562748477164661, ||V_lower^k - V_lower^k-1||_inf = 0.23095589815078731988
     Local Iteration   2: ||V_upper^k - V_upper^k-1||_inf = 0.11299740238538058534, ||V_lower^k - V_lower^k-1||_inf = 0.22171766222475586261
     Local Iteration   3: ||V_upper^k - V_upper^k-1||_inf = 0.10847750628996521982, ||V_lower^k - V_lower^k-1||_inf = 0.21284895573576623207
@@ -243,11 +243,11 @@ Boundary cells: 7080
     Final convergence values:
       ||V_upper^final - V_upper^prev||_inf = 0.00000000e+00
       ||V_lower^final - V_lower^prev||_inf = 0.00000000e+00
-  Local VI completed in 56 iterations, time: 0.022s
+  Local VI completed in 56 iterations, time: 0.019s
     Final ||V_upper^k - V_upper^k-1||_inf = 0.00000000000000000000e+00
     Final ||V_lower^k - V_lower^k-1||_inf = 0.00000000000000000000e+00
   Saved visualization: /Users/i.k.tabbara/Documents/python directory/HSCC_2027/refactored_Implementations/results_hscc_2027_modified_init/ra_discount/dubins_res20_eps0.05_dmin1e-08_dmax1e-08_gamma0.96_dt0.3_tau0.3_std/value_function_phase_1_complete.png
-  Phase 1 completed in 0.04s with 15080 leaf cells
+  Phase 1 completed in 0.03s with 15080 leaf cells
 
 Classification after phase 1:
   Safe:               40 cells (  0.3%),    0.5% of state space
@@ -274,15 +274,15 @@ Boundary cells: 14160
     Cumulative refined: 21240
   Rebuilding spatial index...
   Building spatial index for 29240 cells...
-   Spatial index built in 0.00s
+   Spatial index built in 0.01s
     Spatial index rebuilt in 0.005s
   Initializing 28320 new cells...
   Initializing 28320 new cells in parallel...
-   Initialized in 0.00s (222407212.5 cells/s)
+   Initialized in 0.00s (159324894.5 cells/s)
     Initialization completed in 0.000s
   Starting local value iteration...
   Reinitializing ALL 29240 cells (V_lower = min(l, r), V_upper = l)
-   Reinitialized 29240 cells in 0.00s (403310344.8 cells/s)
+   Reinitialized 29240 cells in 0.00s (346548148.1 cells/s)
   Local VI: updating all 29240 cells
     Conservative mode: False
     Convergence tolerance: 1e-08
@@ -290,9 +290,9 @@ Boundary cells: 14160
     Updating successor cache for 28320 updated cells...
     Updating successor cache for 28320 new cells (HYBRID)...
       Affected cells: 28864
-   Trajectories + spatial queries computed in 0.02s (3772181.5 tasks/s)
-    Breakdown: 52.0% ODE, 48.0% queries
-     Cache updated in 0.02s (3486475.7 tasks/s)
+   Trajectories + spatial queries computed in 0.03s (3245075.5 tasks/s)
+    Breakdown: 49.3% ODE, 50.7% queries
+     Cache updated in 0.03s (3020936.5 tasks/s)
     Local Iteration   1: ||V_upper^k - V_upper^k-1||_inf = 3.95601805137455864170, ||V_lower^k - V_lower^k-1||_inf = 4.88019249424047796282
     Local Iteration   2: ||V_upper^k - V_upper^k-1||_inf = 0.11504709317278294378, ||V_lower^k - V_lower^k-1||_inf = 4.64658479447085870362
     Local Iteration   3: ||V_upper^k - V_upper^k-1||_inf = 0.11044520944587166156, ||V_lower^k - V_lower^k-1||_inf = 4.42232140269202389504
@@ -363,7 +363,7 @@ Boundary cells: 14160
     Final convergence values:
       ||V_upper^final - V_upper^prev||_inf = 0.00000000e+00
       ||V_lower^final - V_lower^prev||_inf = 0.00000000e+00
-  Local VI completed in 58 iterations, time: 0.044s
+  Local VI completed in 58 iterations, time: 0.047s
     Final ||V_upper^k - V_upper^k-1||_inf = 0.00000000000000000000e+00
     Final ||V_lower^k - V_lower^k-1||_inf = 0.00000000000000000000e+00
   Saved visualization: /Users/i.k.tabbara/Documents/python directory/HSCC_2027/refactored_Implementations/results_hscc_2027_modified_init/ra_discount/dubins_res20_eps0.05_dmin1e-08_dmax1e-08_gamma0.96_dt0.3_tau0.3_std/value_function_phase_2_complete.png
@@ -398,11 +398,11 @@ Boundary cells: 27996
     Spatial index rebuilt in 0.010s
   Initializing 55992 new cells...
   Initializing 55992 new cells in parallel...
-   Initialized in 0.00s (328560698.5 cells/s)
+   Initialized in 0.00s (270383033.0 cells/s)
     Initialization completed in 0.000s
   Starting local value iteration...
   Reinitializing ALL 57236 cells (V_lower = min(l, r), V_upper = l)
-   Reinitialized 57236 cells in 0.00s (554564040.0 cells/s)
+   Reinitialized 57236 cells in 0.00s (366017585.9 cells/s)
   Local VI: updating all 57236 cells
     Conservative mode: False
     Convergence tolerance: 1e-08
@@ -410,9 +410,9 @@ Boundary cells: 27996
     Updating successor cache for 55992 updated cells...
     Updating successor cache for 55992 new cells (HYBRID)...
       Affected cells: 56716
-   Trajectories + spatial queries computed in 0.04s (4493137.5 tasks/s)
-    Breakdown: 52.5% ODE, 47.5% queries
-     Cache updated in 0.04s (4078087.4 tasks/s)
+   Trajectories + spatial queries computed in 0.03s (4987014.6 tasks/s)
+    Breakdown: 52.9% ODE, 47.1% queries
+     Cache updated in 0.04s (4439449.3 tasks/s)
     Local Iteration   1: ||V_upper^k - V_upper^k-1||_inf = 3.95601805137455864170, ||V_lower^k - V_lower^k-1||_inf = 4.88019249424047796282
     Local Iteration   2: ||V_upper^k - V_upper^k-1||_inf = 3.76457609016864314100, ||V_lower^k - V_lower^k-1||_inf = 4.58339587511643653528
     Local Iteration   3: ||V_upper^k - V_upper^k-1||_inf = 3.61399304656189723772, ||V_lower^k - V_lower^k-1||_inf = 4.40006004011177864754
@@ -488,11 +488,11 @@ Boundary cells: 27996
     Final convergence values:
       ||V_upper^final - V_upper^prev||_inf = 0.00000000e+00
       ||V_lower^final - V_lower^prev||_inf = 0.00000000e+00
-  Local VI completed in 63 iterations, time: 0.072s
+  Local VI completed in 63 iterations, time: 0.063s
     Final ||V_upper^k - V_upper^k-1||_inf = 0.00000000000000000000e+00
     Final ||V_lower^k - V_lower^k-1||_inf = 0.00000000000000000000e+00
   Saved visualization: /Users/i.k.tabbara/Documents/python directory/HSCC_2027/refactored_Implementations/results_hscc_2027_modified_init/ra_discount/dubins_res20_eps0.05_dmin1e-08_dmax1e-08_gamma0.96_dt0.3_tau0.3_std/value_function_phase_3_complete.png
-  Phase 3 completed in 0.13s with 57236 leaf cells
+  Phase 3 completed in 0.09s with 57236 leaf cells
 
 Classification after phase 3:
   Safe:              716 cells (  1.3%),    1.7% of state space
@@ -515,19 +515,19 @@ Boundary cells: 51836
     Refined: 51836 parent cells
     Created: 103672 child cells
     Total cells: 109072
-    Refinement time: 0.003s
+    Refinement time: 0.006s
     Cumulative refined: 101072
   Rebuilding spatial index...
   Building spatial index for 109072 cells...
-   Spatial index built in 0.03s
-    Spatial index rebuilt in 0.030s
+   Spatial index built in 0.02s
+    Spatial index rebuilt in 0.022s
   Initializing 103672 new cells...
   Initializing 103672 new cells in parallel...
-   Initialized in 0.00s (229024868.2 cells/s)
+   Initialized in 0.00s (381732288.1 cells/s)
     Initialization completed in 0.000s
   Starting local value iteration...
   Reinitializing ALL 109072 cells (V_lower = min(l, r), V_upper = l)
-   Reinitialized 109072 cells in 0.00s (181610202.1 cells/s)
+   Reinitialized 109072 cells in 0.00s (414131941.1 cells/s)
   Local VI: updating all 109072 cells
     Conservative mode: False
     Convergence tolerance: 1e-08
@@ -535,9 +535,9 @@ Boundary cells: 51836
     Updating successor cache for 103672 updated cells...
     Updating successor cache for 103672 new cells (HYBRID)...
       Affected cells: 105376
-   Trajectories + spatial queries computed in 0.07s (4242009.7 tasks/s)
-    Breakdown: 51.0% ODE, 49.0% queries
-     Cache updated in 0.09s (3551463.0 tasks/s)
+   Trajectories + spatial queries computed in 0.11s (2759887.7 tasks/s)
+    Breakdown: 44.4% ODE, 55.6% queries
+     Cache updated in 0.13s (2488813.1 tasks/s)
     Local Iteration   1: ||V_upper^k - V_upper^k-1||_inf = 3.95601805137455864170, ||V_lower^k - V_lower^k-1||_inf = 4.88019249424047796282
     Local Iteration   2: ||V_upper^k - V_upper^k-1||_inf = 3.76457609016864314100, ||V_lower^k - V_lower^k-1||_inf = 4.58339587511643653528
     Local Iteration   3: ||V_upper^k - V_upper^k-1||_inf = 3.61399304656189723772, ||V_lower^k - V_lower^k-1||_inf = 4.40006004011177864754
@@ -616,7 +616,7 @@ Boundary cells: 51836
     Final convergence values:
       ||V_upper^final - V_upper^prev||_inf = 0.00000000e+00
       ||V_lower^final - V_lower^prev||_inf = 0.00000000e+00
-  Local VI completed in 66 iterations, time: 0.136s
+  Local VI completed in 66 iterations, time: 0.175s
     Final ||V_upper^k - V_upper^k-1||_inf = 0.00000000000000000000e+00
     Final ||V_lower^k - V_lower^k-1||_inf = 0.00000000000000000000e+00
   Saved visualization: /Users/i.k.tabbara/Documents/python directory/HSCC_2027/refactored_Implementations/results_hscc_2027_modified_init/ra_discount/dubins_res20_eps0.05_dmin1e-08_dmax1e-08_gamma0.96_dt0.3_tau0.3_std/value_function_phase_4_complete.png
@@ -643,19 +643,19 @@ Boundary cells: 102736
     Refined: 102736 parent cells
     Created: 205472 child cells
     Total cells: 211808
-    Refinement time: 0.007s
+    Refinement time: 0.012s
     Cumulative refined: 203808
   Rebuilding spatial index...
   Building spatial index for 211808 cells...
-   Spatial index built in 0.04s
-    Spatial index rebuilt in 0.040s
+   Spatial index built in 0.06s
+    Spatial index rebuilt in 0.059s
   Initializing 205472 new cells...
   Initializing 205472 new cells in parallel...
-   Initialized in 0.00s (432991037.7 cells/s)
-    Initialization completed in 0.000s
+   Initialized in 0.00s (255231404.1 cells/s)
+    Initialization completed in 0.001s
   Starting local value iteration...
   Reinitializing ALL 211808 cells (V_lower = min(l, r), V_upper = l)
-   Reinitialized 211808 cells in 0.00s (484132571.4 cells/s)
+   Reinitialized 211808 cells in 0.00s (370104771.7 cells/s)
   Local VI: updating all 211808 cells
     Conservative mode: False
     Convergence tolerance: 1e-08
@@ -663,9 +663,9 @@ Boundary cells: 102736
     Updating successor cache for 205472 updated cells...
     Updating successor cache for 205472 new cells (HYBRID)...
       Affected cells: 207492
-   Trajectories + spatial queries computed in 0.15s (4261981.0 tasks/s)
-    Breakdown: 45.9% ODE, 54.1% queries
-     Cache updated in 0.16s (3858021.4 tasks/s)
+   Trajectories + spatial queries computed in 0.25s (2524622.6 tasks/s)
+    Breakdown: 43.0% ODE, 57.0% queries
+     Cache updated in 0.28s (2253939.5 tasks/s)
     Local Iteration   1: ||V_upper^k - V_upper^k-1||_inf = 3.95601805137455864170, ||V_lower^k - V_lower^k-1||_inf = 4.88019249424047796282
     Local Iteration   2: ||V_upper^k - V_upper^k-1||_inf = 3.78547099647405449474, ||V_lower^k - V_lower^k-1||_inf = 4.58339587511643653528
     Local Iteration   3: ||V_upper^k - V_upper^k-1||_inf = 3.63405215661509206626, ||V_lower^k - V_lower^k-1||_inf = 4.40006004011177864754
@@ -745,11 +745,11 @@ Boundary cells: 102736
     Final convergence values:
       ||V_upper^final - V_upper^prev||_inf = 0.00000000e+00
       ||V_lower^final - V_lower^prev||_inf = 0.00000000e+00
-  Local VI completed in 67 iterations, time: 0.289s
+  Local VI completed in 67 iterations, time: 0.469s
     Final ||V_upper^k - V_upper^k-1||_inf = 0.00000000000000000000e+00
     Final ||V_lower^k - V_lower^k-1||_inf = 0.00000000000000000000e+00
   Saved visualization: /Users/i.k.tabbara/Documents/python directory/HSCC_2027/refactored_Implementations/results_hscc_2027_modified_init/ra_discount/dubins_res20_eps0.05_dmin1e-08_dmax1e-08_gamma0.96_dt0.3_tau0.3_std/value_function_phase_5_complete.png
-  Phase 5 completed in 0.44s with 211808 leaf cells
+  Phase 5 completed in 0.57s with 211808 leaf cells
 
 Classification after phase 5:
   Safe:             2562 cells (  1.2%),    2.5% of state space
@@ -772,19 +772,19 @@ Boundary cells: 202232
     Refined: 202232 parent cells
     Created: 404464 child cells
     Total cells: 414040
-    Refinement time: 0.015s
+    Refinement time: 0.024s
     Cumulative refined: 406040
   Rebuilding spatial index...
   Building spatial index for 414040 cells...
-   Spatial index built in 0.09s
-    Spatial index rebuilt in 0.091s
+   Spatial index built in 0.11s
+    Spatial index rebuilt in 0.111s
   Initializing 404464 new cells...
   Initializing 404464 new cells in parallel...
-   Initialized in 0.00s (426781244.9 cells/s)
+   Initialized in 0.00s (361787865.2 cells/s)
     Initialization completed in 0.001s
   Starting local value iteration...
   Reinitializing ALL 414040 cells (V_lower = min(l, r), V_upper = l)
-   Reinitialized 414040 cells in 0.00s (420273923.1 cells/s)
+   Reinitialized 414040 cells in 0.00s (401964191.8 cells/s)
   Local VI: updating all 414040 cells
     Conservative mode: False
     Convergence tolerance: 1e-08
@@ -792,9 +792,9 @@ Boundary cells: 202232
     Updating successor cache for 404464 updated cells...
     Updating successor cache for 404464 new cells (HYBRID)...
       Affected cells: 407972
-   Trajectories + spatial queries computed in 0.33s (3684632.2 tasks/s)
-    Breakdown: 51.2% ODE, 48.8% queries
-     Cache updated in 0.37s (3324370.8 tasks/s)
+   Trajectories + spatial queries computed in 0.39s (3162466.7 tasks/s)
+    Breakdown: 50.2% ODE, 49.8% queries
+     Cache updated in 0.43s (2840054.1 tasks/s)
     Local Iteration   1: ||V_upper^k - V_upper^k-1||_inf = 3.95601805137455864170, ||V_lower^k - V_lower^k-1||_inf = 4.88019249424047796282
     Local Iteration   2: ||V_upper^k - V_upper^k-1||_inf = 3.78547099647405449474, ||V_lower^k - V_lower^k-1||_inf = 4.62179587511643674702
     Local Iteration   3: ||V_upper^k - V_upper^k-1||_inf = 3.63405215661509206626, ||V_lower^k - V_lower^k-1||_inf = 4.40006004011177864754
@@ -878,11 +878,11 @@ Boundary cells: 202232
     Final convergence values:
       ||V_upper^final - V_upper^prev||_inf = 0.00000000e+00
       ||V_lower^final - V_lower^prev||_inf = 0.00000000e+00
-  Local VI completed in 71 iterations, time: 0.538s
+  Local VI completed in 71 iterations, time: 0.611s
     Final ||V_upper^k - V_upper^k-1||_inf = 0.00000000000000000000e+00
     Final ||V_lower^k - V_lower^k-1||_inf = 0.00000000000000000000e+00
   Saved visualization: /Users/i.k.tabbara/Documents/python directory/HSCC_2027/refactored_Implementations/results_hscc_2027_modified_init/ra_discount/dubins_res20_eps0.05_dmin1e-08_dmax1e-08_gamma0.96_dt0.3_tau0.3_std/value_function_phase_6_complete.png
-  Phase 6 completed in 0.84s with 414040 leaf cells
+  Phase 6 completed in 0.79s with 414040 leaf cells
 
 Classification after phase 6:
   Safe:           245988 cells ( 59.4%),   50.1% of state space
@@ -905,19 +905,19 @@ Boundary cells: 130496
     Refined: 130496 parent cells
     Created: 260992 child cells
     Total cells: 544536
-    Refinement time: 0.044s
+    Refinement time: 0.024s
     Cumulative refined: 536536
   Rebuilding spatial index...
   Building spatial index for 544536 cells...
-   Spatial index built in 0.12s
-    Spatial index rebuilt in 0.119s
+   Spatial index built in 0.13s
+    Spatial index rebuilt in 0.125s
   Initializing 260992 new cells...
   Initializing 260992 new cells in parallel...
-   Initialized in 0.00s (441797714.8 cells/s)
+   Initialized in 0.00s (306224047.9 cells/s)
     Initialization completed in 0.001s
   Starting local value iteration...
   Reinitializing ALL 544536 cells (V_lower = min(l, r), V_upper = l)
-   Reinitialized 544536 cells in 0.00s (392895022.8 cells/s)
+   Reinitialized 544536 cells in 0.00s (368095621.5 cells/s)
   Local VI: updating all 544536 cells
     Conservative mode: False
     Convergence tolerance: 1e-08
@@ -925,9 +925,9 @@ Boundary cells: 130496
     Updating successor cache for 260992 updated cells...
     Updating successor cache for 260992 new cells (HYBRID)...
       Affected cells: 376850
-   Trajectories + spatial queries computed in 0.25s (4473256.6 tasks/s)
-    Breakdown: 47.2% ODE, 52.8% queries
-     Cache updated in 0.31s (3694148.1 tasks/s)
+   Trajectories + spatial queries computed in 0.27s (4208266.2 tasks/s)
+    Breakdown: 46.1% ODE, 53.9% queries
+     Cache updated in 0.33s (3420247.5 tasks/s)
     Local Iteration   1: ||V_upper^k - V_upper^k-1||_inf = 3.95601805137455864170, ||V_lower^k - V_lower^k-1||_inf = 4.88019249424047796282
     Local Iteration   2: ||V_upper^k - V_upper^k-1||_inf = 3.78547099647405449474, ||V_lower^k - V_lower^k-1||_inf = 4.62179587511643674702
     Local Iteration   3: ||V_upper^k - V_upper^k-1||_inf = 3.63405215661509206626, ||V_lower^k - V_lower^k-1||_inf = 4.40006004011177864754
@@ -1011,11 +1011,11 @@ Boundary cells: 130496
     Final convergence values:
       ||V_upper^final - V_upper^prev||_inf = 0.00000000e+00
       ||V_lower^final - V_lower^prev||_inf = 0.00000000e+00
-  Local VI completed in 71 iterations, time: 0.587s
+  Local VI completed in 71 iterations, time: 0.620s
     Final ||V_upper^k - V_upper^k-1||_inf = 0.00000000000000000000e+00
     Final ||V_lower^k - V_lower^k-1||_inf = 0.00000000000000000000e+00
   Saved visualization: /Users/i.k.tabbara/Documents/python directory/HSCC_2027/refactored_Implementations/results_hscc_2027_modified_init/ra_discount/dubins_res20_eps0.05_dmin1e-08_dmax1e-08_gamma0.96_dt0.3_tau0.3_std/value_function_phase_7_complete.png
-  Phase 7 completed in 0.97s with 544536 leaf cells
+  Phase 7 completed in 0.85s with 544536 leaf cells
 
 Classification after phase 7:
   Safe:           258026 cells ( 47.4%),   51.3% of state space
@@ -1038,19 +1038,19 @@ Boundary cells: 247500
     Refined: 247500 parent cells
     Created: 495000 child cells
     Total cells: 792036
-    Refinement time: 0.010s
+    Refinement time: 0.014s
     Cumulative refined: 784036
   Rebuilding spatial index...
   Building spatial index for 792036 cells...
-   Spatial index built in 0.24s
-    Spatial index rebuilt in 0.236s
+   Spatial index built in 0.19s
+    Spatial index rebuilt in 0.190s
   Initializing 495000 new cells...
   Initializing 495000 new cells in parallel...
-   Initialized in 0.00s (377730533.9 cells/s)
-    Initialization completed in 0.001s
+   Initialized in 0.00s (330624439.4 cells/s)
+    Initialization completed in 0.002s
   Starting local value iteration...
   Reinitializing ALL 792036 cells (V_lower = min(l, r), V_upper = l)
-   Reinitialized 792036 cells in 0.00s (397359086.9 cells/s)
+   Reinitialized 792036 cells in 0.00s (340752245.2 cells/s)
   Local VI: updating all 792036 cells
     Conservative mode: False
     Convergence tolerance: 1e-08
@@ -1058,9 +1058,9 @@ Boundary cells: 247500
     Updating successor cache for 495000 updated cells...
     Updating successor cache for 495000 new cells (HYBRID)...
       Affected cells: 620666
-   Trajectories + spatial queries computed in 0.43s (4312839.9 tasks/s)
-    Breakdown: 43.9% ODE, 56.1% queries
-     Cache updated in 0.50s (3750026.8 tasks/s)
+   Trajectories + spatial queries computed in 0.52s (3560762.4 tasks/s)
+    Breakdown: 42.7% ODE, 57.3% queries
+     Cache updated in 0.59s (3140058.0 tasks/s)
     Local Iteration   1: ||V_upper^k - V_upper^k-1||_inf = 3.95601805137455864170, ||V_lower^k - V_lower^k-1||_inf = 4.88019249424047796282
     Local Iteration   2: ||V_upper^k - V_upper^k-1||_inf = 3.78547099647405449474, ||V_lower^k - V_lower^k-1||_inf = 4.62179587511643674702
     Local Iteration   3: ||V_upper^k - V_upper^k-1||_inf = 3.63405215661509206626, ||V_lower^k - V_lower^k-1||_inf = 4.43692404011177821133
@@ -1144,11 +1144,11 @@ Boundary cells: 247500
     Final convergence values:
       ||V_upper^final - V_upper^prev||_inf = 0.00000000e+00
       ||V_lower^final - V_lower^prev||_inf = 0.00000000e+00
-  Local VI completed in 71 iterations, time: 1.102s
+  Local VI completed in 71 iterations, time: 1.108s
     Final ||V_upper^k - V_upper^k-1||_inf = 0.00000000000000000000e+00
     Final ||V_lower^k - V_lower^k-1||_inf = 0.00000000000000000000e+00
   Saved visualization: /Users/i.k.tabbara/Documents/python directory/HSCC_2027/refactored_Implementations/results_hscc_2027_modified_init/ra_discount/dubins_res20_eps0.05_dmin1e-08_dmax1e-08_gamma0.96_dt0.3_tau0.3_std/value_function_phase_8_complete.png
-  Phase 8 completed in 1.68s with 792036 leaf cells
+  Phase 8 completed in 1.37s with 792036 leaf cells
 
 Classification after phase 8:
   Safe:           272136 cells ( 34.4%),   52.0% of state space
@@ -1171,19 +1171,19 @@ Boundary cells: 475324
     Refined: 475324 parent cells
     Created: 950648 child cells
     Total cells: 1267360
-    Refinement time: 0.073s
+    Refinement time: 0.070s
     Cumulative refined: 1259360
   Rebuilding spatial index...
   Building spatial index for 1267360 cells...
-   Spatial index built in 0.34s
-    Spatial index rebuilt in 0.345s
+   Spatial index built in 0.36s
+    Spatial index rebuilt in 0.364s
   Initializing 950648 new cells...
   Initializing 950648 new cells in parallel...
-   Initialized in 0.00s (421005455.2 cells/s)
-    Initialization completed in 0.002s
+   Initialized in 0.00s (268039824.4 cells/s)
+    Initialization completed in 0.004s
   Starting local value iteration...
   Reinitializing ALL 1267360 cells (V_lower = min(l, r), V_upper = l)
-   Reinitialized 1267360 cells in 0.00s (317594286.4 cells/s)
+   Reinitialized 1267360 cells in 0.00s (348634796.1 cells/s)
   Local VI: updating all 1267360 cells
     Conservative mode: False
     Convergence tolerance: 1e-08
@@ -1191,9 +1191,9 @@ Boundary cells: 475324
     Updating successor cache for 950648 updated cells...
     Updating successor cache for 950648 new cells (HYBRID)...
       Affected cells: 1087332
-   Trajectories + spatial queries computed in 0.92s (3529335.0 tasks/s)
-    Breakdown: 49.6% ODE, 50.4% queries
-     Cache updated in 1.08s (3033916.6 tasks/s)
+   Trajectories + spatial queries computed in 0.79s (4140444.4 tasks/s)
+    Breakdown: 49.9% ODE, 50.1% queries
+     Cache updated in 0.94s (3471163.9 tasks/s)
     Local Iteration   1: ||V_upper^k - V_upper^k-1||_inf = 3.95601805137455864170, ||V_lower^k - V_lower^k-1||_inf = 4.88019249424047796282
     Local Iteration   2: ||V_upper^k - V_upper^k-1||_inf = 3.78547099647405449474, ||V_lower^k - V_lower^k-1||_inf = 4.62179587511643674702
     Local Iteration   3: ||V_upper^k - V_upper^k-1||_inf = 3.63405215661509206626, ||V_lower^k - V_lower^k-1||_inf = 4.43692404011177821133
@@ -1275,11 +1275,11 @@ Boundary cells: 475324
     Final convergence values:
       ||V_upper^final - V_upper^prev||_inf = 0.00000000e+00
       ||V_lower^final - V_lower^prev||_inf = 0.00000000e+00
-  Local VI completed in 69 iterations, time: 1.816s
+  Local VI completed in 69 iterations, time: 1.618s
     Final ||V_upper^k - V_upper^k-1||_inf = 0.00000000000000000000e+00
     Final ||V_lower^k - V_lower^k-1||_inf = 0.00000000000000000000e+00
   Saved visualization: /Users/i.k.tabbara/Documents/python directory/HSCC_2027/refactored_Implementations/results_hscc_2027_modified_init/ra_discount/dubins_res20_eps0.05_dmin1e-08_dmax1e-08_gamma0.96_dt0.3_tau0.3_std/value_function_phase_9_complete.png
-  Phase 9 completed in 2.68s with 1267360 leaf cells
+  Phase 9 completed in 2.13s with 1267360 leaf cells
 
 Classification after phase 9:
   Safe:           608400 cells ( 48.0%),   60.2% of state space
@@ -1302,19 +1302,19 @@ Boundary cells: 485306
     Refined: 485306 parent cells
     Created: 970612 child cells
     Total cells: 1752666
-    Refinement time: 0.017s
+    Refinement time: 0.024s
     Cumulative refined: 1744666
   Rebuilding spatial index...
   Building spatial index for 1752666 cells...
-   Spatial index built in 0.46s
-    Spatial index rebuilt in 0.462s
+   Spatial index built in 0.42s
+    Spatial index rebuilt in 0.424s
   Initializing 970612 new cells...
   Initializing 970612 new cells in parallel...
-   Initialized in 0.04s (25570627.5 cells/s)
-    Initialization completed in 0.038s
+   Initialized in 0.00s (412799606.7 cells/s)
+    Initialization completed in 0.002s
   Starting local value iteration...
   Reinitializing ALL 1752666 cells (V_lower = min(l, r), V_upper = l)
-   Reinitialized 1752666 cells in 0.01s (330847758.4 cells/s)
+   Reinitialized 1752666 cells in 0.00s (358088875.3 cells/s)
   Local VI: updating all 1752666 cells
     Conservative mode: False
     Convergence tolerance: 1e-08
@@ -1322,9 +1322,9 @@ Boundary cells: 485306
     Updating successor cache for 970612 updated cells...
     Updating successor cache for 970612 new cells (HYBRID)...
       Affected cells: 1380924
-   Trajectories + spatial queries computed in 1.26s (3283179.6 tasks/s)
-    Breakdown: 46.3% ODE, 53.7% queries
-     Cache updated in 1.61s (2565983.3 tasks/s)
+   Trajectories + spatial queries computed in 1.18s (3524037.5 tasks/s)
+    Breakdown: 46.5% ODE, 53.5% queries
+     Cache updated in 1.40s (2960240.1 tasks/s)
     Local Iteration   1: ||V_upper^k - V_upper^k-1||_inf = 3.95601805137455864170, ||V_lower^k - V_lower^k-1||_inf = 4.88019249424047796282
     Local Iteration   2: ||V_upper^k - V_upper^k-1||_inf = 3.78547099647405449474, ||V_lower^k - V_lower^k-1||_inf = 4.62179587511643674702
     Local Iteration   3: ||V_upper^k - V_upper^k-1||_inf = 3.63405215661509206626, ||V_lower^k - V_lower^k-1||_inf = 4.43692404011177821133
@@ -1406,11 +1406,11 @@ Boundary cells: 485306
     Final convergence values:
       ||V_upper^final - V_upper^prev||_inf = 0.00000000e+00
       ||V_lower^final - V_lower^prev||_inf = 0.00000000e+00
-  Local VI completed in 69 iterations, time: 2.716s
+  Local VI completed in 69 iterations, time: 2.448s
     Final ||V_upper^k - V_upper^k-1||_inf = 0.00000000000000000000e+00
     Final ||V_lower^k - V_lower^k-1||_inf = 0.00000000000000000000e+00
   Saved visualization: /Users/i.k.tabbara/Documents/python directory/HSCC_2027/refactored_Implementations/results_hscc_2027_modified_init/ra_discount/dubins_res20_eps0.05_dmin1e-08_dmax1e-08_gamma0.96_dt0.3_tau0.3_std/value_function_phase_10_complete.png
-  Phase 10 completed in 3.76s with 1752666 leaf cells
+  Phase 10 completed in 3.00s with 1752666 leaf cells
 
 Classification after phase 10:
   Safe:           646902 cells ( 36.9%),   60.6% of state space
@@ -1433,19 +1433,19 @@ Boundary cells: 922356
     Refined: 922356 parent cells
     Created: 1844712 child cells
     Total cells: 2675022
-    Refinement time: 0.148s
+    Refinement time: 0.146s
     Cumulative refined: 2667022
   Rebuilding spatial index...
   Building spatial index for 2675022 cells...
-   Spatial index built in 0.73s
-    Spatial index rebuilt in 0.730s
+   Spatial index built in 0.72s
+    Spatial index rebuilt in 0.720s
   Initializing 1844712 new cells...
   Initializing 1844712 new cells in parallel...
-   Initialized in 0.00s (425899272.6 cells/s)
-    Initialization completed in 0.004s
+   Initialized in 0.01s (239392913.8 cells/s)
+    Initialization completed in 0.008s
   Starting local value iteration...
   Reinitializing ALL 2675022 cells (V_lower = min(l, r), V_upper = l)
-   Reinitialized 2675022 cells in 0.01s (333719030.3 cells/s)
+   Reinitialized 2675022 cells in 0.01s (320686750.7 cells/s)
   Local VI: updating all 2675022 cells
     Conservative mode: False
     Convergence tolerance: 1e-08
@@ -1453,9 +1453,9 @@ Boundary cells: 922356
     Updating successor cache for 1844712 updated cells...
     Updating successor cache for 1844712 new cells (HYBRID)...
       Affected cells: 2289014
-   Trajectories + spatial queries computed in 1.93s (3552863.3 tasks/s)
-    Breakdown: 45.2% ODE, 54.8% queries
-     Cache updated in 2.23s (3084100.5 tasks/s)
+   Trajectories + spatial queries computed in 2.39s (2876149.6 tasks/s)
+    Breakdown: 43.9% ODE, 56.1% queries
+     Cache updated in 2.75s (2501635.2 tasks/s)
     Local Iteration   1: ||V_upper^k - V_upper^k-1||_inf = 3.95601805137455864170, ||V_lower^k - V_lower^k-1||_inf = 4.88019249424047796282
     Local Iteration   2: ||V_upper^k - V_upper^k-1||_inf = 3.78547099647405449474, ||V_lower^k - V_lower^k-1||_inf = 4.62179587511643674702
     Local Iteration   3: ||V_upper^k - V_upper^k-1||_inf = 3.63405215661509206626, ||V_lower^k - V_lower^k-1||_inf = 4.43692404011177821133
@@ -1537,11 +1537,11 @@ Boundary cells: 922356
     Final convergence values:
       ||V_upper^final - V_upper^prev||_inf = 0.00000000e+00
       ||V_lower^final - V_lower^prev||_inf = 0.00000000e+00
-  Local VI completed in 69 iterations, time: 4.177s
+  Local VI completed in 69 iterations, time: 5.418s
     Final ||V_upper^k - V_upper^k-1||_inf = 0.00000000000000000000e+00
     Final ||V_lower^k - V_lower^k-1||_inf = 0.00000000000000000000e+00
   Saved visualization: /Users/i.k.tabbara/Documents/python directory/HSCC_2027/refactored_Implementations/results_hscc_2027_modified_init/ra_discount/dubins_res20_eps0.05_dmin1e-08_dmax1e-08_gamma0.96_dt0.3_tau0.3_std/value_function_phase_11_complete.png
-  Phase 11 completed in 5.81s with 2675022 leaf cells
+  Phase 11 completed in 6.46s with 2675022 leaf cells
 
 Classification after phase 11:
   Safe:           707478 cells ( 26.4%),   61.0% of state space
@@ -1564,19 +1564,19 @@ Boundary cells: 1757464
     Refined: 1757464 parent cells
     Created: 3514928 child cells
     Total cells: 4432486
-    Refinement time: 0.366s
+    Refinement time: 0.653s
     Cumulative refined: 4424486
   Rebuilding spatial index...
   Building spatial index for 4432486 cells...
-   Spatial index built in 1.23s
-    Spatial index rebuilt in 1.231s
+   Spatial index built in 1.35s
+    Spatial index rebuilt in 1.345s
   Initializing 3514928 new cells...
   Initializing 3514928 new cells in parallel...
-   Initialized in 0.01s (236002847.7 cells/s)
-    Initialization completed in 0.015s
+   Initialized in 0.04s (92377263.6 cells/s)
+    Initialization completed in 0.038s
   Starting local value iteration...
   Reinitializing ALL 4432486 cells (V_lower = min(l, r), V_upper = l)
-   Reinitialized 4432486 cells in 0.02s (263041889.5 cells/s)
+   Reinitialized 4432486 cells in 0.03s (151740303.3 cells/s)
   Local VI: updating all 4432486 cells
     Conservative mode: False
     Convergence tolerance: 1e-08
@@ -1584,9 +1584,9 @@ Boundary cells: 1757464
     Updating successor cache for 3514928 updated cells...
     Updating successor cache for 3514928 new cells (HYBRID)...
       Affected cells: 4008024
-   Trajectories + spatial queries computed in 3.36s (3579912.3 tasks/s)
-    Breakdown: 52.2% ODE, 47.8% queries
-     Cache updated in 4.04s (2978601.7 tasks/s)
+   Trajectories + spatial queries computed in 3.99s (3015458.3 tasks/s)
+    Breakdown: 51.3% ODE, 48.7% queries
+     Cache updated in 4.98s (2415257.9 tasks/s)
     Local Iteration   1: ||V_upper^k - V_upper^k-1||_inf = 3.95601805137455864170, ||V_lower^k - V_lower^k-1||_inf = 4.88019249424047796282
     Local Iteration   2: ||V_upper^k - V_upper^k-1||_inf = 3.78547099647405449474, ||V_lower^k - V_lower^k-1||_inf = 4.62179587511643674702
     Local Iteration   3: ||V_upper^k - V_upper^k-1||_inf = 3.63405215661509206626, ||V_lower^k - V_lower^k-1||_inf = 4.43692404011177821133
@@ -1669,11 +1669,11 @@ Boundary cells: 1757464
     Final convergence values:
       ||V_upper^final - V_upper^prev||_inf = 0.00000000e+00
       ||V_lower^final - V_lower^prev||_inf = 0.00000000e+00
-  Local VI completed in 70 iterations, time: 7.347s
+  Local VI completed in 70 iterations, time: 9.248s
     Final ||V_upper^k - V_upper^k-1||_inf = 0.00000000000000000000e+00
     Final ||V_lower^k - V_lower^k-1||_inf = 0.00000000000000000000e+00
   Saved visualization: /Users/i.k.tabbara/Documents/python directory/HSCC_2027/refactored_Implementations/results_hscc_2027_modified_init/ra_discount/dubins_res20_eps0.05_dmin1e-08_dmax1e-08_gamma0.96_dt0.3_tau0.3_std/value_function_phase_12_complete.png
-  Phase 12 completed in 10.18s with 4432486 leaf cells
+  Phase 12 completed in 11.55s with 4432486 leaf cells
 
 Classification after phase 12:
   Safe:          1786438 cells ( 40.3%),   64.3% of state space
@@ -1696,19 +1696,19 @@ Boundary cells: 1838412
     Refined: 1838412 parent cells
     Created: 3676824 child cells
     Total cells: 6270898
-    Refinement time: 0.115s
+    Refinement time: 0.119s
     Cumulative refined: 6262898
   Rebuilding spatial index...
   Building spatial index for 6270898 cells...
-   Spatial index built in 2.04s
-    Spatial index rebuilt in 2.039s
+   Spatial index built in 1.96s
+    Spatial index rebuilt in 1.959s
   Initializing 3676824 new cells...
   Initializing 3676824 new cells in parallel...
-   Initialized in 0.01s (253384030.9 cells/s)
-    Initialization completed in 0.015s
+   Initialized in 0.01s (323341511.5 cells/s)
+    Initialization completed in 0.011s
   Starting local value iteration...
   Reinitializing ALL 6270898 cells (V_lower = min(l, r), V_upper = l)
-   Reinitialized 6270898 cells in 0.08s (76399092.3 cells/s)
+   Reinitialized 6270898 cells in 0.10s (61224490.0 cells/s)
   Local VI: updating all 6270898 cells
     Conservative mode: False
     Convergence tolerance: 1e-08
@@ -1716,9 +1716,9 @@ Boundary cells: 1838412
     Updating successor cache for 3676824 updated cells...
     Updating successor cache for 3676824 new cells (HYBRID)...
       Affected cells: 4681172
-   Trajectories + spatial queries computed in 5.07s (2767700.9 tasks/s)
-    Breakdown: 49.3% ODE, 50.7% queries
-     Cache updated in 6.17s (2274995.1 tasks/s)
+   Trajectories + spatial queries computed in 6.08s (2309635.4 tasks/s)
+    Breakdown: 48.3% ODE, 51.7% queries
+     Cache updated in 7.35s (1910639.0 tasks/s)
     Local Iteration   1: ||V_upper^k - V_upper^k-1||_inf = 3.95601805137455864170, ||V_lower^k - V_lower^k-1||_inf = 4.88019249424047796282
     Local Iteration   2: ||V_upper^k - V_upper^k-1||_inf = 3.78547099647405449474, ||V_lower^k - V_lower^k-1||_inf = 4.62179587511643674702
     Local Iteration   3: ||V_upper^k - V_upper^k-1||_inf = 3.63405215661509206626, ||V_lower^k - V_lower^k-1||_inf = 4.43692404011177821133
@@ -1801,11 +1801,11 @@ Boundary cells: 1838412
     Final convergence values:
       ||V_upper^final - V_upper^prev||_inf = 0.00000000e+00
       ||V_lower^final - V_lower^prev||_inf = 0.00000000e+00
-  Local VI completed in 70 iterations, time: 12.013s
+  Local VI completed in 70 iterations, time: 14.747s
     Final ||V_upper^k - V_upper^k-1||_inf = 0.00000000000000000000e+00
     Final ||V_lower^k - V_lower^k-1||_inf = 0.00000000000000000000e+00
   Saved visualization: /Users/i.k.tabbara/Documents/python directory/HSCC_2027/refactored_Implementations/results_hscc_2027_modified_init/ra_discount/dubins_res20_eps0.05_dmin1e-08_dmax1e-08_gamma0.96_dt0.3_tau0.3_std/value_function_phase_13_complete.png
-  Phase 13 completed in 16.16s with 6270898 leaf cells
+  Phase 13 completed in 17.13s with 6270898 leaf cells
 
 Classification after phase 13:
   Safe:          1818028 cells ( 29.0%),   64.3% of state space
@@ -1832,22 +1832,22 @@ Final Cell Classification:
 
  All results saved to: /Users/i.k.tabbara/Documents/python directory/HSCC_2027/refactored_Implementations/results_hscc_2027_modified_init/ra_discount/dubins_res20_eps0.05_dmin1e-08_dmax1e-08_gamma0.96_dt0.3_tau0.3_std/
 ALGORITHM 2 COMPLETE
-Total time: 43.46 seconds
+Total time: 44.71 seconds
 
 ======================================================================
 TIMING BREAKDOWN (RA_discount)
 ======================================================================
   grid construction      :      0.001 s
-  spatial index builds   :      5.341 s
-  cell initialization    :      0.200 s
-  ODE integration        :      6.794 s  (45819318 solves)
-  successor set queries  :      7.074 s
-  value iteration        :     14.067 s  (925 sweeps)
-  cell splitting         :      0.801 s
-  plotting / output      :      5.856 s
+  spatial index builds   :      5.340 s
+  cell initialization    :      0.223 s
+  ODE integration        :      7.709 s  (45819318 solves)
+  successor set queries  :      8.326 s
+  value iteration        :     17.121 s  (925 sweeps)
+  cell splitting         :      1.096 s
+  plotting / output      :      1.101 s
   checkpoint writes      :      0.000 s
   ------------------------------------------------
-  TOTAL                  :     45.043 s
+  TOTAL                  :     46.556 s
   final leaf cells       :    6270898
-TOTAL WALL TIME: 45.04 seconds
-# run finished 2026-10-04T19:22:18
+TOTAL WALL TIME: 46.56 seconds
+# run finished 2026-10-04T20:10:27

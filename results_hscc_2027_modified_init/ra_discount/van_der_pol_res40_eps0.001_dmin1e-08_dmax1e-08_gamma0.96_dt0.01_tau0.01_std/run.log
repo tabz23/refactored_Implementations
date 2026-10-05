@@ -6405,3 +6405,688 @@ Boundary cells: 24675149
     Local Iteration 225: ||V_upper^k - V_upper^k-1||_inf = 0.00001170137777777104, ||V_lower^k - V_lower^k-1||_inf = 0.00001685519091671140
     Local Iteration 226: ||V_upper^k - V_upper^k-1||_inf = 0.00001123332266666019, ||V_lower^k - V_lower^k-1||_inf = 0.00001618098328004292
     Local Iteration 227: ||V_upper^k - V_upper^k-1||_inf = 0.00001078398975999379, ||V_lower^k - V_lower^k-1||_inf = 0.00001553374394884120
+    Local Iteration 228: ||V_upper^k - V_upper^k-1||_inf = 0.00001035263016959404, ||V_lower^k - V_lower^k-1||_inf = 0.00001491239419088751
+    Local Iteration 229: ||V_upper^k - V_upper^k-1||_inf = 0.00000993852496281028, ||V_lower^k - V_lower^k-1||_inf = 0.00001431589842325201
+    Local Iteration 230: ||V_upper^k - V_upper^k-1||_inf = 0.00000954098396429786, ||V_lower^k - V_lower^k-1||_inf = 0.00001373180964417837
+    Local Iteration 231: ||V_upper^k - V_upper^k-1||_inf = 0.00000915934460572594, ||V_lower^k - V_lower^k-1||_inf = 0.00001318253725841125
+    Local Iteration 232: ||V_upper^k - V_upper^k-1||_inf = 0.00000879297082149690, ||V_lower^k - V_lower^k-1||_inf = 0.00001265382496348332
+    Local Iteration 233: ||V_upper^k - V_upper^k-1||_inf = 0.00000844125198863702, ||V_lower^k - V_lower^k-1||_inf = 0.00001214767196494403
+    Local Iteration 234: ||V_upper^k - V_upper^k-1||_inf = 0.00000810360190909155, ||V_lower^k - V_lower^k-1||_inf = 0.00001166176508634627
+    Local Iteration 235: ||V_upper^k - V_upper^k-1||_inf = 0.00000777945783272791, ||V_lower^k - V_lower^k-1||_inf = 0.00001119247540330698
+    Local Iteration 236: ||V_upper^k - V_upper^k-1||_inf = 0.00000746827951941879, ||V_lower^k - V_lower^k-1||_inf = 0.00001073992642009668
+    Local Iteration 237: ||V_upper^k - V_upper^k-1||_inf = 0.00000716954833864206, ||V_lower^k - V_lower^k-1||_inf = 0.00001031032936329280
+    Local Iteration 238: ||V_upper^k - V_upper^k-1||_inf = 0.00000688276640509639, ||V_lower^k - V_lower^k-1||_inf = 0.00000989703210654613
+    Local Iteration 239: ||V_upper^k - V_upper^k-1||_inf = 0.00000660745574889252, ||V_lower^k - V_lower^k-1||_inf = 0.00000949773132470405
+    Local Iteration 240: ||V_upper^k - V_upper^k-1||_inf = 0.00000634315751893682, ||V_lower^k - V_lower^k-1||_inf = 0.00000911144494531582
+    Local Iteration 241: ||V_upper^k - V_upper^k-1||_inf = 0.00000608943121817934, ||V_lower^k - V_lower^k-1||_inf = 0.00000874526004992606
+    Local Iteration 242: ||V_upper^k - V_upper^k-1||_inf = 0.00000584585396945217, ||V_lower^k - V_lower^k-1||_inf = 0.00000839469204544705
+    Local Iteration 243: ||V_upper^k - V_upper^k-1||_inf = 0.00000561201981067408, ||V_lower^k - V_lower^k-1||_inf = 0.00000805439279062028
+    Local Iteration 244: ||V_upper^k - V_upper^k-1||_inf = 0.00000538753901824712, ||V_lower^k - V_lower^k-1||_inf = 0.00000772505115585840
+    Local Iteration 245: ||V_upper^k - V_upper^k-1||_inf = 0.00000517203745751724, ||V_lower^k - V_lower^k-1||_inf = 0.00000740881518078595
+    Local Iteration 246: ||V_upper^k - V_upper^k-1||_inf = 0.00000496515595921655, ||V_lower^k - V_lower^k-1||_inf = 0.00000710525447931965
+    Local Iteration 247: ||V_upper^k - V_upper^k-1||_inf = 0.00000476654972084789, ||V_lower^k - V_lower^k-1||_inf = 0.00000681645471200580
+    Local Iteration 248: ||V_upper^k - V_upper^k-1||_inf = 0.00000457588773201397, ||V_lower^k - V_lower^k-1||_inf = 0.00000654302219060834
+    Local Iteration 249: ||V_upper^k - V_upper^k-1||_inf = 0.00000439285222273340, ||V_lower^k - V_lower^k-1||_inf = 0.00000627767822693887
+    Local Iteration 250: ||V_upper^k - V_upper^k-1||_inf = 0.00000421713813382407, ||V_lower^k - V_lower^k-1||_inf = 0.00000602440262399855
+    Local Iteration 251: ||V_upper^k - V_upper^k-1||_inf = 0.00000404845260847110, ||V_lower^k - V_lower^k-1||_inf = 0.00000578258917463962
+    Local Iteration 252: ||V_upper^k - V_upper^k-1||_inf = 0.00000388651450413225, ||V_lower^k - V_lower^k-1||_inf = 0.00000553611607585265
+    Local Iteration 253: ||V_upper^k - V_upper^k-1||_inf = 0.00000373105392396696, ||V_lower^k - V_lower^k-1||_inf = 0.00000531467143281855
+    Local Iteration 254: ||V_upper^k - V_upper^k-1||_inf = 0.00000358181176700829, ||V_lower^k - V_lower^k-1||_inf = 0.00000510052604934269
+    Local Iteration 255: ||V_upper^k - V_upper^k-1||_inf = 0.00000343853929632796, ||V_lower^k - V_lower^k-1||_inf = 0.00000489602161854805
+    Local Iteration 256: ||V_upper^k - V_upper^k-1||_inf = 0.00000330099772447485, ||V_lower^k - V_lower^k-1||_inf = 0.00000469776806094550
+    Local Iteration 257: ||V_upper^k - V_upper^k-1||_inf = 0.00000316895781549585, ||V_lower^k - V_lower^k-1||_inf = 0.00000450863072443091
+    Local Iteration 258: ||V_upper^k - V_upper^k-1||_inf = 0.00000304219950287601, ||V_lower^k - V_lower^k-1||_inf = 0.00000432828549545368
+    Local Iteration 259: ||V_upper^k - V_upper^k-1||_inf = 0.00000292051152276098, ||V_lower^k - V_lower^k-1||_inf = 0.00000415515407563554
+    Local Iteration 260: ||V_upper^k - V_upper^k-1||_inf = 0.00000280369106185053, ||V_lower^k - V_lower^k-1||_inf = 0.00000398894791261012
+    Local Iteration 261: ||V_upper^k - V_upper^k-1||_inf = 0.00000269154341937651, ||V_lower^k - V_lower^k-1||_inf = 0.00000382938999610572
+    Local Iteration 262: ||V_upper^k - V_upper^k-1||_inf = 0.00000258388168260145, ||V_lower^k - V_lower^k-1||_inf = 0.00000367621439626148
+    Local Iteration 263: ||V_upper^k - V_upper^k-1||_inf = 0.00000248052641529739, ||V_lower^k - V_lower^k-1||_inf = 0.00000352916582041102
+    Local Iteration 264: ||V_upper^k - V_upper^k-1||_inf = 0.00000238130535868549, ||V_lower^k - V_lower^k-1||_inf = 0.00000338443281617574
+    Local Iteration 265: ||V_upper^k - V_upper^k-1||_inf = 0.00000228605314433807, ||V_lower^k - V_lower^k-1||_inf = 0.00000324571032425539
+    Local Iteration 266: ||V_upper^k - V_upper^k-1||_inf = 0.00000219461101856455, ||V_lower^k - V_lower^k-1||_inf = 0.00000311273465668726
+    Local Iteration 267: ||V_upper^k - V_upper^k-1||_inf = 0.00000210682657782197, ||V_lower^k - V_lower^k-1||_inf = 0.00000298822527041977
+    Local Iteration 268: ||V_upper^k - V_upper^k-1||_inf = 0.00000202255351470909, ||V_lower^k - V_lower^k-1||_inf = 0.00000286736741257042
+    Local Iteration 269: ||V_upper^k - V_upper^k-1||_inf = 0.00000194165137412072, ||V_lower^k - V_lower^k-1||_inf = 0.00000275064434308973
+    Local Iteration 270: ||V_upper^k - V_upper^k-1||_inf = 0.00000186398531915589, ||V_lower^k - V_lower^k-1||_inf = 0.00000264061856936614
+    Local Iteration 271: ||V_upper^k - V_upper^k-1||_inf = 0.00000178942590638965, ||V_lower^k - V_lower^k-1||_inf = 0.00000253285788500554
+    Local Iteration 272: ||V_upper^k - V_upper^k-1||_inf = 0.00000171784887013407, ||V_lower^k - V_lower^k-1||_inf = 0.00000243154356960531
+    Local Iteration 273: ||V_upper^k - V_upper^k-1||_inf = 0.00000164913491532871, ||V_lower^k - V_lower^k-1||_inf = 0.00000233428182682110
+    Local Iteration 274: ||V_upper^k - V_upper^k-1||_inf = 0.00000158316951871556, ||V_lower^k - V_lower^k-1||_inf = 0.00000224032335241890
+    Local Iteration 275: ||V_upper^k - V_upper^k-1||_inf = 0.00000151984273796694, ||V_lower^k - V_lower^k-1||_inf = 0.00000215071041832214
+    Local Iteration 276: ||V_upper^k - V_upper^k-1||_inf = 0.00000145904902844826, ||V_lower^k - V_lower^k-1||_inf = 0.00000206468200158926
+    Local Iteration 277: ||V_upper^k - V_upper^k-1||_inf = 0.00000140068706731033, ||V_lower^k - V_lower^k-1||_inf = 0.00000198209472152570
+    Local Iteration 278: ||V_upper^k - V_upper^k-1||_inf = 0.00000134465958461792, ||V_lower^k - V_lower^k-1||_inf = 0.00000190182683636314
+    Local Iteration 279: ||V_upper^k - V_upper^k-1||_inf = 0.00000129087320123320, ||V_lower^k - V_lower^k-1||_inf = 0.00000182555047107145
+    Local Iteration 280: ||V_upper^k - V_upper^k-1||_inf = 0.00000123923827318387, ||V_lower^k - V_lower^k-1||_inf = 0.00000175252845222860
+    Local Iteration 281: ||V_upper^k - V_upper^k-1||_inf = 0.00000118966874225652, ||V_lower^k - V_lower^k-1||_inf = 0.00000168242731413945
+    Local Iteration 282: ||V_upper^k - V_upper^k-1||_inf = 0.00000114208199256626, ||V_lower^k - V_lower^k-1||_inf = 0.00000161436899758534
+    Local Iteration 283: ||V_upper^k - V_upper^k-1||_inf = 0.00000109639871286361, ||V_lower^k - V_lower^k-1||_inf = 0.00000154924988004794
+    Local Iteration 284: ||V_upper^k - V_upper^k-1||_inf = 0.00000105164714189655, ||V_lower^k - V_lower^k-1||_inf = 0.00000148607398389270
+    Local Iteration 285: ||V_upper^k - V_upper^k-1||_inf = 0.00000100958125622069, ||V_lower^k - V_lower^k-1||_inf = 0.00000142606459412803
+    Local Iteration 286: ||V_upper^k - V_upper^k-1||_inf = 0.00000096919800597186, ||V_lower^k - V_lower^k-1||_inf = 0.00000136869858424806
+    Local Iteration 287: ||V_upper^k - V_upper^k-1||_inf = 0.00000093043008573299, ||V_lower^k - V_lower^k-1||_inf = 0.00000131299819277420
+    Local Iteration 288: ||V_upper^k - V_upper^k-1||_inf = 0.00000089321288230367, ||V_lower^k - V_lower^k-1||_inf = 0.00000126023111890351
+    Local Iteration 289: ||V_upper^k - V_upper^k-1||_inf = 0.00000085748436701152, ||V_lower^k - V_lower^k-1||_inf = 0.00000120982187414737
+    Local Iteration 290: ||V_upper^k - V_upper^k-1||_inf = 0.00000082318499233106, ||V_lower^k - V_lower^k-1||_inf = 0.00000116142899918147
+    Local Iteration 291: ||V_upper^k - V_upper^k-1||_inf = 0.00000079025759263782, ||V_lower^k - V_lower^k-1||_inf = 0.00000111497183921421
+    Local Iteration 292: ||V_upper^k - V_upper^k-1||_inf = 0.00000075864728893231, ||V_lower^k - V_lower^k-1||_inf = 0.00000106986679664656
+    Local Iteration 293: ||V_upper^k - V_upper^k-1||_inf = 0.00000072830139737501, ||V_lower^k - V_lower^k-1||_inf = 0.00000102707212478070
+    Local Iteration 294: ||V_upper^k - V_upper^k-1||_inf = 0.00000069916934148001, ||V_lower^k - V_lower^k-1||_inf = 0.00000098598923978947
+    Local Iteration 295: ||V_upper^k - V_upper^k-1||_inf = 0.00000067120256782081, ||V_lower^k - V_lower^k-1||_inf = 0.00000094644326497412
+    Local Iteration 296: ||V_upper^k - V_upper^k-1||_inf = 0.00000064435446510798, ||V_lower^k - V_lower^k-1||_inf = 0.00000090850027162542
+    Local Iteration 297: ||V_upper^k - V_upper^k-1||_inf = 0.00000061858028650366, ||V_lower^k - V_lower^k-1||_inf = 0.00000087182301984920
+    Local Iteration 298: ||V_upper^k - V_upper^k-1||_inf = 0.00000059383707504351, ||V_lower^k - V_lower^k-1||_inf = 0.00000083666354949534
+    Local Iteration 299: ||V_upper^k - V_upper^k-1||_inf = 0.00000057008359204177, ||V_lower^k - V_lower^k-1||_inf = 0.00000080319700751552
+    Local Iteration 300: ||V_upper^k - V_upper^k-1||_inf = 0.00000054728024836010, ||V_lower^k - V_lower^k-1||_inf = 0.00000077106912721490
+    Local Iteration 301: ||V_upper^k - V_upper^k-1||_inf = 0.00000052538903842570, ||V_lower^k - V_lower^k-1||_inf = 0.00000074022636212631
+    Local Iteration 302: ||V_upper^k - V_upper^k-1||_inf = 0.00000050437347688867, ||V_lower^k - V_lower^k-1||_inf = 0.00000071061730764126
+    Local Iteration 303: ||V_upper^k - V_upper^k-1||_inf = 0.00000048419853781312, ||V_lower^k - V_lower^k-1||_inf = 0.00000068219261533561
+    Local Iteration 304: ||V_upper^k - V_upper^k-1||_inf = 0.00000046483059630060, ||V_lower^k - V_lower^k-1||_inf = 0.00000065490491072218
+    Local Iteration 305: ||V_upper^k - V_upper^k-1||_inf = 0.00000044623737244857, ||V_lower^k - V_lower^k-1||_inf = 0.00000062870871429329
+    Local Iteration 306: ||V_upper^k - V_upper^k-1||_inf = 0.00000042838787755063, ||V_lower^k - V_lower^k-1||_inf = 0.00000060356036572156
+    Local Iteration 307: ||V_upper^k - V_upper^k-1||_inf = 0.00000041125236244861, ||V_lower^k - V_lower^k-1||_inf = 0.00000057939354875457
+    Local Iteration 308: ||V_upper^k - V_upper^k-1||_inf = 0.00000039480226795066, ||V_lower^k - V_lower^k-1||_inf = 0.00000055621780680438
+    Local Iteration 309: ||V_upper^k - V_upper^k-1||_inf = 0.00000037901017723263, ||V_lower^k - V_lower^k-1||_inf = 0.00000053382391951780
+    Local Iteration 310: ||V_upper^k - V_upper^k-1||_inf = 0.00000036384977014333, ||V_lower^k - V_lower^k-1||_inf = 0.00000051245702715743
+    Local Iteration 311: ||V_upper^k - V_upper^k-1||_inf = 0.00000034929577933760, ||V_lower^k - V_lower^k-1||_inf = 0.00000049195874607113
+    Local Iteration 312: ||V_upper^k - V_upper^k-1||_inf = 0.00000033532394816409, ||V_lower^k - V_lower^k-1||_inf = 0.00000047200054878648
+    Local Iteration 313: ||V_upper^k - V_upper^k-1||_inf = 0.00000032191099023753, ||V_lower^k - V_lower^k-1||_inf = 0.00000045312052683502
+    Local Iteration 314: ||V_upper^k - V_upper^k-1||_inf = 0.00000030903455062803, ||V_lower^k - V_lower^k-1||_inf = 0.00000043499570576162
+    Local Iteration 315: ||V_upper^k - V_upper^k-1||_inf = 0.00000029667316860291, ||V_lower^k - V_lower^k-1||_inf = 0.00000041759587753116
+    Local Iteration 316: ||V_upper^k - V_upper^k-1||_inf = 0.00000028480624185879, ||V_lower^k - V_lower^k-1||_inf = 0.00000040089204242991
+    Local Iteration 317: ||V_upper^k - V_upper^k-1||_inf = 0.00000027341399218444, ||V_lower^k - V_lower^k-1||_inf = 0.00000038485636073271
+    Local Iteration 318: ||V_upper^k - V_upper^k-1||_inf = 0.00000026247743249706, ||V_lower^k - V_lower^k-1||_inf = 0.00000036946210630341
+    Local Iteration 319: ||V_upper^k - V_upper^k-1||_inf = 0.00000025197833519718, ||V_lower^k - V_lower^k-1||_inf = 0.00000035468362205127
+    Local Iteration 320: ||V_upper^k - V_upper^k-1||_inf = 0.00000024189920178929, ||V_lower^k - V_lower^k-1||_inf = 0.00000034049627716922
+    Local Iteration 321: ||V_upper^k - V_upper^k-1||_inf = 0.00000023222323371772, ||V_lower^k - V_lower^k-1||_inf = 0.00000032687642608245
+    Local Iteration 322: ||V_upper^k - V_upper^k-1||_inf = 0.00000022293430436901, ||V_lower^k - V_lower^k-1||_inf = 0.00000031380136903915
+    Local Iteration 323: ||V_upper^k - V_upper^k-1||_inf = 0.00000021401693219425, ||V_lower^k - V_lower^k-1||_inf = 0.00000030124931427759
+    Local Iteration 324: ||V_upper^k - V_upper^k-1||_inf = 0.00000020545625490648, ||V_lower^k - V_lower^k-1||_inf = 0.00000028919934170648
+    Local Iteration 325: ||V_upper^k - V_upper^k-1||_inf = 0.00000019723800471022, ||V_lower^k - V_lower^k-1||_inf = 0.00000027763136803822
+    Local Iteration 326: ||V_upper^k - V_upper^k-1||_inf = 0.00000018934848452181, ||V_lower^k - V_lower^k-1||_inf = 0.00000026652611331670
+    Local Iteration 327: ||V_upper^k - V_upper^k-1||_inf = 0.00000018177454514094, ||V_lower^k - V_lower^k-1||_inf = 0.00000025586506878403
+    Local Iteration 328: ||V_upper^k - V_upper^k-1||_inf = 0.00000017450356333530, ||V_lower^k - V_lower^k-1||_inf = 0.00000024563046603267
+    Local Iteration 329: ||V_upper^k - V_upper^k-1||_inf = 0.00000016752342080189, ||V_lower^k - V_lower^k-1||_inf = 0.00000023580524739136
+    Local Iteration 330: ||V_upper^k - V_upper^k-1||_inf = 0.00000016082248396981, ||V_lower^k - V_lower^k-1||_inf = 0.00000022637303749571
+    Local Iteration 331: ||V_upper^k - V_upper^k-1||_inf = 0.00000015438958461102, ||V_lower^k - V_lower^k-1||_inf = 0.00000021731811599588
+    Local Iteration 332: ||V_upper^k - V_upper^k-1||_inf = 0.00000014821400122658, ||V_lower^k - V_lower^k-1||_inf = 0.00000020862539135604
+    Local Iteration 333: ||V_upper^k - V_upper^k-1||_inf = 0.00000014228544117752, ||V_lower^k - V_lower^k-1||_inf = 0.00000020028037570180
+    Local Iteration 334: ||V_upper^k - V_upper^k-1||_inf = 0.00000013659402353042, ||V_lower^k - V_lower^k-1||_inf = 0.00000019221469499815
+    Local Iteration 335: ||V_upper^k - V_upper^k-1||_inf = 0.00000013113026258920, ||V_lower^k - V_lower^k-1||_inf = 0.00000018452610719823
+    Local Iteration 336: ||V_upper^k - V_upper^k-1||_inf = 0.00000012588505208563, ||V_lower^k - V_lower^k-1||_inf = 0.00000017714506291030
+    Local Iteration 337: ||V_upper^k - V_upper^k-1||_inf = 0.00000012084965000221, ||V_lower^k - V_lower^k-1||_inf = 0.00000017005926039389
+    Local Iteration 338: ||V_upper^k - V_upper^k-1||_inf = 0.00000011601566400212, ||V_lower^k - V_lower^k-1||_inf = 0.00000016325688997813
+    Local Iteration 339: ||V_upper^k - V_upper^k-1||_inf = 0.00000011137503744203, ||V_lower^k - V_lower^k-1||_inf = 0.00000015672661437901
+    Local Iteration 340: ||V_upper^k - V_upper^k-1||_inf = 0.00000010692003594435, ||V_lower^k - V_lower^k-1||_inf = 0.00000015045754980385
+    Local Iteration 341: ||V_upper^k - V_upper^k-1||_inf = 0.00000010264323450658, ||V_lower^k - V_lower^k-1||_inf = 0.00000014443924781169
+    Local Iteration 342: ||V_upper^k - V_upper^k-1||_inf = 0.00000009853750512631, ||V_lower^k - V_lower^k-1||_inf = 0.00000013866167789922
+    Local Iteration 343: ||V_upper^k - V_upper^k-1||_inf = 0.00000009459600492126, ||V_lower^k - V_lower^k-1||_inf = 0.00000013311521078325
+    Local Iteration 344: ||V_upper^k - V_upper^k-1||_inf = 0.00000009081216472441, ||V_lower^k - V_lower^k-1||_inf = 0.00000012779060235192
+    Local Iteration 345: ||V_upper^k - V_upper^k-1||_inf = 0.00000008717967813544, ||V_lower^k - V_lower^k-1||_inf = 0.00000012267897825785
+    Local Iteration 346: ||V_upper^k - V_upper^k-1||_inf = 0.00000008369249101002, ||V_lower^k - V_lower^k-1||_inf = 0.00000011777181912753
+    Local Iteration 347: ||V_upper^k - V_upper^k-1||_inf = 0.00000008034479136962, ||V_lower^k - V_lower^k-1||_inf = 0.00000011306094636243
+    Local Iteration 348: ||V_upper^k - V_upper^k-1||_inf = 0.00000007713099971483, ||V_lower^k - V_lower^k-1||_inf = 0.00000010853850850793
+    Local Iteration 349: ||V_upper^k - V_upper^k-1||_inf = 0.00000007404575972624, ||V_lower^k - V_lower^k-1||_inf = 0.00000010419358804650
+    Local Iteration 350: ||V_upper^k - V_upper^k-1||_inf = 0.00000007108392933719, ||V_lower^k - V_lower^k-1||_inf = 0.00000010002584452464
+    Local Iteration 351: ||V_upper^k - V_upper^k-1||_inf = 0.00000006824057216370, ||V_lower^k - V_lower^k-1||_inf = 0.00000009602481074365
+    Local Iteration 352: ||V_upper^k - V_upper^k-1||_inf = 0.00000006551094927715, ||V_lower^k - V_lower^k-1||_inf = 0.00000009218381831391
+    Local Iteration 353: ||V_upper^k - V_upper^k-1||_inf = 0.00000006289051130607, ||V_lower^k - V_lower^k-1||_inf = 0.00000008849646558135
+    Local Iteration 354: ||V_upper^k - V_upper^k-1||_inf = 0.00000006037489085382, ||V_lower^k - V_lower^k-1||_inf = 0.00000008495660695810
+    Local Iteration 355: ||V_upper^k - V_upper^k-1||_inf = 0.00000005795989521967, ||V_lower^k - V_lower^k-1||_inf = 0.00000008155834267977
+    Local Iteration 356: ||V_upper^k - V_upper^k-1||_inf = 0.00000005564149941088, ||V_lower^k - V_lower^k-1||_inf = 0.00000007829600897258
+    Local Iteration 357: ||V_upper^k - V_upper^k-1||_inf = 0.00000005341583943445, ||V_lower^k - V_lower^k-1||_inf = 0.00000007516416861368
+    Local Iteration 358: ||V_upper^k - V_upper^k-1||_inf = 0.00000005127920585707, ||V_lower^k - V_lower^k-1||_inf = 0.00000007215760186913
+    Local Iteration 359: ||V_upper^k - V_upper^k-1||_inf = 0.00000004922803762279, ||V_lower^k - V_lower^k-1||_inf = 0.00000006927129779437
+    Local Iteration 360: ||V_upper^k - V_upper^k-1||_inf = 0.00000004725891611788, ||V_lower^k - V_lower^k-1||_inf = 0.00000006650044588259
+    Local Iteration 361: ||V_upper^k - V_upper^k-1||_inf = 0.00000004536855947316, ||V_lower^k - V_lower^k-1||_inf = 0.00000006384042804729
+    Local Iteration 362: ||V_upper^k - V_upper^k-1||_inf = 0.00000004355381709424, ||V_lower^k - V_lower^k-1||_inf = 0.00000006128681092540
+    Local Iteration 363: ||V_upper^k - V_upper^k-1||_inf = 0.00000004181166441047, ||V_lower^k - V_lower^k-1||_inf = 0.00000005883533848838
+    Local Iteration 364: ||V_upper^k - V_upper^k-1||_inf = 0.00000004013919783405, ||V_lower^k - V_lower^k-1||_inf = 0.00000005648192494884
+    Local Iteration 365: ||V_upper^k - V_upper^k-1||_inf = 0.00000003853362992069, ||V_lower^k - V_lower^k-1||_inf = 0.00000005422264795089
+    Local Iteration 366: ||V_upper^k - V_upper^k-1||_inf = 0.00000003699228472386, ||V_lower^k - V_lower^k-1||_inf = 0.00000005205374203286
+    Local Iteration 367: ||V_upper^k - V_upper^k-1||_inf = 0.00000003551259333490, ||V_lower^k - V_lower^k-1||_inf = 0.00000004997159235154
+    Local Iteration 368: ||V_upper^k - V_upper^k-1||_inf = 0.00000003409208960151, ||V_lower^k - V_lower^k-1||_inf = 0.00000004797272865748
+    Local Iteration 369: ||V_upper^k - V_upper^k-1||_inf = 0.00000003272840601745, ||V_lower^k - V_lower^k-1||_inf = 0.00000004605381951118
+    Local Iteration 370: ||V_upper^k - V_upper^k-1||_inf = 0.00000003141926977675, ||V_lower^k - V_lower^k-1||_inf = 0.00000004421166673073
+    Local Iteration 371: ||V_upper^k - V_upper^k-1||_inf = 0.00000003016249898568, ||V_lower^k - V_lower^k-1||_inf = 0.00000004244320006150
+    Local Iteration 372: ||V_upper^k - V_upper^k-1||_inf = 0.00000002895599902625, ||V_lower^k - V_lower^k-1||_inf = 0.00000004074547205904
+    Local Iteration 373: ||V_upper^k - V_upper^k-1||_inf = 0.00000002779775906520, ||V_lower^k - V_lower^k-1||_inf = 0.00000003911565317668
+    Local Iteration 374: ||V_upper^k - V_upper^k-1||_inf = 0.00000002668584870259, ||V_lower^k - V_lower^k-1||_inf = 0.00000003755102704961
+    Local Iteration 375: ||V_upper^k - V_upper^k-1||_inf = 0.00000002561841475449, ||V_lower^k - V_lower^k-1||_inf = 0.00000003604898596763
+    Local Iteration 376: ||V_upper^k - V_upper^k-1||_inf = 0.00000002459367816431, ||V_lower^k - V_lower^k-1||_inf = 0.00000003460702652892
+    Local Iteration 377: ||V_upper^k - V_upper^k-1||_inf = 0.00000002360993103774, ||V_lower^k - V_lower^k-1||_inf = 0.00000003322274546777
+    Local Iteration 378: ||V_upper^k - V_upper^k-1||_inf = 0.00000002266553379623, ||V_lower^k - V_lower^k-1||_inf = 0.00000003189383564906
+    Local Iteration 379: ||V_upper^k - V_upper^k-1||_inf = 0.00000002175891244438, ||V_lower^k - V_lower^k-1||_inf = 0.00000003061808222309
+    Local Iteration 380: ||V_upper^k - V_upper^k-1||_inf = 0.00000002088855594660, ||V_lower^k - V_lower^k-1||_inf = 0.00000002939335893417
+    Local Iteration 381: ||V_upper^k - V_upper^k-1||_inf = 0.00000002005301370874, ||V_lower^k - V_lower^k-1||_inf = 0.00000002821762457680
+    Local Iteration 382: ||V_upper^k - V_upper^k-1||_inf = 0.00000001925089316039, ||V_lower^k - V_lower^k-1||_inf = 0.00000002708891959373
+    Local Iteration 383: ||V_upper^k - V_upper^k-1||_inf = 0.00000001848085743397, ||V_lower^k - V_lower^k-1||_inf = 0.00000002600536280998
+    Local Iteration 384: ||V_upper^k - V_upper^k-1||_inf = 0.00000001774162313662, ||V_lower^k - V_lower^k-1||_inf = 0.00000002496514829758
+    Local Iteration 385: ||V_upper^k - V_upper^k-1||_inf = 0.00000001703195821115, ||V_lower^k - V_lower^k-1||_inf = 0.00000002396654236568
+    Local Iteration 386: ||V_upper^k - V_upper^k-1||_inf = 0.00000001635067988271, ||V_lower^k - V_lower^k-1||_inf = 0.00000002300788067105
+    Local Iteration 387: ||V_upper^k - V_upper^k-1||_inf = 0.00000001569665268740, ||V_lower^k - V_lower^k-1||_inf = 0.00000002208756544421
+    Local Iteration 388: ||V_upper^k - V_upper^k-1||_inf = 0.00000001506878657990, ||V_lower^k - V_lower^k-1||_inf = 0.00000002120406282644
+    Local Iteration 389: ||V_upper^k - V_upper^k-1||_inf = 0.00000001446603511671, ||V_lower^k - V_lower^k-1||_inf = 0.00000002035590031338
+    Local Iteration 390: ||V_upper^k - V_upper^k-1||_inf = 0.00000001388739371204, ||V_lower^k - V_lower^k-1||_inf = 0.00000001954166430085
+    Local Iteration 391: ||V_upper^k - V_upper^k-1||_inf = 0.00000001333189796356, ||V_lower^k - V_lower^k-1||_inf = 0.00000001875999772882
+    Local Iteration 392: ||V_upper^k - V_upper^k-1||_inf = 0.00000001279862204501, ||V_lower^k - V_lower^k-1||_inf = 0.00000001800959781966
+    Local Iteration 393: ||V_upper^k - V_upper^k-1||_inf = 0.00000001228667716321, ||V_lower^k - V_lower^k-1||_inf = 0.00000001728921390688
+    Local Iteration 394: ||V_upper^k - V_upper^k-1||_inf = 0.00000001179521007668, ||V_lower^k - V_lower^k-1||_inf = 0.00000001659764535060
+    Local Iteration 395: ||V_upper^k - V_upper^k-1||_inf = 0.00000001132340167362, ||V_lower^k - V_lower^k-1||_inf = 0.00000001593373953658
+    Local Iteration 396: ||V_upper^k - V_upper^k-1||_inf = 0.00000001087046560667, ||V_lower^k - V_lower^k-1||_inf = 0.00000001529638995511
+    Local Iteration 397: ||V_upper^k - V_upper^k-1||_inf = 0.00000001043564698241, ||V_lower^k - V_lower^k-1||_inf = 0.00000001468453435691
+    Local Iteration 398: ||V_upper^k - V_upper^k-1||_inf = 0.00000001001822110311, ||V_lower^k - V_lower^k-1||_inf = 0.00000001409715298263
+    Local Iteration 399: ||V_upper^k - V_upper^k-1||_inf = 0.00000000961749225898, ||V_lower^k - V_lower^k-1||_inf = 0.00000001353326686333
+    Local Iteration 400: ||V_upper^k - V_upper^k-1||_inf = 0.00000000923279256863, ||V_lower^k - V_lower^k-1||_inf = 0.00000001299193618879
+    Local Iteration 401: ||V_upper^k - V_upper^k-1||_inf = 0.00000000886348086588, ||V_lower^k - V_lower^k-1||_inf = 0.00000001247225874124
+    Local Iteration 402: ||V_upper^k - V_upper^k-1||_inf = 0.00000000850894163125, ||V_lower^k - V_lower^k-1||_inf = 0.00000001197336839159
+    Local Iteration 403: ||V_upper^k - V_upper^k-1||_inf = 0.00000000816858396600, ||V_lower^k - V_lower^k-1||_inf = 0.00000001149443365593
+    Local Iteration 404: ||V_upper^k - V_upper^k-1||_inf = 0.00000000784184060736, ||V_lower^k - V_lower^k-1||_inf = 0.00000001103465630969
+    Local Iteration 405: ||V_upper^k - V_upper^k-1||_inf = 0.00000000752816698306, ||V_lower^k - V_lower^k-1||_inf = 0.00000001059327005730
+    Local Iteration 406: ||V_upper^k - V_upper^k-1||_inf = 0.00000000722704030374, ||V_lower^k - V_lower^k-1||_inf = 0.00000001016953925501
+    Local Iteration 407: ||V_upper^k - V_upper^k-1||_inf = 0.00000000693795869159, ||V_lower^k - V_lower^k-1||_inf = 0.00000000976275768481
+
+==================================================
+ LOCAL CONVERGENCE ACHIEVED
+==================================================
+  ||V_upper^k - V_upper^k-1||_inf = 6.93795869158931096933e-09 < tolerance = 1e-08
+  ||V_lower^k - V_lower^k-1||_inf = 9.76275768481192169933e-09 < tolerance = 1e-08
+  Converged in 407 iterations
+  V_lower increased from min(l_lower, r_lower); smallest step 0.000e+00
+    Local VI completed in 407 iterations
+    Final convergence values:
+      ||V_upper^final - V_upper^prev||_inf = 6.93795869e-09
+      ||V_lower^final - V_lower^prev||_inf = 9.76275768e-09
+  Local VI completed in 407 iterations, time: 102.060s
+    Final ||V_upper^k - V_upper^k-1||_inf = 6.93795869158931096933e-09
+    Final ||V_lower^k - V_lower^k-1||_inf = 9.76275768481192169933e-09
+  Saved visualization: /Users/i.k.tabbara/Documents/python directory/HSCC_2027/refactored_Implementations/results_hscc_2027_modified_init/ra_discount/van_der_pol_res40_eps0.001_dmin1e-08_dmax1e-08_gamma0.96_dt0.01_tau0.01_std/value_function_phase_16_complete.png
+  Phase 16 completed in 160.42s with 53365496 leaf cells
+
+Classification after phase 16:
+  Safe:          5152152 cells (  9.7%),   28.1% of state space
+  Unsafe:        2406936 cells (  4.5%),   28.2% of state space
+  Unclassified: 45806408 cells ( 85.8%),   43.7% of state space
+
+======================================================================
+REFINEMENT PHASE 17
+======================================================================
+Boundary cells: 45806408
+  Refinable (>eta_min=0.000354): 45806408
+  Below threshold: 0
+  Cumulative refined: 53363896
+  Refinable cell size statistics:
+    Max:    0.000566
+    Mean:   0.000566
+    Min:    0.000566
+    Median: 0.000566
+  Refining 45806408 cells...
+    Refined: 45806408 parent cells
+    Created: 91612816 child cells
+    Total cells: 99171904
+    Refinement time: 7.063s
+    Cumulative refined: 99170304
+  Rebuilding spatial index...
+  Building spatial index for 99171904 cells...
+   Spatial index built in 88.83s
+    Spatial index rebuilt in 88.833s
+  Initializing 91612816 new cells...
+  Initializing 91612816 new cells in parallel...
+   Initialized in 7.84s (11681737.2 cells/s)
+    Initialization completed in 7.844s
+  Starting local value iteration...
+  Reinitializing ALL 99171904 cells (V_lower = min(l, r), V_upper = l)
+   Reinitialized 99171904 cells in 14.14s (7015923.3 cells/s)
+  Local VI: updating all 99171904 cells
+    Conservative mode: False
+    Convergence tolerance: 1e-08
+    Max iterations: 20000
+    Updating successor cache for 91612816 updated cells...
+    Updating successor cache for 91612816 new cells (HYBRID)...
+      Affected cells: 91624862
+   Trajectories + spatial queries computed in 43.43s (2109764.4 tasks/s)
+    Breakdown: 54.1% ODE, 45.9% queries
+     Cache updated in 142.98s (640809.7 tasks/s)
+    Local Iteration   1: ||V_upper^k - V_upper^k-1||_inf = 4.08968913564991254361, ||V_lower^k - V_lower^k-1||_inf = 3.99484477945168681146
+    Local Iteration   2: ||V_upper^k - V_upper^k-1||_inf = 3.80896525035328537001, ||V_lower^k - V_lower^k-1||_inf = 3.71362286890487425239
+    Local Iteration   3: ||V_upper^k - V_upper^k-1||_inf = 3.55917803769511831291, ||V_lower^k - V_lower^k-1||_inf = 3.48878040110247589212
+    Local Iteration   4: ||V_upper^k - V_upper^k-1||_inf = 3.32577992813652123516, ||V_lower^k - V_lower^k-1||_inf = 3.25776127393884529226
+    Local Iteration   5: ||V_upper^k - V_upper^k-1||_inf = 3.11842335679553039895, ||V_lower^k - V_lower^k-1||_inf = 3.07007722666910876086
+    Local Iteration   6: ||V_upper^k - V_upper^k-1||_inf = 2.93417459038568972929, ||V_lower^k - V_lower^k-1||_inf = 2.87882320325655438609
+    Local Iteration   7: ||V_upper^k - V_upper^k-1||_inf = 2.75213777916642898802, ||V_lower^k - V_lower^k-1||_inf = 2.71505301479622573879
+    Local Iteration   8: ||V_upper^k - V_upper^k-1||_inf = 2.59058560169354556990, ||V_lower^k - V_lower^k-1||_inf = 2.57861667739507582908
+    Local Iteration   9: ||V_upper^k - V_upper^k-1||_inf = 2.43208842647777778723, ||V_lower^k - V_lower^k-1||_inf = 2.40712110829653047617
+    Local Iteration  10: ||V_upper^k - V_upper^k-1||_inf = 2.26730758388096198530, ||V_lower^k - V_lower^k-1||_inf = 2.26670430587138804768
+    Local Iteration  11: ||V_upper^k - V_upper^k-1||_inf = 2.17661528052572350589, ||V_lower^k - V_lower^k-1||_inf = 2.12223399332541928786
+    Local Iteration  12: ||V_upper^k - V_upper^k-1||_inf = 2.08955066930469435249, ||V_lower^k - V_lower^k-1||_inf = 1.98562860396246154693
+    Local Iteration  13: ||V_upper^k - V_upper^k-1||_inf = 2.00596864253250650734, ||V_lower^k - V_lower^k-1||_inf = 1.85809246218690082841
+    Local Iteration  14: ||V_upper^k - V_upper^k-1||_inf = 1.92572989683120621152, ||V_lower^k - V_lower^k-1||_inf = 1.77911241472572445588
+    Local Iteration  15: ||V_upper^k - V_upper^k-1||_inf = 1.84870070095795790976, ||V_lower^k - V_lower^k-1||_inf = 1.68963053836084542425
+    Local Iteration  16: ||V_upper^k - V_upper^k-1||_inf = 1.77475267291963945127, ||V_lower^k - V_lower^k-1||_inf = 1.61158313454672130760
+    Local Iteration  17: ||V_upper^k - V_upper^k-1||_inf = 1.70376256600285391762, ||V_lower^k - V_lower^k-1||_inf = 1.53269132444617994793
+    Local Iteration  18: ||V_upper^k - V_upper^k-1||_inf = 1.63561206336273978756, ||V_lower^k - V_lower^k-1||_inf = 1.47036130992303060161
+    Local Iteration  19: ||V_upper^k - V_upper^k-1||_inf = 1.57018758082822995625, ||V_lower^k - V_lower^k-1||_inf = 1.40770214279293348625
+    Local Iteration  20: ||V_upper^k - V_upper^k-1||_inf = 1.50738007759510095340, ||V_lower^k - V_lower^k-1||_inf = 1.32457889328943378970
+    Local Iteration  21: ||V_upper^k - V_upper^k-1||_inf = 1.44708487449129674651, ||V_lower^k - V_lower^k-1||_inf = 1.27157747110814933755
+    Local Iteration  22: ||V_upper^k - V_upper^k-1||_inf = 1.38920147951164496547, ||V_lower^k - V_lower^k-1||_inf = 1.22071437226382339958
+    Local Iteration  23: ||V_upper^k - V_upper^k-1||_inf = 1.33363342033117904251, ||V_lower^k - V_lower^k-1||_inf = 1.15369938457462417603
+    Local Iteration  24: ||V_upper^k - V_upper^k-1||_inf = 1.28028808351793177422, ||V_lower^k - V_lower^k-1||_inf = 1.10504305415679482394
+    Local Iteration  25: ||V_upper^k - V_upper^k-1||_inf = 1.22907656017721444996, ||V_lower^k - V_lower^k-1||_inf = 1.06081040975401652560
+    Local Iteration  26: ||V_upper^k - V_upper^k-1||_inf = 1.17991349777012599631, ||V_lower^k - V_lower^k-1||_inf = 1.00158735948287325179
+    Local Iteration  27: ||V_upper^k - V_upper^k-1||_inf = 1.13271695785932080547, ||V_lower^k - V_lower^k-1||_inf = 0.96147383548426534894
+    Local Iteration  28: ||V_upper^k - V_upper^k-1||_inf = 1.08740827954494800878, ||V_lower^k - V_lower^k-1||_inf = 0.92091215550737459683
+    Local Iteration  29: ||V_upper^k - V_upper^k-1||_inf = 1.04391194836314982197, ||V_lower^k - V_lower^k-1||_inf = 0.88406231055268547081
+    Local Iteration  30: ||V_upper^k - V_upper^k-1||_inf = 1.00215547042862396232, ||V_lower^k - V_lower^k-1||_inf = 0.84868708086815947134
+    Local Iteration  31: ||V_upper^k - V_upper^k-1||_inf = 0.96206925161147893721, ||V_lower^k - V_lower^k-1||_inf = 0.79848255413741964226
+    Local Iteration  32: ||V_upper^k - V_upper^k-1||_inf = 0.92358648154701972199, ||V_lower^k - V_lower^k-1||_inf = 0.76653135272874439732
+    Local Iteration  33: ||V_upper^k - V_upper^k-1||_inf = 0.88664302228513891535, ||V_lower^k - V_lower^k-1||_inf = 0.73585875242449083622
+    Local Iteration  34: ||V_upper^k - V_upper^k-1||_inf = 0.85114276573877079013, ||V_lower^k - V_lower^k-1||_inf = 0.70642440232751124718
+    Local Iteration  35: ||V_upper^k - V_upper^k-1||_inf = 0.81709705510921981642, ||V_lower^k - V_lower^k-1||_inf = 0.67815704061839277017
+    Local Iteration  36: ||V_upper^k - V_upper^k-1||_inf = 0.78441317290485113034, ||V_lower^k - V_lower^k-1||_inf = 0.65103075899365703272
+    Local Iteration  37: ||V_upper^k - V_upper^k-1||_inf = 0.75303664598865704960, ||V_lower^k - V_lower^k-1||_inf = 0.61162066796815095504
+    Local Iteration  38: ||V_upper^k - V_upper^k-1||_inf = 0.72291518014911071432, ||V_lower^k - V_lower^k-1||_inf = 0.57359454733788461933
+    Local Iteration  39: ||V_upper^k - V_upper^k-1||_inf = 0.69399857294314626355, ||V_lower^k - V_lower^k-1||_inf = 0.55052114031895360569
+    Local Iteration  40: ||V_upper^k - V_upper^k-1||_inf = 0.66623863002542038636, ||V_lower^k - V_lower^k-1||_inf = 0.46993773340941780159
+    Local Iteration  41: ||V_upper^k - V_upper^k-1||_inf = 0.63958908482440357535, ||V_lower^k - V_lower^k-1||_inf = 0.45114022407304110729
+    Local Iteration  42: ||V_upper^k - V_upper^k-1||_inf = 0.61400552143142739236, ||V_lower^k - V_lower^k-1||_inf = 0.42269515767646492765
+    Local Iteration  43: ||V_upper^k - V_upper^k-1||_inf = 0.58944530057417032776, ||V_lower^k - V_lower^k-1||_inf = 0.40578735136940624617
+    Local Iteration  44: ||V_upper^k - V_upper^k-1||_inf = 0.56586748855120350132, ||V_lower^k - V_lower^k-1||_inf = 0.38871771576596764186
+    Local Iteration  45: ||V_upper^k - V_upper^k-1||_inf = 0.54323278900915528133, ||V_lower^k - V_lower^k-1||_inf = 0.37316900713532891176
+    Local Iteration  46: ||V_upper^k - V_upper^k-1||_inf = 0.52150347744878911005, ||V_lower^k - V_lower^k-1||_inf = 0.35056074387201924258
+    Local Iteration  47: ||V_upper^k - V_upper^k-1||_inf = 0.50064333835083751900, ||V_lower^k - V_lower^k-1||_inf = 0.33621901800486947431
+    Local Iteration  48: ||V_upper^k - V_upper^k-1||_inf = 0.48061760481680393386, ||V_lower^k - V_lower^k-1||_inf = 0.32277025728467467758
+    Local Iteration  49: ||V_upper^k - V_upper^k-1||_inf = 0.46137418964167392632, ||V_lower^k - V_lower^k-1||_inf = 0.30985944699328771268
+    Local Iteration  50: ||V_upper^k - V_upper^k-1||_inf = 0.44291922205600697815, ||V_lower^k - V_lower^k-1||_inf = 0.29711323577251741446
+    Local Iteration  51: ||V_upper^k - V_upper^k-1||_inf = 0.42520245317376664795, ||V_lower^k - V_lower^k-1||_inf = 0.28478738945172932251
+    Local Iteration  52: ||V_upper^k - V_upper^k-1||_inf = 0.40819435504681594873, ||V_lower^k - V_lower^k-1||_inf = 0.27339589387366014517
+    Local Iteration  53: ||V_upper^k - V_upper^k-1||_inf = 0.39186658084494330190, ||V_lower^k - V_lower^k-1||_inf = 0.25622600909541404235
+    Local Iteration  54: ||V_upper^k - V_upper^k-1||_inf = 0.37619191761114556538, ||V_lower^k - V_lower^k-1||_inf = 0.24573703447326325500
+    Local Iteration  55: ||V_upper^k - V_upper^k-1||_inf = 0.36114424090669972056, ||V_lower^k - V_lower^k-1||_inf = 0.23590755309433272813
+    Local Iteration  56: ||V_upper^k - V_upper^k-1||_inf = 0.34669847127043174062, ||V_lower^k - V_lower^k-1||_inf = 0.22647125097055939569
+    Local Iteration  57: ||V_upper^k - V_upper^k-1||_inf = 0.33283053241961446655, ||V_lower^k - V_lower^k-1||_inf = 0.21714801665489910643
+    Local Iteration  58: ||V_upper^k - V_upper^k-1||_inf = 0.31951731112282982794, ||V_lower^k - V_lower^k-1||_inf = 0.20846209598870310553
+    Local Iteration  59: ||V_upper^k - V_upper^k-1||_inf = 0.30673661867791662816, ||V_lower^k - V_lower^k-1||_inf = 0.20012361214915500018
+    Local Iteration  60: ||V_upper^k - V_upper^k-1||_inf = 0.29446715393079997414, ||V_lower^k - V_lower^k-1||_inf = 0.19211866766318880240
+    Local Iteration  61: ||V_upper^k - V_upper^k-1||_inf = 0.28268846777356793076, ||V_lower^k - V_lower^k-1||_inf = 0.18443392095666125141
+    Local Iteration  62: ||V_upper^k - V_upper^k-1||_inf = 0.27138092906262523130, ||V_lower^k - V_lower^k-1||_inf = 0.17705656411839476583
+    Local Iteration  63: ||V_upper^k - V_upper^k-1||_inf = 0.26052569190012020428, ||V_lower^k - V_lower^k-1||_inf = 0.16535979856524007925
+    Local Iteration  64: ||V_upper^k - V_upper^k-1||_inf = 0.25010466422411536946, ||V_lower^k - V_lower^k-1||_inf = 0.15866740824821612410
+    Local Iteration  65: ||V_upper^k - V_upper^k-1||_inf = 0.24010047765515074580, ||V_lower^k - V_lower^k-1||_inf = 0.15224245487730947435
+    Local Iteration  66: ||V_upper^k - V_upper^k-1||_inf = 0.23049645854894471042, ||V_lower^k - V_lower^k-1||_inf = 0.14615275668221705541
+    Local Iteration  67: ||V_upper^k - V_upper^k-1||_inf = 0.22127660020698691756, ||V_lower^k - V_lower^k-1||_inf = 0.14030664641492840428
+    Local Iteration  68: ||V_upper^k - V_upper^k-1||_inf = 0.21242553619870740977, ||V_lower^k - V_lower^k-1||_inf = 0.13469438055833127255
+    Local Iteration  69: ||V_upper^k - V_upper^k-1||_inf = 0.20392851475075912671, ||V_lower^k - V_lower^k-1||_inf = 0.12917949172638723554
+    Local Iteration  70: ||V_upper^k - V_upper^k-1||_inf = 0.19577137416072876164, ||V_lower^k - V_lower^k-1||_inf = 0.12397882992949914305
+    Local Iteration  71: ||V_upper^k - V_upper^k-1||_inf = 0.18794051919429960451, ||V_lower^k - V_lower^k-1||_inf = 0.11554090515163627229
+    Local Iteration  72: ||V_upper^k - V_upper^k-1||_inf = 0.18042289842652758924, ||V_lower^k - V_lower^k-1||_inf = 0.11091926894557081751
+    Local Iteration  73: ||V_upper^k - V_upper^k-1||_inf = 0.17320598248946647568, ||V_lower^k - V_lower^k-1||_inf = 0.10648249818774799258
+    Local Iteration  74: ||V_upper^k - V_upper^k-1||_inf = 0.16627774318988780555, ||V_lower^k - V_lower^k-1||_inf = 0.10222319826023806844
+    Local Iteration  75: ||V_upper^k - V_upper^k-1||_inf = 0.15962663346229230554, ||V_lower^k - V_lower^k-1||_inf = 0.09481834145360051869
+    Local Iteration  76: ||V_upper^k - V_upper^k-1||_inf = 0.15324156812380060333, ||V_lower^k - V_lower^k-1||_inf = 0.09102560779545650071
+    Local Iteration  77: ||V_upper^k - V_upper^k-1||_inf = 0.14711190539884858031, ||V_lower^k - V_lower^k-1||_inf = 0.08738458348363824235
+    Local Iteration  78: ||V_upper^k - V_upper^k-1||_inf = 0.14122742918289463154, ||V_lower^k - V_lower^k-1||_inf = 0.08388920014429272765
+    Local Iteration  79: ||V_upper^k - V_upper^k-1||_inf = 0.13557833201557883962, ||V_lower^k - V_lower^k-1||_inf = 0.08053363213852100799
+    Local Iteration  80: ||V_upper^k - V_upper^k-1||_inf = 0.13015519873495567937, ||V_lower^k - V_lower^k-1||_inf = 0.07731228685298016656
+    Local Iteration  81: ||V_upper^k - V_upper^k-1||_inf = 0.12494899078555743444, ||V_lower^k - V_lower^k-1||_inf = 0.07421979537886094769
+    Local Iteration  82: ||V_upper^k - V_upper^k-1||_inf = 0.11993645346004047636, ||V_lower^k - V_lower^k-1||_inf = 0.07121359528318370324
+    Local Iteration  83: ||V_upper^k - V_upper^k-1||_inf = 0.11513899532163884842, ||V_lower^k - V_lower^k-1||_inf = 0.06832751913398693588
+    Local Iteration  84: ||V_upper^k - V_upper^k-1||_inf = 0.11053343550877330059, ||V_lower^k - V_lower^k-1||_inf = 0.06559441836862744957
+    Local Iteration  85: ||V_upper^k - V_upper^k-1||_inf = 0.10611209808842235469, ||V_lower^k - V_lower^k-1||_inf = 0.06297064163388235714
+    Local Iteration  86: ||V_upper^k - V_upper^k-1||_inf = 0.10186761416488546161, ||V_lower^k - V_lower^k-1||_inf = 0.06045181596852705619
+    Local Iteration  87: ||V_upper^k - V_upper^k-1||_inf = 0.09779290959829003982, ||V_lower^k - V_lower^k-1||_inf = 0.05803374332978597505
+    Local Iteration  88: ||V_upper^k - V_upper^k-1||_inf = 0.09388119321435842157, ||V_lower^k - V_lower^k-1||_inf = 0.05571239359659452967
+    Local Iteration  89: ||V_upper^k - V_upper^k-1||_inf = 0.09012594548578407860, ||V_lower^k - V_lower^k-1||_inf = 0.05156284268457016901
+    Local Iteration  90: ||V_upper^k - V_upper^k-1||_inf = 0.08652090766635271712, ||V_lower^k - V_lower^k-1||_inf = 0.04950032897718736197
+    Local Iteration  91: ||V_upper^k - V_upper^k-1||_inf = 0.08306007135969860344, ||V_lower^k - V_lower^k-1||_inf = 0.04752031581809987304
+    Local Iteration  92: ||V_upper^k - V_upper^k-1||_inf = 0.07973766850531065209, ||V_lower^k - V_lower^k-1||_inf = 0.04561950318537588006
+    Local Iteration  93: ||V_upper^k - V_upper^k-1||_inf = 0.07654816176509822434, ||V_lower^k - V_lower^k-1||_inf = 0.04379472305796083820
+    Local Iteration  94: ||V_upper^k - V_upper^k-1||_inf = 0.07348623529449428704, ||V_lower^k - V_lower^k-1||_inf = 0.04204293413564240411
+    Local Iteration  95: ||V_upper^k - V_upper^k-1||_inf = 0.07054678588271451334, ||V_lower^k - V_lower^k-1||_inf = 0.04036121677021670129
+    Local Iteration  96: ||V_upper^k - V_upper^k-1||_inf = 0.06772491444740594280, ||V_lower^k - V_lower^k-1||_inf = 0.03874676809940803129
+    Local Iteration  97: ||V_upper^k - V_upper^k-1||_inf = 0.06501591786950969287, ||V_lower^k - V_lower^k-1||_inf = 0.03719689737543171310
+    Local Iteration  98: ||V_upper^k - V_upper^k-1||_inf = 0.06241528115472930183, ||V_lower^k - V_lower^k-1||_inf = 0.03570902148041444485
+    Local Iteration  99: ||V_upper^k - V_upper^k-1||_inf = 0.05991866990854013281, ||V_lower^k - V_lower^k-1||_inf = 0.03426112868280102586
+    Local Iteration 100: ||V_upper^k - V_upper^k-1||_inf = 0.05752192311219853083, ||V_lower^k - V_lower^k-1||_inf = 0.03161272208661983218
+    Local Iteration 101: ||V_upper^k - V_upper^k-1||_inf = 0.05522104618771058598, ||V_lower^k - V_lower^k-1||_inf = 0.03034821320315503682
+    Local Iteration 102: ||V_upper^k - V_upper^k-1||_inf = 0.05301220434020215838, ||V_lower^k - V_lower^k-1||_inf = 0.02913428467502883479
+    Local Iteration 103: ||V_upper^k - V_upper^k-1||_inf = 0.05089171616659407538, ||V_lower^k - V_lower^k-1||_inf = 0.02796891328802767612
+    Local Iteration 104: ||V_upper^k - V_upper^k-1||_inf = 0.04885604751993030681, ||V_lower^k - V_lower^k-1||_inf = 0.02685015675650656922
+    Local Iteration 105: ||V_upper^k - V_upper^k-1||_inf = 0.04690180561913308982, ||V_lower^k - V_lower^k-1||_inf = 0.02577615048624630825
+    Local Iteration 106: ||V_upper^k - V_upper^k-1||_inf = 0.04502573339436775901, ||V_lower^k - V_lower^k-1||_inf = 0.02474510446679645953
+    Local Iteration 107: ||V_upper^k - V_upper^k-1||_inf = 0.04321838855243568395, ||V_lower^k - V_lower^k-1||_inf = 0.02374121015130777057
+    Local Iteration 108: ||V_upper^k - V_upper^k-1||_inf = 0.04148965301033825243, ||V_lower^k - V_lower^k-1||_inf = 0.02279156174525545989
+    Local Iteration 109: ||V_upper^k - V_upper^k-1||_inf = 0.03983006688992472150, ||V_lower^k - V_lower^k-1||_inf = 0.02187989927544523733
+    Local Iteration 110: ||V_upper^k - V_upper^k-1||_inf = 0.03823686421432773153, ||V_lower^k - V_lower^k-1||_inf = 0.02010668608564204068
+    Local Iteration 111: ||V_upper^k - V_upper^k-1||_inf = 0.03670738964575462338, ||V_lower^k - V_lower^k-1||_inf = 0.01930241864221636169
+    Local Iteration 112: ||V_upper^k - V_upper^k-1||_inf = 0.03523909405992443900, ||V_lower^k - V_lower^k-1||_inf = 0.01853032189652770167
+    Local Iteration 113: ||V_upper^k - V_upper^k-1||_inf = 0.03382953029752745755, ||V_lower^k - V_lower^k-1||_inf = 0.01778910902066659083
+    Local Iteration 114: ||V_upper^k - V_upper^k-1||_inf = 0.03247634908562635481, ||V_lower^k - V_lower^k-1||_inf = 0.01707754465983992928
+    Local Iteration 115: ||V_upper^k - V_upper^k-1||_inf = 0.03117729512220130533, ||V_lower^k - V_lower^k-1||_inf = 0.01639444287344633475
+    Local Iteration 116: ||V_upper^k - V_upper^k-1||_inf = 0.02993020331731324757, ||V_lower^k - V_lower^k-1||_inf = 0.01573866515850848302
+    Local Iteration 117: ||V_upper^k - V_upper^k-1||_inf = 0.02873299518462071878, ||V_lower^k - V_lower^k-1||_inf = 0.01510911855216813884
+    Local Iteration 118: ||V_upper^k - V_upper^k-1||_inf = 0.02758367537723589030, ||V_lower^k - V_lower^k-1||_inf = 0.01382994103572742980
+    Local Iteration 119: ||V_upper^k - V_upper^k-1||_inf = 0.02648032836214645261, ||V_lower^k - V_lower^k-1||_inf = 0.01327674339429833067
+    Local Iteration 120: ||V_upper^k - V_upper^k-1||_inf = 0.02542111522766059284, ||V_lower^k - V_lower^k-1||_inf = 0.01274567365852639911
+    Local Iteration 121: ||V_upper^k - V_upper^k-1||_inf = 0.02440427061855416843, ||V_lower^k - V_lower^k-1||_inf = 0.01223584671218534356
+    Local Iteration 122: ||V_upper^k - V_upper^k-1||_inf = 0.02342809979381199961, ||V_lower^k - V_lower^k-1||_inf = 0.01174641284369793044
+    Local Iteration 123: ||V_upper^k - V_upper^k-1||_inf = 0.02249097580205951935, ||V_lower^k - V_lower^k-1||_inf = 0.01127655632995001357
+    Local Iteration 124: ||V_upper^k - V_upper^k-1||_inf = 0.02159133676997714024, ||V_lower^k - V_lower^k-1||_inf = 0.01027527016455206423
+    Local Iteration 125: ||V_upper^k - V_upper^k-1||_inf = 0.02072768329917805408, ||V_lower^k - V_lower^k-1||_inf = 0.00986425935796998027
+    Local Iteration 126: ||V_upper^k - V_upper^k-1||_inf = 0.01989857596721092761, ||V_lower^k - V_lower^k-1||_inf = 0.00946968898365118175
+    Local Iteration 127: ||V_upper^k - V_upper^k-1||_inf = 0.01910263292852248940, ||V_lower^k - V_lower^k-1||_inf = 0.00909090142430513289
+    Local Iteration 128: ||V_upper^k - V_upper^k-1||_inf = 0.01833852761138158802, ||V_lower^k - V_lower^k-1||_inf = 0.00872726536733292764
+    Local Iteration 129: ||V_upper^k - V_upper^k-1||_inf = 0.01760498650692632339, ||V_lower^k - V_lower^k-1||_inf = 0.00837817475263960901
+    Local Iteration 130: ||V_upper^k - V_upper^k-1||_inf = 0.01690078704664927170, ||V_lower^k - V_lower^k-1||_inf = 0.00804304776253402486
+    Local Iteration 131: ||V_upper^k - V_upper^k-1||_inf = 0.01622475556478330042, ||V_lower^k - V_lower^k-1||_inf = 0.00772132585203266254
+    Local Iteration 132: ||V_upper^k - V_upper^k-1||_inf = 0.01557576534219196757, ||V_lower^k - V_lower^k-1||_inf = 0.00741247281795135576
+    Local Iteration 133: ||V_upper^k - V_upper^k-1||_inf = 0.01495273472850428866, ||V_lower^k - V_lower^k-1||_inf = 0.00671904810886454415
+    Local Iteration 134: ||V_upper^k - V_upper^k-1||_inf = 0.01435462533936411600, ||V_lower^k - V_lower^k-1||_inf = 0.00645028618450996238
+    Local Iteration 135: ||V_upper^k - V_upper^k-1||_inf = 0.01378044032578954955, ||V_lower^k - V_lower^k-1||_inf = 0.00619227473712956333
+    Local Iteration 136: ||V_upper^k - V_upper^k-1||_inf = 0.01322922271275796952, ||V_lower^k - V_lower^k-1||_inf = 0.00594458374764438198
+    Local Iteration 137: ||V_upper^k - V_upper^k-1||_inf = 0.01270005380424765046, ||V_lower^k - V_lower^k-1||_inf = 0.00570680039773860739
+    Local Iteration 138: ||V_upper^k - V_upper^k-1||_inf = 0.01219205165207774486, ||V_lower^k - V_lower^k-1||_inf = 0.00547852838182906129
+    Local Iteration 139: ||V_upper^k - V_upper^k-1||_inf = 0.01170436958599463395, ||V_lower^k - V_lower^k-1||_inf = 0.00525938724655589888
+    Local Iteration 140: ||V_upper^k - V_upper^k-1||_inf = 0.01123619480255485040, ||V_lower^k - V_lower^k-1||_inf = 0.00504901175669366254
+    Local Iteration 141: ||V_upper^k - V_upper^k-1||_inf = 0.01078674701045265541, ||V_lower^k - V_lower^k-1||_inf = 0.00454878239774853931
+    Local Iteration 142: ||V_upper^k - V_upper^k-1||_inf = 0.01035527713003454864, ||V_lower^k - V_lower^k-1||_inf = 0.00436683110183859816
+    Local Iteration 143: ||V_upper^k - V_upper^k-1||_inf = 0.00994106604483316683, ||V_lower^k - V_lower^k-1||_inf = 0.00419215785776505447
+    Local Iteration 144: ||V_upper^k - V_upper^k-1||_inf = 0.00954342340303983815, ||V_lower^k - V_lower^k-1||_inf = 0.00402447154345445240
+    Local Iteration 145: ||V_upper^k - V_upper^k-1||_inf = 0.00916168646691824413, ||V_lower^k - V_lower^k-1||_inf = 0.00386349268171627507
+    Local Iteration 146: ||V_upper^k - V_upper^k-1||_inf = 0.00879521900824151506, ||V_lower^k - V_lower^k-1||_inf = 0.00370895297444762476
+    Local Iteration 147: ||V_upper^k - V_upper^k-1||_inf = 0.00844341024791185266, ||V_lower^k - V_lower^k-1||_inf = 0.00356059485546972049
+    Local Iteration 148: ||V_upper^k - V_upper^k-1||_inf = 0.00810567383799537869, ||V_lower^k - V_lower^k-1||_inf = 0.00318469876521474630
+    Local Iteration 149: ||V_upper^k - V_upper^k-1||_inf = 0.00778144688447556312, ||V_lower^k - V_lower^k-1||_inf = 0.00305731081460615655
+    Local Iteration 150: ||V_upper^k - V_upper^k-1||_inf = 0.00747018900909653984, ||V_lower^k - V_lower^k-1||_inf = 0.00293501838202191081
+    Local Iteration 151: ||V_upper^k - V_upper^k-1||_inf = 0.00717138144873267873, ||V_lower^k - V_lower^k-1||_inf = 0.00281761764674103455
+    Local Iteration 152: ||V_upper^k - V_upper^k-1||_inf = 0.00688452619078337193, ||V_lower^k - V_lower^k-1||_inf = 0.00249835159556552246
+    Local Iteration 153: ||V_upper^k - V_upper^k-1||_inf = 0.00660914514315203653, ||V_lower^k - V_lower^k-1||_inf = 0.00239841753174290136
+    Local Iteration 154: ||V_upper^k - V_upper^k-1||_inf = 0.00634477933742595528, ||V_lower^k - V_lower^k-1||_inf = 0.00230248083047318499
+    Local Iteration 155: ||V_upper^k - V_upper^k-1||_inf = 0.00609098816392891675, ||V_lower^k - V_lower^k-1||_inf = 0.00221038159725425818
+    Local Iteration 156: ||V_upper^k - V_upper^k-1||_inf = 0.00584734863737176001, ||V_lower^k - V_lower^k-1||_inf = 0.00193921407496355346
+    Local Iteration 157: ||V_upper^k - V_upper^k-1||_inf = 0.00561345469187688947, ||V_lower^k - V_lower^k-1||_inf = 0.00186164551196501063
+    Local Iteration 158: ||V_upper^k - V_upper^k-1||_inf = 0.00538891650420181365, ||V_lower^k - V_lower^k-1||_inf = 0.00178717969148641052
+    Local Iteration 159: ||V_upper^k - V_upper^k-1||_inf = 0.00517335984403374111, ||V_lower^k - V_lower^k-1||_inf = 0.00171569250382695455
+    Local Iteration 160: ||V_upper^k - V_upper^k-1||_inf = 0.00496642545027239056, ||V_lower^k - V_lower^k-1||_inf = 0.00148537730158562146
+    Local Iteration 161: ||V_upper^k - V_upper^k-1||_inf = 0.00476776843226149431, ||V_lower^k - V_lower^k-1||_inf = 0.00142596220952219670
+    Local Iteration 162: ||V_upper^k - V_upper^k-1||_inf = 0.00457705769497103454, ||V_lower^k - V_lower^k-1||_inf = 0.00136892372114130875
+    Local Iteration 163: ||V_upper^k - V_upper^k-1||_inf = 0.00439397538717219323, ||V_lower^k - V_lower^k-1||_inf = 0.00131416677229565654
+    Local Iteration 164: ||V_upper^k - V_upper^k-1||_inf = 0.00421821637168530526, ||V_lower^k - V_lower^k-1||_inf = 0.00111854934755627536
+    Local Iteration 165: ||V_upper^k - V_upper^k-1||_inf = 0.00404948771681789329, ||V_lower^k - V_lower^k-1||_inf = 0.00107380737365402436
+    Local Iteration 166: ||V_upper^k - V_upper^k-1||_inf = 0.00388750820814517690, ||V_lower^k - V_lower^k-1||_inf = 0.00089352635501421069
+    Local Iteration 167: ||V_upper^k - V_upper^k-1||_inf = 0.00373200787981937000, ||V_lower^k - V_lower^k-1||_inf = 0.00085778530081364202
+    Local Iteration 168: ||V_upper^k - V_upper^k-1||_inf = 0.00358272756462659501, ||V_lower^k - V_lower^k-1||_inf = 0.00082347388878109594
+    Local Iteration 169: ||V_upper^k - V_upper^k-1||_inf = 0.00343941846204153098, ||V_lower^k - V_lower^k-1||_inf = 0.00079053493322985219
+    Local Iteration 170: ||V_upper^k - V_upper^k-1||_inf = 0.00330184172355986981, ||V_lower^k - V_lower^k-1||_inf = 0.00075891353590065843
+    Local Iteration 171: ||V_upper^k - V_upper^k-1||_inf = 0.00316976805461747450, ||V_lower^k - V_lower^k-1||_inf = 0.00072855699446463217
+    Local Iteration 172: ||V_upper^k - V_upper^k-1||_inf = 0.00304297733243277541, ||V_lower^k - V_lower^k-1||_inf = 0.00058744062278998869
+    Local Iteration 173: ||V_upper^k - V_upper^k-1||_inf = 0.00292125823913546440, ||V_lower^k - V_lower^k-1||_inf = 0.00045196890598233090
+    Local Iteration 174: ||V_upper^k - V_upper^k-1||_inf = 0.00009384348245222132, ||V_lower^k - V_lower^k-1||_inf = 0.00013568311880870045
+    Local Iteration 175: ||V_upper^k - V_upper^k-1||_inf = 0.00009008974315413243, ||V_lower^k - V_lower^k-1||_inf = 0.00013025579405635248
+    Local Iteration 176: ||V_upper^k - V_upper^k-1||_inf = 0.00008648615342796715, ||V_lower^k - V_lower^k-1||_inf = 0.00012504556229409871
+    Local Iteration 177: ||V_upper^k - V_upper^k-1||_inf = 0.00008302670729084844, ||V_lower^k - V_lower^k-1||_inf = 0.00012004373980233464
+    Local Iteration 178: ||V_upper^k - V_upper^k-1||_inf = 0.00007970563899921466, ||V_lower^k - V_lower^k-1||_inf = 0.00011524199021024136
+    Local Iteration 179: ||V_upper^k - V_upper^k-1||_inf = 0.00007651741343924607, ||V_lower^k - V_lower^k-1||_inf = 0.00011063231060183185
+    Local Iteration 180: ||V_upper^k - V_upper^k-1||_inf = 0.00007345671690167622, ||V_lower^k - V_lower^k-1||_inf = 0.00010620701817775843
+    Local Iteration 181: ||V_upper^k - V_upper^k-1||_inf = 0.00007051844822560929, ||V_lower^k - V_lower^k-1||_inf = 0.00010195873745064794
+    Local Iteration 182: ||V_upper^k - V_upper^k-1||_inf = 0.00006769771029658503, ||V_lower^k - V_lower^k-1||_inf = 0.00009788038795262213
+    Local Iteration 183: ||V_upper^k - V_upper^k-1||_inf = 0.00006498980188472171, ||V_lower^k - V_lower^k-1||_inf = 0.00009396517243451729
+    Local Iteration 184: ||V_upper^k - V_upper^k-1||_inf = 0.00006239020980933273, ||V_lower^k - V_lower^k-1||_inf = 0.00009020656553713645
+    Local Iteration 185: ||V_upper^k - V_upper^k-1||_inf = 0.00005989460141695943, ||V_lower^k - V_lower^k-1||_inf = 0.00008659830291565069
+    Local Iteration 186: ||V_upper^k - V_upper^k-1||_inf = 0.00005749881736028103, ||V_lower^k - V_lower^k-1||_inf = 0.00008313437079902463
+    Local Iteration 187: ||V_upper^k - V_upper^k-1||_inf = 0.00005519886466586973, ||V_lower^k - V_lower^k-1||_inf = 0.00007973950882908705
+    Local Iteration 188: ||V_upper^k - V_upper^k-1||_inf = 0.00005299091007923489, ||V_lower^k - V_lower^k-1||_inf = 0.00007651193311720354
+    Local Iteration 189: ||V_upper^k - V_upper^k-1||_inf = 0.00005087127367606561, ||V_lower^k - V_lower^k-1||_inf = 0.00007345145579251526
+    Local Iteration 190: ||V_upper^k - V_upper^k-1||_inf = 0.00004883642272902292, ||V_lower^k - V_lower^k-1||_inf = 0.00007051339756081469
+    Local Iteration 191: ||V_upper^k - V_upper^k-1||_inf = 0.00004688296581986196, ||V_lower^k - V_lower^k-1||_inf = 0.00006769286165838207
+    Local Iteration 192: ||V_upper^k - V_upper^k-1||_inf = 0.00004500764718706751, ||V_lower^k - V_lower^k-1||_inf = 0.00006498514719204679
+    Local Iteration 193: ||V_upper^k - V_upper^k-1||_inf = 0.00004320734129958481, ||V_lower^k - V_lower^k-1||_inf = 0.00006238574130436477
+    Local Iteration 194: ||V_upper^k - V_upper^k-1||_inf = 0.00004147904764760144, ||V_lower^k - V_lower^k-1||_inf = 0.00005987074047985068
+    Local Iteration 195: ||V_upper^k - V_upper^k-1||_inf = 0.00003981988574169740, ||V_lower^k - V_lower^k-1||_inf = 0.00005745756189782657
+    Local Iteration 196: ||V_upper^k - V_upper^k-1||_inf = 0.00003822709031202950, ||V_lower^k - V_lower^k-1||_inf = 0.00005514879742262889
+    Local Iteration 197: ||V_upper^k - V_upper^k-1||_inf = 0.00003669800669954830, ||V_lower^k - V_lower^k-1||_inf = 0.00005294284552572392
+    Local Iteration 198: ||V_upper^k - V_upper^k-1||_inf = 0.00003523008643156636, ||V_lower^k - V_lower^k-1||_inf = 0.00005082513170469490
+    Local Iteration 199: ||V_upper^k - V_upper^k-1||_inf = 0.00003382088297430364, ||V_lower^k - V_lower^k-1||_inf = 0.00004879212643650707
+    Local Iteration 200: ||V_upper^k - V_upper^k-1||_inf = 0.00003246804765533141, ||V_lower^k - V_lower^k-1||_inf = 0.00004684044137904684
+    Local Iteration 201: ||V_upper^k - V_upper^k-1||_inf = 0.00003116932574911816, ||V_lower^k - V_lower^k-1||_inf = 0.00004496682372388491
+    Local Iteration 202: ||V_upper^k - V_upper^k-1||_inf = 0.00002992255271915348, ||V_lower^k - V_lower^k-1||_inf = 0.00004316815077492955
+    Local Iteration 203: ||V_upper^k - V_upper^k-1||_inf = 0.00002872565061038735, ||V_lower^k - V_lower^k-1||_inf = 0.00004144142474393243
+    Local Iteration 204: ||V_upper^k - V_upper^k-1||_inf = 0.00002757662458597189, ||V_lower^k - V_lower^k-1||_inf = 0.00003978376775417517
+    Local Iteration 205: ||V_upper^k - V_upper^k-1||_inf = 0.00002647355960253299, ||V_lower^k - V_lower^k-1||_inf = 0.00003819241704400820
+    Local Iteration 206: ||V_upper^k - V_upper^k-1||_inf = 0.00002541461721843166, ||V_lower^k - V_lower^k-1||_inf = 0.00003666472036224788
+    Local Iteration 207: ||V_upper^k - V_upper^k-1||_inf = 0.00002439803252969440, ||V_lower^k - V_lower^k-1||_inf = 0.00003519813154775799
+    Local Iteration 208: ||V_upper^k - V_upper^k-1||_inf = 0.00002342211122850660, ||V_lower^k - V_lower^k-1||_inf = 0.00003379020628584768
+    Local Iteration 209: ||V_upper^k - V_upper^k-1||_inf = 0.00002248522677936632, ||V_lower^k - V_lower^k-1||_inf = 0.00003242468064092998
+    Local Iteration 210: ||V_upper^k - V_upper^k-1||_inf = 0.00002158581770819165, ||V_lower^k - V_lower^k-1||_inf = 0.00003112357313293465
+    Local Iteration 211: ||V_upper^k - V_upper^k-1||_inf = 0.00002072238499986400, ||V_lower^k - V_lower^k-1||_inf = 0.00002986959530557585
+    Local Iteration 212: ||V_upper^k - V_upper^k-1||_inf = 0.00001989348959986948, ||V_lower^k - V_lower^k-1||_inf = 0.00002866957100974268
+    Local Iteration 213: ||V_upper^k - V_upper^k-1||_inf = 0.00001909775001587469, ||V_lower^k - V_lower^k-1||_inf = 0.00002752278816935290
+    Local Iteration 214: ||V_upper^k - V_upper^k-1||_inf = 0.00001833384001523970, ||V_lower^k - V_lower^k-1||_inf = 0.00002641963653380176
+    Local Iteration 215: ||V_upper^k - V_upper^k-1||_inf = 0.00001760048641463009, ||V_lower^k - V_lower^k-1||_inf = 0.00002536152917369347
+    Local Iteration 216: ||V_upper^k - V_upper^k-1||_inf = 0.00001689646695804485, ||V_lower^k - V_lower^k-1||_inf = 0.00002434706800674572
+    Local Iteration 217: ||V_upper^k - V_upper^k-1||_inf = 0.00001622060827972304, ||V_lower^k - V_lower^k-1||_inf = 0.00002337318528647587
+    Local Iteration 218: ||V_upper^k - V_upper^k-1||_inf = 0.00001557178394853410, ||V_lower^k - V_lower^k-1||_inf = 0.00002243715462899888
+    Local Iteration 219: ||V_upper^k - V_upper^k-1||_inf = 0.00001494891259059270, ||V_lower^k - V_lower^k-1||_inf = 0.00002153035703174658
+    Local Iteration 220: ||V_upper^k - V_upper^k-1||_inf = 0.00001435095608696898, ||V_lower^k - V_lower^k-1||_inf = 0.00002066914275047671
+    Local Iteration 221: ||V_upper^k - V_upper^k-1||_inf = 0.00001377691784349024, ||V_lower^k - V_lower^k-1||_inf = 0.00001984237704045767
+    Local Iteration 222: ||V_upper^k - V_upper^k-1||_inf = 0.00001322584112975060, ||V_lower^k - V_lower^k-1||_inf = 0.00001904868195883936
+    Local Iteration 223: ||V_upper^k - V_upper^k-1||_inf = 0.00001269680748456061, ||V_lower^k - V_lower^k-1||_inf = 0.00001828300620223655
+    Local Iteration 224: ||V_upper^k - V_upper^k-1||_inf = 0.00001218893518517818, ||V_lower^k - V_lower^k-1||_inf = 0.00001754804852699122
+    Local Iteration 225: ||V_upper^k - V_upper^k-1||_inf = 0.00001170137777777104, ||V_lower^k - V_lower^k-1||_inf = 0.00001684612658591156
+    Local Iteration 226: ||V_upper^k - V_upper^k-1||_inf = 0.00001123332266666019, ||V_lower^k - V_lower^k-1||_inf = 0.00001617228152247510
+    Local Iteration 227: ||V_upper^k - V_upper^k-1||_inf = 0.00001078398975999379, ||V_lower^k - V_lower^k-1||_inf = 0.00001552327852175382
+    Local Iteration 228: ||V_upper^k - V_upper^k-1||_inf = 0.00001035263016959404, ||V_lower^k - V_lower^k-1||_inf = 0.00001490234738088368
+    Local Iteration 229: ||V_upper^k - V_upper^k-1||_inf = 0.00000993852496281028, ||V_lower^k - V_lower^k-1||_inf = 0.00001430625348564828
+    Local Iteration 230: ||V_upper^k - V_upper^k-1||_inf = 0.00000954098396429786, ||V_lower^k - V_lower^k-1||_inf = 0.00001373103536547911
+    Local Iteration 231: ||V_upper^k - V_upper^k-1||_inf = 0.00000915934460572594, ||V_lower^k - V_lower^k-1||_inf = 0.00001318179395085994
+    Local Iteration 232: ||V_upper^k - V_upper^k-1||_inf = 0.00000879297082149690, ||V_lower^k - V_lower^k-1||_inf = 0.00001265452219282557
+    Local Iteration 233: ||V_upper^k - V_upper^k-1||_inf = 0.00000844125198863702, ||V_lower^k - V_lower^k-1||_inf = 0.00001214834130511250
+    Local Iteration 234: ||V_upper^k - V_upper^k-1||_inf = 0.00000810360190909155, ||V_lower^k - V_lower^k-1||_inf = 0.00001165796186157329
+    Local Iteration 235: ||V_upper^k - V_upper^k-1||_inf = 0.00000777945783272791, ||V_lower^k - V_lower^k-1||_inf = 0.00001118460115890745
+    Local Iteration 236: ||V_upper^k - V_upper^k-1||_inf = 0.00000746827951941879, ||V_lower^k - V_lower^k-1||_inf = 0.00001073202935878315
+    Local Iteration 237: ||V_upper^k - V_upper^k-1||_inf = 0.00000716954833864206, ||V_lower^k - V_lower^k-1||_inf = 0.00001029731936861880
+    Local Iteration 238: ||V_upper^k - V_upper^k-1||_inf = 0.00000688276640509639, ||V_lower^k - V_lower^k-1||_inf = 0.00000987403532654748
+    Local Iteration 239: ||V_upper^k - V_upper^k-1||_inf = 0.00000660745574889252, ||V_lower^k - V_lower^k-1||_inf = 0.00000947429516407635
+    Local Iteration 240: ||V_upper^k - V_upper^k-1||_inf = 0.00000634315751893682, ||V_lower^k - V_lower^k-1||_inf = 0.00000908888235096359
+    Local Iteration 241: ||V_upper^k - V_upper^k-1||_inf = 0.00000608943121817934, ||V_lower^k - V_lower^k-1||_inf = 0.00000871826498961533
+    Local Iteration 242: ||V_upper^k - V_upper^k-1||_inf = 0.00000584585396945217, ||V_lower^k - V_lower^k-1||_inf = 0.00000836216260964091
+    Local Iteration 243: ||V_upper^k - V_upper^k-1||_inf = 0.00000561201981067408, ||V_lower^k - V_lower^k-1||_inf = 0.00000802164067521826
+    Local Iteration 244: ||V_upper^k - V_upper^k-1||_inf = 0.00000538753901824712, ||V_lower^k - V_lower^k-1||_inf = 0.00000769821092179001
+    Local Iteration 245: ||V_upper^k - V_upper^k-1||_inf = 0.00000517203745751724, ||V_lower^k - V_lower^k-1||_inf = 0.00000738647980497493
+    Local Iteration 246: ||V_upper^k - V_upper^k-1||_inf = 0.00000496515595921655, ||V_lower^k - V_lower^k-1||_inf = 0.00000708425113867740
+    Local Iteration 247: ||V_upper^k - V_upper^k-1||_inf = 0.00000476654972084789, ||V_lower^k - V_lower^k-1||_inf = 0.00000680088109313032
+    Local Iteration 248: ||V_upper^k - V_upper^k-1||_inf = 0.00000457588773201397, ||V_lower^k - V_lower^k-1||_inf = 0.00000652009226296917
+    Local Iteration 249: ||V_upper^k - V_upper^k-1||_inf = 0.00000439285222273340, ||V_lower^k - V_lower^k-1||_inf = 0.00000625648210907955
+    Local Iteration 250: ||V_upper^k - V_upper^k-1||_inf = 0.00000421713813382407, ||V_lower^k - V_lower^k-1||_inf = 0.00000600363076202356
+    Local Iteration 251: ||V_upper^k - V_upper^k-1||_inf = 0.00000404845260847110, ||V_lower^k - V_lower^k-1||_inf = 0.00000576208624412854
+    Local Iteration 252: ||V_upper^k - V_upper^k-1||_inf = 0.00000388651450413225, ||V_lower^k - V_lower^k-1||_inf = 0.00000552963859921614
+    Local Iteration 253: ||V_upper^k - V_upper^k-1||_inf = 0.00000373105392396696, ||V_lower^k - V_lower^k-1||_inf = 0.00000530306501205315
+    Local Iteration 254: ||V_upper^k - V_upper^k-1||_inf = 0.00000358181176700829, ||V_lower^k - V_lower^k-1||_inf = 0.00000509094241157103
+    Local Iteration 255: ||V_upper^k - V_upper^k-1||_inf = 0.00000343853929632796, ||V_lower^k - V_lower^k-1||_inf = 0.00000488669844695585
+    Local Iteration 256: ||V_upper^k - V_upper^k-1||_inf = 0.00000330099772447485, ||V_lower^k - V_lower^k-1||_inf = 0.00000469095714025927
+    Local Iteration 257: ||V_upper^k - V_upper^k-1||_inf = 0.00000316895781549585, ||V_lower^k - V_lower^k-1||_inf = 0.00000449810003229976
+    Local Iteration 258: ||V_upper^k - V_upper^k-1||_inf = 0.00000304219950287601, ||V_lower^k - V_lower^k-1||_inf = 0.00000431493722234598
+    Local Iteration 259: ||V_upper^k - V_upper^k-1||_inf = 0.00000292051152276098, ||V_lower^k - V_lower^k-1||_inf = 0.00000414199308247351
+    Local Iteration 260: ||V_upper^k - V_upper^k-1||_inf = 0.00000280369106185053, ||V_lower^k - V_lower^k-1||_inf = 0.00000397411964992823
+    Local Iteration 261: ||V_upper^k - V_upper^k-1||_inf = 0.00000269154341937651, ||V_lower^k - V_lower^k-1||_inf = 0.00000381309638509424
+    Local Iteration 262: ||V_upper^k - V_upper^k-1||_inf = 0.00000258388168260145, ||V_lower^k - V_lower^k-1||_inf = 0.00000366016414811946
+    Local Iteration 263: ||V_upper^k - V_upper^k-1||_inf = 0.00000248052641529739, ||V_lower^k - V_lower^k-1||_inf = 0.00000351345876002459
+    Local Iteration 264: ||V_upper^k - V_upper^k-1||_inf = 0.00000238130535868549, ||V_lower^k - V_lower^k-1||_inf = 0.00000337182415957493
+    Local Iteration 265: ||V_upper^k - V_upper^k-1||_inf = 0.00000228605314433807, ||V_lower^k - V_lower^k-1||_inf = 0.00000323610891053190
+    Local Iteration 266: ||V_upper^k - V_upper^k-1||_inf = 0.00000219461101856455, ||V_lower^k - V_lower^k-1||_inf = 0.00000310288344880940
+    Local Iteration 267: ||V_upper^k - V_upper^k-1||_inf = 0.00000210682657782197, ||V_lower^k - V_lower^k-1||_inf = 0.00000297599953290969
+    Local Iteration 268: ||V_upper^k - V_upper^k-1||_inf = 0.00000202255351470909, ||V_lower^k - V_lower^k-1||_inf = 0.00000285673573045045
+    Local Iteration 269: ||V_upper^k - V_upper^k-1||_inf = 0.00000194165137412072, ||V_lower^k - V_lower^k-1||_inf = 0.00000274228989129891
+    Local Iteration 270: ||V_upper^k - V_upper^k-1||_inf = 0.00000186398531915589, ||V_lower^k - V_lower^k-1||_inf = 0.00000263200522848810
+    Local Iteration 271: ||V_upper^k - V_upper^k-1||_inf = 0.00000178942590638965, ||V_lower^k - V_lower^k-1||_inf = 0.00000252666408738775
+    Local Iteration 272: ||V_upper^k - V_upper^k-1||_inf = 0.00000171784887013407, ||V_lower^k - V_lower^k-1||_inf = 0.00000242540546343351
+    Local Iteration 273: ||V_upper^k - V_upper^k-1||_inf = 0.00000164913491532871, ||V_lower^k - V_lower^k-1||_inf = 0.00000232715660689247
+    Local Iteration 274: ||V_upper^k - V_upper^k-1||_inf = 0.00000158316951871556, ||V_lower^k - V_lower^k-1||_inf = 0.00000223407034261677
+    Local Iteration 275: ||V_upper^k - V_upper^k-1||_inf = 0.00000151984273796694, ||V_lower^k - V_lower^k-1||_inf = 0.00000214455535267940
+    Local Iteration 276: ||V_upper^k - V_upper^k-1||_inf = 0.00000145904902844826, ||V_lower^k - V_lower^k-1||_inf = 0.00000205807279102803
+    Local Iteration 277: ||V_upper^k - V_upper^k-1||_inf = 0.00000140068706731033, ||V_lower^k - V_lower^k-1||_inf = 0.00000197567096774024
+    Local Iteration 278: ||V_upper^k - V_upper^k-1||_inf = 0.00000134465958461792, ||V_lower^k - V_lower^k-1||_inf = 0.00000189640263122434
+    Local Iteration 279: ||V_upper^k - V_upper^k-1||_inf = 0.00000129087320123320, ||V_lower^k - V_lower^k-1||_inf = 0.00000181963452236547
+    Local Iteration 280: ||V_upper^k - V_upper^k-1||_inf = 0.00000123923827318387, ||V_lower^k - V_lower^k-1||_inf = 0.00000174643049611208
+    Local Iteration 281: ||V_upper^k - V_upper^k-1||_inf = 0.00000118966874225652, ||V_lower^k - V_lower^k-1||_inf = 0.00000167657327626760
+    Local Iteration 282: ||V_upper^k - V_upper^k-1||_inf = 0.00000114208199256626, ||V_lower^k - V_lower^k-1||_inf = 0.00000160951034521690
+    Local Iteration 283: ||V_upper^k - V_upper^k-1||_inf = 0.00000109639871286361, ||V_lower^k - V_lower^k-1||_inf = 0.00000154512993140822
+    Local Iteration 284: ||V_upper^k - V_upper^k-1||_inf = 0.00000105164714189655, ||V_lower^k - V_lower^k-1||_inf = 0.00000148332473415189
+    Local Iteration 285: ||V_upper^k - V_upper^k-1||_inf = 0.00000100958125622069, ||V_lower^k - V_lower^k-1||_inf = 0.00000142383361798405
+    Local Iteration 286: ||V_upper^k - V_upper^k-1||_inf = 0.00000096919800597186, ||V_lower^k - V_lower^k-1||_inf = 0.00000136671053798964
+    Local Iteration 287: ||V_upper^k - V_upper^k-1||_inf = 0.00000093043008573299, ||V_lower^k - V_lower^k-1||_inf = 0.00000131124906005309
+    Local Iteration 288: ||V_upper^k - V_upper^k-1||_inf = 0.00000089321288230367, ||V_lower^k - V_lower^k-1||_inf = 0.00000125879909765097
+    Local Iteration 289: ||V_upper^k - V_upper^k-1||_inf = 0.00000085748436701152, ||V_lower^k - V_lower^k-1||_inf = 0.00000120768349444893
+    Local Iteration 290: ||V_upper^k - V_upper^k-1||_inf = 0.00000082318499233106, ||V_lower^k - V_lower^k-1||_inf = 0.00000115871291674303
+    Local Iteration 291: ||V_upper^k - V_upper^k-1||_inf = 0.00000079025759263782, ||V_lower^k - V_lower^k-1||_inf = 0.00000111236440007331
+    Local Iteration 292: ||V_upper^k - V_upper^k-1||_inf = 0.00000075864728893231, ||V_lower^k - V_lower^k-1||_inf = 0.00000106781125636974
+    Local Iteration 293: ||V_upper^k - V_upper^k-1||_inf = 0.00000072830139737501, ||V_lower^k - V_lower^k-1||_inf = 0.00000102509815790915
+    Local Iteration 294: ||V_upper^k - V_upper^k-1||_inf = 0.00000069916934148001, ||V_lower^k - V_lower^k-1||_inf = 0.00000098409423159279
+    Local Iteration 295: ||V_upper^k - V_upper^k-1||_inf = 0.00000067120256782081, ||V_lower^k - V_lower^k-1||_inf = 0.00000094462564047642
+    Local Iteration 296: ||V_upper^k - V_upper^k-1||_inf = 0.00000064435446510798, ||V_lower^k - V_lower^k-1||_inf = 0.00000090684061485737
+    Local Iteration 297: ||V_upper^k - V_upper^k-1||_inf = 0.00000061858028650366, ||V_lower^k - V_lower^k-1||_inf = 0.00000087056699026308
+    Local Iteration 298: ||V_upper^k - V_upper^k-1||_inf = 0.00000059383707504351, ||V_lower^k - V_lower^k-1||_inf = 0.00000083574431065255
+    Local Iteration 299: ||V_upper^k - V_upper^k-1||_inf = 0.00000057008359204177, ||V_lower^k - V_lower^k-1||_inf = 0.00000080231453822645
+    Local Iteration 300: ||V_upper^k - V_upper^k-1||_inf = 0.00000054728024836010, ||V_lower^k - V_lower^k-1||_inf = 0.00000077010411897880
+    Local Iteration 301: ||V_upper^k - V_upper^k-1||_inf = 0.00000052538903842570, ||V_lower^k - V_lower^k-1||_inf = 0.00000073906091106198
+    Local Iteration 302: ||V_upper^k - V_upper^k-1||_inf = 0.00000050437347688867, ||V_lower^k - V_lower^k-1||_inf = 0.00000070930353294756
+    Local Iteration 303: ||V_upper^k - V_upper^k-1||_inf = 0.00000048419853781312, ||V_lower^k - V_lower^k-1||_inf = 0.00000068093139162965
+    Local Iteration 304: ||V_upper^k - V_upper^k-1||_inf = 0.00000046483059630060, ||V_lower^k - V_lower^k-1||_inf = 0.00000065357866577612
+    Local Iteration 305: ||V_upper^k - V_upper^k-1||_inf = 0.00000044623737244857, ||V_lower^k - V_lower^k-1||_inf = 0.00000062743551914508
+    Local Iteration 306: ||V_upper^k - V_upper^k-1||_inf = 0.00000042838787755063, ||V_lower^k - V_lower^k-1||_inf = 0.00000060187923746034
+    Local Iteration 307: ||V_upper^k - V_upper^k-1||_inf = 0.00000041125236244861, ||V_lower^k - V_lower^k-1||_inf = 0.00000057780406796192
+    Local Iteration 308: ||V_upper^k - V_upper^k-1||_inf = 0.00000039480226795066, ||V_lower^k - V_lower^k-1||_inf = 0.00000055469190524345
+    Local Iteration 309: ||V_upper^k - V_upper^k-1||_inf = 0.00000037901017723263, ||V_lower^k - V_lower^k-1||_inf = 0.00000053238487664060
+    Local Iteration 310: ||V_upper^k - V_upper^k-1||_inf = 0.00000036384977014333, ||V_lower^k - V_lower^k-1||_inf = 0.00000051108948157497
+    Local Iteration 311: ||V_upper^k - V_upper^k-1||_inf = 0.00000034929577933760, ||V_lower^k - V_lower^k-1||_inf = 0.00000049063014382473
+    Local Iteration 312: ||V_upper^k - V_upper^k-1||_inf = 0.00000033532394816409, ||V_lower^k - V_lower^k-1||_inf = 0.00000047100493807174
+    Local Iteration 313: ||V_upper^k - V_upper^k-1||_inf = 0.00000032191099023753, ||V_lower^k - V_lower^k-1||_inf = 0.00000045216474054887
+    Local Iteration 314: ||V_upper^k - V_upper^k-1||_inf = 0.00000030903455062803, ||V_lower^k - V_lower^k-1||_inf = 0.00000043407815092692
+    Local Iteration 315: ||V_upper^k - V_upper^k-1||_inf = 0.00000029667316860291, ||V_lower^k - V_lower^k-1||_inf = 0.00000041671502488984
+    Local Iteration 316: ||V_upper^k - V_upper^k-1||_inf = 0.00000028480624185879, ||V_lower^k - V_lower^k-1||_inf = 0.00000040004642389425
+    Local Iteration 317: ||V_upper^k - V_upper^k-1||_inf = 0.00000027341399218444, ||V_lower^k - V_lower^k-1||_inf = 0.00000038404456693848
+    Local Iteration 318: ||V_upper^k - V_upper^k-1||_inf = 0.00000026247743249706, ||V_lower^k - V_lower^k-1||_inf = 0.00000036868278426094
+    Local Iteration 319: ||V_upper^k - V_upper^k-1||_inf = 0.00000025197833519718, ||V_lower^k - V_lower^k-1||_inf = 0.00000035393547289050
+    Local Iteration 320: ||V_upper^k - V_upper^k-1||_inf = 0.00000024189920178929, ||V_lower^k - V_lower^k-1||_inf = 0.00000033977805397488
+    Local Iteration 321: ||V_upper^k - V_upper^k-1||_inf = 0.00000023222323371772, ||V_lower^k - V_lower^k-1||_inf = 0.00000032618693181589
+    Local Iteration 322: ||V_upper^k - V_upper^k-1||_inf = 0.00000022293430436901, ||V_lower^k - V_lower^k-1||_inf = 0.00000031313945454325
+    Local Iteration 323: ||V_upper^k - V_upper^k-1||_inf = 0.00000021401693219425, ||V_lower^k - V_lower^k-1||_inf = 0.00000030061387636152
+    Local Iteration 324: ||V_upper^k - V_upper^k-1||_inf = 0.00000020545625490648, ||V_lower^k - V_lower^k-1||_inf = 0.00000028858932130706
+    Local Iteration 325: ||V_upper^k - V_upper^k-1||_inf = 0.00000019723800471022, ||V_lower^k - V_lower^k-1||_inf = 0.00000027704574845478
+    Local Iteration 326: ||V_upper^k - V_upper^k-1||_inf = 0.00000018934848452181, ||V_lower^k - V_lower^k-1||_inf = 0.00000026596391851659
+    Local Iteration 327: ||V_upper^k - V_upper^k-1||_inf = 0.00000018177454514094, ||V_lower^k - V_lower^k-1||_inf = 0.00000025532536177592
+    Local Iteration 328: ||V_upper^k - V_upper^k-1||_inf = 0.00000017450356333530, ||V_lower^k - V_lower^k-1||_inf = 0.00000024511234730489
+    Local Iteration 329: ||V_upper^k - V_upper^k-1||_inf = 0.00000016752342080189, ||V_lower^k - V_lower^k-1||_inf = 0.00000023530785341269
+    Local Iteration 330: ||V_upper^k - V_upper^k-1||_inf = 0.00000016082248396981, ||V_lower^k - V_lower^k-1||_inf = 0.00000022589553927618
+    Local Iteration 331: ||V_upper^k - V_upper^k-1||_inf = 0.00000015438958461102, ||V_lower^k - V_lower^k-1||_inf = 0.00000021685971770514
+    Local Iteration 332: ||V_upper^k - V_upper^k-1||_inf = 0.00000014821400122658, ||V_lower^k - V_lower^k-1||_inf = 0.00000020818532899693
+    Local Iteration 333: ||V_upper^k - V_upper^k-1||_inf = 0.00000014228544117752, ||V_lower^k - V_lower^k-1||_inf = 0.00000019985791583705
+    Local Iteration 334: ||V_upper^k - V_upper^k-1||_inf = 0.00000013659402353042, ||V_lower^k - V_lower^k-1||_inf = 0.00000019186359920357
+    Local Iteration 335: ||V_upper^k - V_upper^k-1||_inf = 0.00000013113026258920, ||V_lower^k - V_lower^k-1||_inf = 0.00000018418905523543
+    Local Iteration 336: ||V_upper^k - V_upper^k-1||_inf = 0.00000012588505208563, ||V_lower^k - V_lower^k-1||_inf = 0.00000017682149302601
+    Local Iteration 337: ||V_upper^k - V_upper^k-1||_inf = 0.00000012084965000221, ||V_lower^k - V_lower^k-1||_inf = 0.00000016974863330497
+    Local Iteration 338: ||V_upper^k - V_upper^k-1||_inf = 0.00000011601566400212, ||V_lower^k - V_lower^k-1||_inf = 0.00000016295868797277
+    Local Iteration 339: ||V_upper^k - V_upper^k-1||_inf = 0.00000011137503744203, ||V_lower^k - V_lower^k-1||_inf = 0.00000015644034045386
+    Local Iteration 340: ||V_upper^k - V_upper^k-1||_inf = 0.00000010692003594435, ||V_lower^k - V_lower^k-1||_inf = 0.00000015018272683571
+    Local Iteration 341: ||V_upper^k - V_upper^k-1||_inf = 0.00000010264323450658, ||V_lower^k - V_lower^k-1||_inf = 0.00000014417541776228
+    Local Iteration 342: ||V_upper^k - V_upper^k-1||_inf = 0.00000009853750512631, ||V_lower^k - V_lower^k-1||_inf = 0.00000013840840105179
+    Local Iteration 343: ||V_upper^k - V_upper^k-1||_inf = 0.00000009459600492126, ||V_lower^k - V_lower^k-1||_inf = 0.00000013287206500972
+    Local Iteration 344: ||V_upper^k - V_upper^k-1||_inf = 0.00000009081216472441, ||V_lower^k - V_lower^k-1||_inf = 0.00000012755718240933
+    Local Iteration 345: ||V_upper^k - V_upper^k-1||_inf = 0.00000008717967813544, ||V_lower^k - V_lower^k-1||_inf = 0.00000012245489511295
+    Local Iteration 346: ||V_upper^k - V_upper^k-1||_inf = 0.00000008369249101002, ||V_lower^k - V_lower^k-1||_inf = 0.00000011751620724807
+    Local Iteration 347: ||V_upper^k - V_upper^k-1||_inf = 0.00000008034479136962, ||V_lower^k - V_lower^k-1||_inf = 0.00000011281555895815
+    Local Iteration 348: ||V_upper^k - V_upper^k-1||_inf = 0.00000007713099971483, ||V_lower^k - V_lower^k-1||_inf = 0.00000010830293659983
+    Local Iteration 349: ||V_upper^k - V_upper^k-1||_inf = 0.00000007404575972624, ||V_lower^k - V_lower^k-1||_inf = 0.00000010397081913583
+    Local Iteration 350: ||V_upper^k - V_upper^k-1||_inf = 0.00000007108392933719, ||V_lower^k - V_lower^k-1||_inf = 0.00000009981198637040
+    Local Iteration 351: ||V_upper^k - V_upper^k-1||_inf = 0.00000006824057216370, ||V_lower^k - V_lower^k-1||_inf = 0.00000009581950691558
+    Local Iteration 352: ||V_upper^k - V_upper^k-1||_inf = 0.00000006551094927715, ||V_lower^k - V_lower^k-1||_inf = 0.00000009198672663896
+    Local Iteration 353: ||V_upper^k - V_upper^k-1||_inf = 0.00000006289051130607, ||V_lower^k - V_lower^k-1||_inf = 0.00000008830725757340
+    Local Iteration 354: ||V_upper^k - V_upper^k-1||_inf = 0.00000006037489085382, ||V_lower^k - V_lower^k-1||_inf = 0.00000008477496727047
+    Local Iteration 355: ||V_upper^k - V_upper^k-1||_inf = 0.00000005795989521967, ||V_lower^k - V_lower^k-1||_inf = 0.00000008138396857965
+    Local Iteration 356: ||V_upper^k - V_upper^k-1||_inf = 0.00000005564149941088, ||V_lower^k - V_lower^k-1||_inf = 0.00000007812860983646
+    Local Iteration 357: ||V_upper^k - V_upper^k-1||_inf = 0.00000005341583943445, ||V_lower^k - V_lower^k-1||_inf = 0.00000007500346544300
+    Local Iteration 358: ||V_upper^k - V_upper^k-1||_inf = 0.00000005127920585707, ||V_lower^k - V_lower^k-1||_inf = 0.00000007200332682528
+    Local Iteration 359: ||V_upper^k - V_upper^k-1||_inf = 0.00000004922803762279, ||V_lower^k - V_lower^k-1||_inf = 0.00000006912319375227
+    Local Iteration 360: ||V_upper^k - V_upper^k-1||_inf = 0.00000004725891611788, ||V_lower^k - V_lower^k-1||_inf = 0.00000006635826600218
+    Local Iteration 361: ||V_upper^k - V_upper^k-1||_inf = 0.00000004536855947316, ||V_lower^k - V_lower^k-1||_inf = 0.00000006370393536209
+    Local Iteration 362: ||V_upper^k - V_upper^k-1||_inf = 0.00000004355381709424, ||V_lower^k - V_lower^k-1||_inf = 0.00000006115577794761
+    Local Iteration 363: ||V_upper^k - V_upper^k-1||_inf = 0.00000004181166441047, ||V_lower^k - V_lower^k-1||_inf = 0.00000005870954682971
+    Local Iteration 364: ||V_upper^k - V_upper^k-1||_inf = 0.00000004013919783405, ||V_lower^k - V_lower^k-1||_inf = 0.00000005636116495652
+    Local Iteration 365: ||V_upper^k - V_upper^k-1||_inf = 0.00000003853362992069, ||V_lower^k - V_lower^k-1||_inf = 0.00000005410671835826
+    Local Iteration 366: ||V_upper^k - V_upper^k-1||_inf = 0.00000003699228472386, ||V_lower^k - V_lower^k-1||_inf = 0.00000005194244962393
+    Local Iteration 367: ||V_upper^k - V_upper^k-1||_inf = 0.00000003551259333490, ||V_lower^k - V_lower^k-1||_inf = 0.00000004986475163897
+    Local Iteration 368: ||V_upper^k - V_upper^k-1||_inf = 0.00000003409208960151, ||V_lower^k - V_lower^k-1||_inf = 0.00000004787016157341
+    Local Iteration 369: ||V_upper^k - V_upper^k-1||_inf = 0.00000003272840601745, ||V_lower^k - V_lower^k-1||_inf = 0.00000004595535511047
+    Local Iteration 370: ||V_upper^k - V_upper^k-1||_inf = 0.00000003141926977675, ||V_lower^k - V_lower^k-1||_inf = 0.00000004411714090605
+    Local Iteration 371: ||V_upper^k - V_upper^k-1||_inf = 0.00000003016249898568, ||V_lower^k - V_lower^k-1||_inf = 0.00000004235245526981
+    Local Iteration 372: ||V_upper^k - V_upper^k-1||_inf = 0.00000002895599902625, ||V_lower^k - V_lower^k-1||_inf = 0.00000004065835705902
+    Local Iteration 373: ||V_upper^k - V_upper^k-1||_inf = 0.00000002779775906520, ||V_lower^k - V_lower^k-1||_inf = 0.00000003903202277666
+    Local Iteration 374: ||V_upper^k - V_upper^k-1||_inf = 0.00000002668584870259, ||V_lower^k - V_lower^k-1||_inf = 0.00000003747074186559
+    Local Iteration 375: ||V_upper^k - V_upper^k-1||_inf = 0.00000002561841475449, ||V_lower^k - V_lower^k-1||_inf = 0.00000003597191219097
+    Local Iteration 376: ||V_upper^k - V_upper^k-1||_inf = 0.00000002459367816431, ||V_lower^k - V_lower^k-1||_inf = 0.00000003453303570333
+    Local Iteration 377: ||V_upper^k - V_upper^k-1||_inf = 0.00000002360993103774, ||V_lower^k - V_lower^k-1||_inf = 0.00000003315171427520
+    Local Iteration 378: ||V_upper^k - V_upper^k-1||_inf = 0.00000002266553379623, ||V_lower^k - V_lower^k-1||_inf = 0.00000003182564570419
+    Local Iteration 379: ||V_upper^k - V_upper^k-1||_inf = 0.00000002175891244438, ||V_lower^k - V_lower^k-1||_inf = 0.00000003055261987602
+    Local Iteration 380: ||V_upper^k - V_upper^k-1||_inf = 0.00000002088855594660, ||V_lower^k - V_lower^k-1||_inf = 0.00000002933051508098
+    Local Iteration 381: ||V_upper^k - V_upper^k-1||_inf = 0.00000002005301370874, ||V_lower^k - V_lower^k-1||_inf = 0.00000002815729447774
+    Local Iteration 382: ||V_upper^k - V_upper^k-1||_inf = 0.00000001925089316039, ||V_lower^k - V_lower^k-1||_inf = 0.00000002703100269863
+    Local Iteration 383: ||V_upper^k - V_upper^k-1||_inf = 0.00000001848085743397, ||V_lower^k - V_lower^k-1||_inf = 0.00000002594976259069
+    Local Iteration 384: ||V_upper^k - V_upper^k-1||_inf = 0.00000001774162313662, ||V_lower^k - V_lower^k-1||_inf = 0.00000002491177208706
+    Local Iteration 385: ||V_upper^k - V_upper^k-1||_inf = 0.00000001703195821115, ||V_lower^k - V_lower^k-1||_inf = 0.00000002391530120358
+    Local Iteration 386: ||V_upper^k - V_upper^k-1||_inf = 0.00000001635067988271, ||V_lower^k - V_lower^k-1||_inf = 0.00000002295868915543
+    Local Iteration 387: ||V_upper^k - V_upper^k-1||_inf = 0.00000001569665268740, ||V_lower^k - V_lower^k-1||_inf = 0.00000002204034158922
+    Local Iteration 388: ||V_upper^k - V_upper^k-1||_inf = 0.00000001506878657990, ||V_lower^k - V_lower^k-1||_inf = 0.00000002115872792565
+    Local Iteration 389: ||V_upper^k - V_upper^k-1||_inf = 0.00000001446603511671, ||V_lower^k - V_lower^k-1||_inf = 0.00000002031237880862
+    Local Iteration 390: ||V_upper^k - V_upper^k-1||_inf = 0.00000001388739371204, ||V_lower^k - V_lower^k-1||_inf = 0.00000001949988365628
+    Local Iteration 391: ||V_upper^k - V_upper^k-1||_inf = 0.00000001333189796356, ||V_lower^k - V_lower^k-1||_inf = 0.00000001871988831003
+    Local Iteration 392: ||V_upper^k - V_upper^k-1||_inf = 0.00000001279862204501, ||V_lower^k - V_lower^k-1||_inf = 0.00000001797109277762
+    Local Iteration 393: ||V_upper^k - V_upper^k-1||_inf = 0.00000001228667716321, ||V_lower^k - V_lower^k-1||_inf = 0.00000001725224906652
+    Local Iteration 394: ||V_upper^k - V_upper^k-1||_inf = 0.00000001179521007668, ||V_lower^k - V_lower^k-1||_inf = 0.00000001656215910386
+    Local Iteration 395: ||V_upper^k - V_upper^k-1||_inf = 0.00000001132340167362, ||V_lower^k - V_lower^k-1||_inf = 0.00000001589967273970
+    Local Iteration 396: ||V_upper^k - V_upper^k-1||_inf = 0.00000001087046560667, ||V_lower^k - V_lower^k-1||_inf = 0.00000001526368583012
+    Local Iteration 397: ||V_upper^k - V_upper^k-1||_inf = 0.00000001043564698241, ||V_lower^k - V_lower^k-1||_inf = 0.00000001465313839691
+    Local Iteration 398: ||V_upper^k - V_upper^k-1||_inf = 0.00000001001822110311, ||V_lower^k - V_lower^k-1||_inf = 0.00000001406701286104
+    Local Iteration 399: ||V_upper^k - V_upper^k-1||_inf = 0.00000000961749225898, ||V_lower^k - V_lower^k-1||_inf = 0.00000001350433234659
+    Local Iteration 400: ||V_upper^k - V_upper^k-1||_inf = 0.00000000923279256863, ||V_lower^k - V_lower^k-1||_inf = 0.00000001296415905273
+    Local Iteration 401: ||V_upper^k - V_upper^k-1||_inf = 0.00000000886348086588, ||V_lower^k - V_lower^k-1||_inf = 0.00000001244559269062
+    Local Iteration 402: ||V_upper^k - V_upper^k-1||_inf = 0.00000000850894163125, ||V_lower^k - V_lower^k-1||_inf = 0.00000001194776898300
+    Local Iteration 403: ||V_upper^k - V_upper^k-1||_inf = 0.00000000816858396600, ||V_lower^k - V_lower^k-1||_inf = 0.00000001146985822368
+    Local Iteration 404: ||V_upper^k - V_upper^k-1||_inf = 0.00000000784184060736, ||V_lower^k - V_lower^k-1||_inf = 0.00000001101106389473
+    Local Iteration 405: ||V_upper^k - V_upper^k-1||_inf = 0.00000000752816698306, ||V_lower^k - V_lower^k-1||_inf = 0.00000001057062133894
+    Local Iteration 406: ||V_upper^k - V_upper^k-1||_inf = 0.00000000722704030374, ||V_lower^k - V_lower^k-1||_inf = 0.00000001014779648538
+    Local Iteration 407: ||V_upper^k - V_upper^k-1||_inf = 0.00000000693795869159, ||V_lower^k - V_lower^k-1||_inf = 0.00000000974188462597
+
+==================================================
+ LOCAL CONVERGENCE ACHIEVED
+==================================================
+  ||V_upper^k - V_upper^k-1||_inf = 6.93795869158931096933e-09 < tolerance = 1e-08
+  ||V_lower^k - V_lower^k-1||_inf = 9.74188462596699449949e-09 < tolerance = 1e-08
+  Converged in 407 iterations
+  V_lower increased from min(l_lower, r_lower); smallest step 0.000e+00
+    Local VI completed in 407 iterations
+    Final convergence values:
+      ||V_upper^final - V_upper^prev||_inf = 6.93795869e-09
+      ||V_lower^final - V_lower^prev||_inf = 9.74188463e-09
+  Local VI completed in 407 iterations, time: 1073.349s
+    Final ||V_upper^k - V_upper^k-1||_inf = 6.93795869158931096933e-09
+    Final ||V_lower^k - V_lower^k-1||_inf = 9.74188462596699449949e-09
+  Saved visualization: /Users/i.k.tabbara/Documents/python directory/HSCC_2027/refactored_Implementations/results_hscc_2027_modified_init/ra_discount/van_der_pol_res40_eps0.001_dmin1e-08_dmax1e-08_gamma0.96_dt0.01_tau0.01_std/value_function_phase_17_complete.png
+  Phase 17 completed in 1398.79s with 99171904 leaf cells
+
+Classification after phase 17:
+  Safe:          5922802 cells (  6.0%),   28.5% of state space
+  Unsafe:        2932408 cells (  3.0%),   28.5% of state space
+  Unclassified: 90316694 cells ( 91.1%),   43.1% of state space
+
+======================================================================
+REFINEMENT PHASE 18
+======================================================================
+Boundary cells: 90316694
+  Refinable (>eta_min=0.000354): 90316694
+  Below threshold: 0
+  Cumulative refined: 99170304
+  Refinable cell size statistics:
+    Max:    0.000488
+    Mean:   0.000488
+    Min:    0.000488
+    Median: 0.000488
+  Refining 90316694 cells...
