@@ -9,7 +9,9 @@ that do not alter any number:
     every ODE / initialisation task.
 
 Everything else - successor sets, out-of-bounds handling, convergence tests,
-conservative corrections, the order of floating-point operations - is the same.
+the order of floating-point operations - is the same. Discounted runs start
+V_lower at min(l, r) and stop on the residual test; they do not subtract the
+Algorithm 3 lower-bound correction.
 """
 import os
 import time
@@ -84,8 +86,12 @@ class SafetyValueIterator:
         for cell_id, l_lower, l_upper, r_lower, r_upper in results:
             c = by_id[cell_id]
             c.l_lower, c.l_upper, c.r_lower, c.r_upper = l_lower, l_upper, r_lower, r_upper
+            # min(l, r) is the least value of the reach-avoid Bellman image, so
+            # lower iterates that start there increase and stay below the fixed
+            # point. Discounted upper values still start at l and decrease.
             if self.mode.discounted:
-                c.V_lower, c.V_upper = c.l_lower, c.l_upper
+                c.V_lower = min(c.l_lower, c.r_lower)
+                c.V_upper = c.l_upper
             else:
                 c.V_lower = min(c.l_lower, c.r_lower)
                 c.V_upper = min(c.l_upper, c.r_upper)
@@ -242,6 +248,8 @@ class SafetyValueIterator:
         converged = False
         iteration = 0
         diff_upper = diff_lower = delta_k = float("nan")
+        min_lower_step = float("inf")
+        conservative_mode = self._use_lower_correction(conservative_mode)
         pad = "    Local Iteration" if local else "Iteration"
         gamma = self.gamma
 
@@ -266,6 +274,8 @@ class SafetyValueIterator:
             diff_upper = float(np.max(np.abs(new_Vu - Vu)))
             diff_lower = float(np.max(np.abs(new_Vl - Vl)))
             delta_k = float(np.min(new_Vl - Vl))
+            if self.mode.discounted:
+                min_lower_step = min(min_lower_step, delta_k)
             Vu, Vl = new_Vu, new_Vl
             Vu_ext[:n] = Vu
             Vl_ext[:n] = Vl
@@ -322,9 +332,19 @@ class SafetyValueIterator:
                 Vl = Vl - epsilon_cons
                 print(f"   Conservative correction applied to {n} cells")
 
+        if self.mode.discounted and iteration > 0:
+            print(f"  V_lower increased from min(l_lower, r_lower); smallest step {min_lower_step:.3e}")
         self._write_back(leaves, Vu, Vl)
         self.timers["vi"] += time.time() - t_start
         return np.array(conv_upper), np.array(conv_lower), iteration, converged
+
+    def _use_lower_correction(self, conservative_mode: bool) -> bool:
+        """Discounted lower iterates increase from min(l, r), already a lower
+        bound of every Bellman image, so the Algorithm 3 margin is not applied."""
+        if self.mode.discounted and conservative_mode:
+            print("Discounted V_lower starts at min(l_lower, r_lower); residual stopping, no lower-bound correction.")
+            return False
+        return conservative_mode
 
     def _conservative_correction(self, Vl, delta_k, diff_upper, convergence_tol):
         print("\n" + "=" * 60)
@@ -364,6 +384,7 @@ class SafetyValueIterator:
             print("  Precomputing successor sets...")
             self.precompute_all_successors()
         print(f"\nStarting OPTIMIZED PARALLEL value iteration (max {max_iterations} iterations)...")
+        conservative_mode = self._use_lower_correction(conservative_mode)
         print(f"Conservative mode: {conservative_mode}")
         if conservative_mode:
             print(f"Conservative tolerance δ_max: {delta_max}")
@@ -383,12 +404,13 @@ class SafetyValueIterator:
                               conservative_mode: bool, delta_max: float):
         """Re-initialise every leaf, refresh the successor cache, sweep to convergence."""
         leaves = self.cell_tree.get_leaves()
-        kind = "V = l" if self.mode.discounted else "V = min(l, r)"
+        kind = "V_lower = min(l, r), V_upper = l" if self.mode.discounted else "V = min(l, r)"
         print(f"  Reinitializing ALL {len(leaves)} cells ({kind})")
         t0 = time.time()
         self.initialize_cells()
         reinit = time.time() - t0
         print(f"   Reinitialized {len(leaves)} cells in {reinit:.2f}s ({len(leaves) / reinit if reinit > 0 else float('inf'):.1f} cells/s)")
+        conservative_mode = self._use_lower_correction(conservative_mode)
         print(f"  Local VI: updating all {len(leaves)} cells")
         print(f"    Conservative mode: {conservative_mode}")
         if conservative_mode:

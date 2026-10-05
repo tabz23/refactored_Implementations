@@ -68,7 +68,8 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--refinements", type=int, default=100, help="maximum number of refinement phases")
     p.add_argument("--vi-iterations", type=int, default=20000, help="max VI sweeps per phase")
     p.add_argument("--conservative", action="store_true", default=False,
-                   help="conservative stopping (Algorithm 3); default on for ra_discount")
+                   help="conservative stopping (Algorithm 3). Ignored for ra_discount, "
+                        "which starts V_lower at min(l, r) and uses residual stopping")
     p.add_argument("--no-conservative", action="store_true", default=False,
                    help="force conservative stopping off")
     p.add_argument("--delta-max", type=float, default=1e-6, help="delta_max for the conservative stop")
@@ -136,8 +137,11 @@ def main(argv=None):
     if args.phase0_tol is None:
         args.phase0_tol = args.tolerance
     mode = Mode(args.mode)
-    if not args.conservative and not args.no_conservative:
-        args.conservative = mode.discounted
+    if mode.discounted and args.conservative:
+        print("warning: --conservative is ignored for ra_discount; "
+              "V_lower starts at min(l_lower, r_lower) and residual stopping is used",
+              file=sys.stderr)
+        args.conservative = False
     if args.workers is None:
         args.workers = max(1, cpu_count() - 1)
     if args.iterations is None:

@@ -2,6 +2,7 @@
 
     RA_NODISCOUNT     V <- min(l, max(r, best))            (RA_nodiscount.py)
     RA_DISCOUNT       V <- min(l, max(r, gamma * best))    (RA_discount.py)
+                      V_lower starts at min(l, r); residual stop, no correction
     AVOID_NODISCOUNT  V <- min(l, best)                    (avoid_nodiscount.py)
 
 where `best` is the max over actions of the min (lower bound) / max (upper
