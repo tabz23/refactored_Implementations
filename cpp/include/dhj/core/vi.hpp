@@ -144,6 +144,7 @@ public:
             precompute_all_successors();
         }
         std::printf("\nStarting OPTIMIZED PARALLEL value iteration (max %d iterations)...\n", max_iterations);
+        conservative_mode = use_lower_correction(conservative_mode);
         std::printf("Conservative mode: %s\n", py_bool(conservative_mode).c_str());
         if (conservative_mode) {
             std::printf("Conservative tolerance delta_max: %g\n", delta_max);
@@ -165,11 +166,12 @@ public:
                                    double convergence_tol, bool conservative_mode, double delta_max) {
         const std::size_t n = tree_.num_leaves();
         std::printf("  Reinitializing ALL %zu cells (%s)\n", n,
-                    mode_discounted(mode_) ? "V = l" : "V = min(l, r)");
+                    mode_discounted(mode_) ? "V_lower = min(l, r), V_upper = l" : "V = min(l, r)");
         const double t0 = now_seconds();
         initialize_cells();
         const double reinit = now_seconds() - t0;
         std::printf("   Reinitialized %zu cells in %.2fs (%.1f cells/s)\n", n, reinit, reinit > 0 ? n / reinit : 0.0);
+        conservative_mode = use_lower_correction(conservative_mode);
         std::printf("  Local VI: updating all %zu cells\n", n);
         std::printf("    Conservative mode: %s\n", py_bool(conservative_mode).c_str());
         if (conservative_mode) std::printf("    delta_max: %g\n", delta_max);
@@ -258,9 +260,12 @@ private:
                 c.l_upper = l_center + L_l * r;
                 c.r_lower = r_center - L_r * r;
                 c.r_upper = r_center + L_r * r;
-                // Discounted runs decrease from l. Undiscounted runs increase from min(l, r).
+                // min(l, r) is the least value the reach-avoid Bellman image can take, so
+                // the lower iterates that start there are monotone nondecreasing and
+                // stay below the fixed point. Discounted upper values still start at
+                // l and decrease. Undiscounted bounds both start at min(l, r).
                 if (mode_discounted(mode_)) {
-                    c.V_lower = c.l_lower;
+                    c.V_lower = std::min(c.l_lower, c.r_lower);
                     c.V_upper = c.l_upper;
                 } else {
                     c.V_lower = std::min(c.l_lower, c.r_lower);
@@ -439,6 +444,7 @@ private:
         int iteration = 0;
         bool converged = false;
         double diff_upper = 0.0, diff_lower = 0.0, delta_k = 0.0;
+        double min_lower_step = kInf;
         for (iteration = 0; iteration < max_iterations; ++iteration) {
             std::atomic<std::size_t> chunk{0};
             std::fill(part_du.begin(), part_du.end(), 0.0);
@@ -486,6 +492,7 @@ private:
             std::swap(Vl, newVl);
             res.conv_upper.push_back(diff_upper);
             res.conv_lower.push_back(diff_lower);
+            if (discount) min_lower_step = std::min(min_lower_step, delta_k);
             ++timers_.vi_iterations;
 
             const char* pad = local ? "    Local Iteration" : "Iteration";
@@ -537,11 +544,25 @@ private:
             std::printf("  Final ||V_lower^k - V_lower^k-1||_inf = %.20e\n", diff_lower);
         }
 
+        if (discount && iteration > 0) {
+            std::printf("  V_lower increased from min(l_lower, r_lower); smallest step %.3e\n", min_lower_step);
+        }
         write_back(Vu, Vl, n);
         res.iterations = iteration;
         res.converged = converged;
         timers_.value_iteration += now_seconds() - t_start;
         return res;
+    }
+
+    // Discounted lower iterates increase from min(l, r), which is already a
+    // lower bound of every Bellman image. Residual stopping is sound, so the
+    // Algorithm 3 margin is not subtracted from V_lower.
+    bool use_lower_correction(bool conservative_mode) const {
+        if (mode_discounted(mode_) && conservative_mode) {
+            std::printf("Discounted V_lower starts at min(l_lower, r_lower); residual stopping, no lower-bound correction.\n");
+            return false;
+        }
+        return conservative_mode;
     }
 
     // Algorithm 3: V_lower <- V_lower - eps_cons - eps_machine.

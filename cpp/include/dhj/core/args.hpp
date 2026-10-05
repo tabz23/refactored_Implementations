@@ -86,7 +86,8 @@ struct Args {
         "  --refinements INT             max refinement phases (default: 100)\n"
         "  --vi-iterations INT           VI sweeps per phase (default: 20000)\n"
         "  --conservative                conservative stopping (Algorithm 3);\n"
-        "                                default on for ra_discount, off otherwise\n"
+        "                                off for ra_discount, which starts V_lower\n"
+        "                                at min(l, r) and uses residual stopping\n"
         "  --no-conservative             force conservative stopping off\n"
         "  --delta-max FLOAT             delta_max for conservative stopping (default: 1e-6)\n"
         "  --phase0-tol FLOAT            phase-0 residual tol (default: same as --delta-min)\n"
@@ -211,7 +212,15 @@ inline Args parse_args(int argc, char** argv) {
     }
     if (a.results_root.empty()) a.results_root = default_results_root(argv[0]);
     if (!a.phase0_tol_set) a.phase0_tol = a.tolerance;
-    if (!a.conservative_set) a.conservative = mode_discounted(a.mode);
+    // ra_discount no longer uses the Algorithm 3 lower-bound correction.
+    if (mode_discounted(a.mode)) {
+        if (a.conservative_set && a.conservative)
+            std::fprintf(stderr, "warning: --conservative is ignored for ra_discount; "
+                                 "V_lower starts at min(l_lower, r_lower) and residual stopping is used\n");
+        a.conservative = false;
+    } else if (!a.conservative_set) {
+        a.conservative = false;
+    }
     return a;
 }
 
