@@ -11,3 +11,5 @@ __pycache__/
 .DS_Store
 results/
 cpp/build/
+!results_hscc_2027_modified_init/ra_discount/dubins_res20_eps0.05_dmin1e-08_dmax1e-08_gamma0.96_dt0.3_tau0.3_std/*.svg
+!results_hscc_2027_modified_init/ra_discount/dubins_res20_eps0.05_dmin1e-08_dmax1e-08_gamma0.96_dt0.3_tau0.3_std/*.SVG
