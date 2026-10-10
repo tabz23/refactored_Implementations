@@ -1,6 +1,6 @@
 {
-  "command": "./build/dhj --mode ra_discount --dynamics dubins --dt 0.3 --tau 0.3 --initial-resolution 20 --epsilon 0.05 --delta-min 1e-8 --phase0-tol 1e-8 --delta-max 1e-8 --gamma 0.96 --refinements 13 --vi-iterations 100033 --checkpoint-every 0 --keep-checkpoints 0 --workers 12 --plot-slice 0 --results-root /Users/i.k.tabbara/Documents/python directory/HSCC_2027/refactored_Implementations/results_hscc_2027_modified_init",
-  "started": "2026-10-04T20:09:41",
+  "command": "./build/dhj --mode ra_discount --dynamics dubins --dt 0.3 --tau 0.3 --initial-resolution 20 --epsilon 0.05 --delta-min 1e-8 --phase0-tol 1e-8 --delta-max 1e-8 --gamma 0.96 --refinements 13 --vi-iterations 100033 --checkpoint-every 0 --keep-checkpoints 0 --plot-dpi 300 --workers 12 --results-root /Users/i.k.tabbara/Documents/python directory/HSCC_2027/refactored_Implementations/results_hscc_2027_modified_init",
+  "started": "2026-10-09T18:27:57",
   "args": {
     "a_max": 1.0,
     "algorithm": 2,
@@ -19,8 +19,8 @@
     "no_plot": false,
     "out_dir": null,
     "phase0_tol": 1e-08,
-    "plot_dpi": 800,
-    "plot_slice": 0,
+    "plot_dpi": 300,
+    "plot_slice": -1,
     "plot_freq": 1000,
     "precompute": false,
     "refinements": 13,

@@ -1,0 +1,79 @@
+# Commands that produced results_hscc_2027_modified_init
+# Taken from the "# command:" line of each run.log.
+# Working directory for every ./build/dhj line:
+#   HSCC_2027/refactored_Implementations/cpp
+#
+# ra_nodiscount is the gamma = 1 Bellman: the --gamma flag is recorded in the
+# folder name and is not multiplied into the backup.
+# ra_discount multiplies successor values by --gamma.
+# --delta-min and --phase0-tol are both 1e-8. --delta-max is unused for these
+# residual stops and is still written into the folder name.
+#
+# The discounted van der Pol run was started with the command below and has
+# not logged ALGORITHM 2 COMPLETE (it entered refinement phase 18).
+
+ROOT="/Users/i.k.tabbara/Documents/python directory/HSCC_2027/refactored_Implementations/results_hscc_2027_modified_init"
+
+# ---------------------------------------------------------------------------
+# ra_discount
+# ---------------------------------------------------------------------------
+
+./build/dhj --mode ra_discount --dynamics van_der_pol --dt 0.01 --tau 0.01 --initial-resolution 40 --epsilon 0.001 --delta-min 1e-8 --phase0-tol 1e-8 --delta-max 1e-8 --gamma 0.96 --refinements 18 --vi-iterations 20000 --checkpoint-every 0 --keep-checkpoints 0 --plot-dpi 300 --workers 12 --results-root "$ROOT"
+
+./build/dhj --mode ra_discount --dynamics evasion --dt 0.3 --tau 0.3 --initial-resolution 30 --epsilon 0.05 --delta-min 1e-8 --phase0-tol 1e-8 --delta-max 1e-8 --gamma 0.96 --refinements 12 --vi-iterations 1000033 --checkpoint-every 0 --keep-checkpoints 0 --plot-dpi 300 --workers 12 --results-root "$ROOT"
+
+./build/dhj --mode ra_discount --dynamics double_integrator --dt 0.3 --tau 0.3 --initial-resolution 10 --epsilon 0.05 --delta-min 1e-8 --phase0-tol 1e-8 --delta-max 1e-8 --gamma 0.96 --refinements 14 --vi-iterations 20000 --checkpoint-every 0 --keep-checkpoints 0 --plot-dpi 300 --workers 12 --results-root "$ROOT"
+
+./build/dhj --mode ra_discount --dynamics bicycle --a-max 0.2 --v-max 1 --dt 0.3 --tau 0.3 --initial-resolution 5 --epsilon 0.1 --delta-min 1e-8 --phase0-tol 1e-8 --delta-max 1e-8 --gamma 0.96 --refinements 8 --vi-iterations 20000 --checkpoint-every 0 --keep-checkpoints 0 --plot-dpi 300 --workers 12 --results-root "$ROOT"
+
+# Dubins, first run: one theta=0 SVG (default plot dpi). The previous params.json
+# was kept as params_20261009_182757.json.
+./build/dhj --mode ra_discount --dynamics dubins --dt 0.3 --tau 0.3 --initial-resolution 20 --epsilon 0.05 --delta-min 1e-8 --phase0-tol 1e-8 --delta-max 1e-8 --gamma 0.96 --refinements 13 --vi-iterations 100033 --checkpoint-every 0 --keep-checkpoints 0 --workers 12 --plot-slice 0 --results-root "$ROOT"
+
+# Dubins, second run, same folder: raster PNGs of every theta slice. This is
+# the command now stored in params.json, and the second block of phases.csv.
+./build/dhj --mode ra_discount --dynamics dubins --dt 0.3 --tau 0.3 --initial-resolution 20 --epsilon 0.05 --delta-min 1e-8 --phase0-tol 1e-8 --delta-max 1e-8 --gamma 0.96 --refinements 13 --vi-iterations 100033 --checkpoint-every 0 --keep-checkpoints 0 --plot-dpi 300 --workers 12 --results-root "$ROOT"
+
+# ---------------------------------------------------------------------------
+# ra_nodiscount
+# ---------------------------------------------------------------------------
+
+./build/dhj --mode ra_nodiscount --dynamics van_der_pol --dt 0.01 --tau 0.01 --initial-resolution 40 --epsilon 0.001 --delta-min 1e-8 --phase0-tol 1e-8 --delta-max 1e-8 --gamma 0.96 --refinements 18 --vi-iterations 20000 --checkpoint-every 0 --keep-checkpoints 0 --plot-dpi 300 --workers 12 --results-root "$ROOT"
+
+./build/dhj --mode ra_nodiscount --dynamics evasion --dt 0.3 --tau 0.3 --initial-resolution 30 --epsilon 0.05 --delta-min 1e-8 --phase0-tol 1e-8 --delta-max 1e-8 --gamma 0.96 --refinements 12 --vi-iterations 1000033 --checkpoint-every 0 --keep-checkpoints 0 --plot-dpi 300 --workers 12 --results-root "$ROOT"
+
+./build/dhj --mode ra_nodiscount --dynamics double_integrator --dt 0.3 --tau 0.3 --initial-resolution 10 --epsilon 0.05 --delta-min 1e-8 --phase0-tol 1e-8 --delta-max 1e-8 --gamma 0.9 --refinements 14 --vi-iterations 20000 --checkpoint-every 0 --keep-checkpoints 0 --plot-dpi 300 --workers 12 --results-root "$ROOT"
+
+./build/dhj --mode ra_nodiscount --dynamics bicycle --a-max 0.2 --v-max 1 --dt 0.3 --tau 0.3 --initial-resolution 5 --epsilon 0.1 --delta-min 1e-8 --phase0-tol 1e-8 --delta-max 1e-8 --gamma 0.9 --refinements 8 --vi-iterations 20000 --checkpoint-every 0 --keep-checkpoints 0 --plot-dpi 300 --workers 12 --results-root "$ROOT"
+
+./build/dhj --mode ra_nodiscount --dynamics dubins --dt 0.3 --tau 0.3 --initial-resolution 20 --epsilon 0.05 --delta-min 1e-8 --phase0-tol 1e-8 --delta-max 1e-8 --gamma 0.9 --refinements 13 --vi-iterations 100033 --checkpoint-every 0 --keep-checkpoints 0 --workers 12 --plot-slice 0 --results-root "$ROOT"
+
+# ---------------------------------------------------------------------------
+# avoid_nodiscount
+# ---------------------------------------------------------------------------
+
+./build/dhj --mode avoid_nodiscount --dynamics dubins --dt 0.3 --tau 0.3 --initial-resolution 80 --epsilon 0.05 --delta-min 1e-8 --phase0-tol 1e-8 --delta-max 1e-8 --gamma 0.9 --refinements 6 --vi-iterations 20000 --checkpoint-every 0 --keep-checkpoints 0 --plot-dpi 300 --workers 12 --results-root "$ROOT"
+
+# ---------------------------------------------------------------------------
+# These runs match the C++ solver in this tree (checked 2026-10-10)
+# ---------------------------------------------------------------------------
+#
+# Every params.json records implementation "cpp", compiler "clang 16.0", and
+# build "Oct  4 2026 19:14:29". That string is __DATE__ " " __TIME__ written
+# by cpp/include/dhj/core/params.hpp. It is the same in all 12 files, including
+# the second Dubins run on 2026-10-09. cpp/build/dhj still contains that stamp
+# and was last written 2026-10-04 19:14:35.
+#
+# cpp/include/dhj/core/vi.hpp and args.hpp were last written at 19:12 that
+# day, compiled into that binary, and committed as a64b64e (2026-10-04 19:21,
+# "Vlower initialized to min(l,r)", no lower-bound correction). git diff
+# a64b64e HEAD -- cpp is empty, and the working tree has no further edits
+# under cpp/.
+#
+# Discounted run.log lines say "V_lower = min(l, r), V_upper = l" and
+# "V_lower increased from min(l_lower, r_lower)". Nondiscounted lines say
+# "V = min(l, r)" with "Conservative mode: False".
+#
+# Commit 8d18653 (2026-10-04 19:26) updated only the Python package to the
+# same initialization and stopping rule. These results were produced by the
+# C++ binary, not by Python.
