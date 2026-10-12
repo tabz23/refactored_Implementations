@@ -25,6 +25,7 @@ def cell_init_worker(task):
 
 
 def trajectory_worker(task):
-    """(cell_id, center, action_idx, action, tau, dt) -> (cell_id, action_idx, checkpoint states)."""
+    """(cell_id, center, action_idx, action, tau, dt) -> (cell_id, action_idx, states, ode errors)."""
     cell_id, center, action_idx, action, tau, dt = task
-    return (cell_id, action_idx, _DYN.dynamics_multi_step(center, action, tau, dt))
+    states, ode_error = _DYN.dynamics_multi_step(center, action, tau, dt)
+    return (cell_id, action_idx, states, ode_error)

@@ -120,22 +120,28 @@ public:
     }
 
     // States at the checkpoint times dt, 2dt, ..., duration, periodic
-    // coordinates wrapped. Mirrors Dynamics.dynamics_multi_step in the Python.
+    // coordinates wrapped. `ode_error[i]` is the infinity-norm tolerance budget
+    // of the centre trajectory at that checkpoint (see integrate()).
+    // Mirrors Dynamics.dynamics_multi_step in the Python.
     void dynamics_multi_step(const State& s0, std::size_t action_idx, double duration, double dt,
-                             std::vector<State>& out) const {
+                             std::vector<State>& out, std::vector<double>& ode_error) const {
         const int n = static_cast<int>(std::ceil(duration / dt));
         out.clear();
+        ode_error.clear();
         out.reserve(static_cast<std::size_t>(n));
+        ode_error.reserve(static_cast<std::size_t>(n));
         State y = s0;
         double t_prev = 0.0;
+        double error = 0.0;
         const auto f = [this, action_idx](const State& s) { return this->ode(s, action_idx); };
         for (int i = 1; i <= n; ++i) {
             const double t = duration * static_cast<double>(i) / static_cast<double>(n);
-            y = integrate<N>(f, y, t - t_prev);
+            y = integrate<N>(f, y, t - t_prev, L_f_, &error);
             t_prev = t;
             State w = y;
             normalize(w);
             out.push_back(w);
+            ode_error.push_back(error);
         }
     }
 

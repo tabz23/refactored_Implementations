@@ -291,10 +291,12 @@ private:
         if (args_.seq_queries) {
             // Python structure: parallel ODE integration, then sequential queries.
             std::vector<std::vector<State>> trajectories(n_tasks);
+            std::vector<std::vector<double>> ode_errors(n_tasks);
             pool_.parallel_for(n_tasks, [&](std::size_t b, std::size_t e) {
                 for (std::size_t t = b; t < e; ++t) {
                     const std::uint32_t cid = cell_ids[t / n_actions_];
-                    dyn_.dynamics_multi_step(tree_.cell(cid).center, t % n_actions_, reach_.tau(), reach_.dt(), trajectories[t]);
+                    dyn_.dynamics_multi_step(tree_.cell(cid).center, t % n_actions_, reach_.tau(), reach_.dt(),
+                                             trajectories[t], ode_errors[t]);
                 }
             });
             const double ode_wall = now_seconds() - wall0;
@@ -306,7 +308,7 @@ private:
             std::uint32_t epoch = 0;
             std::vector<std::int32_t> out;
             for (std::size_t t = 0; t < n_tasks; ++t)
-                store_successors(cell_ids[t / n_actions_], t % n_actions_, trajectories[t], stamp, epoch, out);
+                store_successors(cell_ids[t / n_actions_], t % n_actions_, trajectories[t], ode_errors[t], stamp, epoch, out);
             const double q_wall = now_seconds() - q0;
             timers_.queries += q_wall;
             std::printf("   Spatial queries completed in %.2fs\n", q_wall);
@@ -321,15 +323,16 @@ private:
             pool_.parallel_for(n_tasks, [&](std::size_t b, std::size_t e) {
                 const std::size_t w = next_worker.fetch_add(1) % nw;
                 std::vector<State> traj;
+                std::vector<double> ode_error;
                 std::vector<std::int32_t> out;
                 for (std::size_t t = b; t < e; ++t) {
                     const std::uint32_t cid = cell_ids[t / n_actions_];
                     const std::size_t ai = t % n_actions_;
                     double t0 = now_seconds();
-                    dyn_.dynamics_multi_step(tree_.cell(cid).center, ai, reach_.tau(), reach_.dt(), traj);
+                    dyn_.dynamics_multi_step(tree_.cell(cid).center, ai, reach_.tau(), reach_.dt(), traj, ode_error);
                     ode_cpu[w] += now_seconds() - t0;
                     t0 = now_seconds();
-                    store_successors(cid, ai, traj, stamps[w], epochs[w], out);
+                    store_successors(cid, ai, traj, ode_error, stamps[w], epochs[w], out);
                     query_cpu[w] += now_seconds() - t0;
                 }
             });
@@ -349,7 +352,8 @@ private:
     // checkpoint, plus the OOB sink if a reach box leaves the domain along a
     // non-periodic axis.
     void store_successors(std::uint32_t cell_id, std::size_t action_idx, const std::vector<State>& traj,
-                          std::vector<std::uint32_t>& stamp, std::uint32_t& epoch, std::vector<std::int32_t>& out) {
+                          const std::vector<double>& ode_error, std::vector<std::uint32_t>& stamp, std::uint32_t& epoch,
+                          std::vector<std::int32_t>& out) {
         const auto& c = tree_.cell(cell_id);
         double r;
         if (reach_.use_infinity_norm()) {
@@ -364,7 +368,7 @@ private:
         bool oob = false;
         ++epoch;
         for (std::size_t i = 0; i < traj.size(); ++i) {
-            const double expansion = r * reach_.growth_factors()[i];
+            const double expansion = r * reach_.growth_factors()[i] + ode_error[i];
             Bounds<N> rb{};
             for (std::size_t d = 0; d < N; ++d) rb[d] = {{traj[i][d] - expansion, traj[i][d] + expansion}};
             tree_.for_each_intersecting(rb, stamp, epoch, [&](std::uint32_t id) { out.push_back(static_cast<std::int32_t>(id)); });

@@ -134,7 +134,7 @@ class SafetyValueIterator:
         growth = self.reachability.growth_factors
         tree = self.cell_tree
 
-        for cell_id, action_idx, checkpoint_states in trajectories:
+        for cell_id, action_idx, checkpoint_states, ode_error in trajectories:
             cell = by_id[cell_id]
             if self.reachability.use_infinity_norm:
                 r = 0.5 * cell.get_max_range()
@@ -144,7 +144,7 @@ class SafetyValueIterator:
             oob = False
             reach_bounds = np.zeros((dim, 2))
             for i, s in enumerate(checkpoint_states):
-                expansion = r * growth[i]
+                expansion = r * growth[i] + ode_error[i]
                 for d in range(dim):
                     reach_bounds[d, 0] = s[d] - expansion
                     reach_bounds[d, 1] = s[d] + expansion

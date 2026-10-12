@@ -31,8 +31,16 @@ constexpr double e1 = 71.0 / 57600, e3 = -71.0 / 16695, e4 = 71.0 / 1920,
 
 // Integrates the autonomous system y' = f(y) from t = 0 to t = h_total and
 // returns y(h_total). F is callable as `State<N> f(const State<N>&)`.
+//
+// If `error` is non-null, it is a radius already valid at the start of this
+// interval (0 at the initial state). On each accepted step of size h it becomes
+//   error <- error * exp(lipschitz * h) + δ,
+// where δ = max_i (atol + rtol * max(|y_i|, |ŷ_i|)) is the absolute infinity-norm
+// tolerance the step was required to meet. That is a budget for the embedded
+// local-error estimate, carried forward by the same Lipschitz constant as the
+// cell tube. It is not a validated enclosure of the true truncation error.
 template <std::size_t N, typename F>
-inline State<N> integrate(const F& f, State<N> y, double h_total) {
+inline State<N> integrate(const F& f, State<N> y, double h_total, double lipschitz = 0.0, double* error = nullptr) {
     if (h_total <= 0.0) return y;
 
     State<N> k1 = f(y);
@@ -80,6 +88,12 @@ inline State<N> integrate(const F& f, State<N> y, double h_total) {
         }
 
         if (err <= 1.0) {   // accept; FSAL: k7 == f(y7)
+            if (error != nullptr) {
+                double delta = 0.0;
+                for (std::size_t i = 0; i < N; ++i)
+                    delta = std::max(delta, kAtol + kRtol * std::max(std::fabs(y[i]), std::fabs(y7[i])));
+                *error = *error * std::exp(lipschitz * h) + delta;
+            }
             t += h;
             y = y7;
             k1 = k7;

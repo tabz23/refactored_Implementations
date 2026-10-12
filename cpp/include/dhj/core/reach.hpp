@@ -1,8 +1,9 @@
 // reach.hpp - Gronwall reachability bounds at the intermediate checkpoints.
 //
 // A trajectory started anywhere in a cell of half-width r (infinity norm)
-// stays within r * exp(L_f t) of the trajectory started at the centre; the
-// reach box at checkpoint t_i is the centre trajectory inflated by that much.
+// stays within r * exp(L_f t) of the exact trajectory started at the centre.
+// The centre used here is numerical, so the reach box is inflated by that
+// amount plus the integrator tolerance budget returned with the trajectory.
 #pragma once
 
 #include <cmath>

@@ -15,16 +15,18 @@ The solver core never looks at the concrete system; it only calls the methods
 below. To add a system, subclass Dynamics in a new file and register it in
 dynamics/__init__.py (two lines).
 
-Numerical conventions are kept identical to the paper scripts: trajectories
-are integrated with scipy.integrate.odeint at atol = rtol = 1e-12 evaluated
-at the checkpoint times dt, 2dt, ..., tau, and periodic coordinates are
-re-wrapped with arctan2(sin, cos).
+Trajectories used by the solver are integrated with the same Dormand-Prince
+5(4) stepper as the C++ code (atol = rtol = 1e-12) at the checkpoint times
+dt, 2dt, ..., tau. Each reach box is widened by that stepper's tolerance
+budget. Periodic coordinates are re-wrapped with arctan2(sin, cos).
 """
 from abc import ABC, abstractmethod
 from typing import Dict, List, Sequence, Tuple
 
 import numpy as np
 from scipy.integrate import odeint
+
+from ..core.ode import integrate
 
 ODE_ATOL = 1e-12
 ODE_RTOL = 1e-12
@@ -153,17 +155,33 @@ class Dynamics(ABC):
         sol = odeint(self.ode, state, [0, self.tau], args=(action,), atol=ODE_ATOL, rtol=ODE_RTOL)
         return self.normalize_state(sol[-1])
 
-    def dynamics_multi_step(self, state: np.ndarray, action, duration: float, dt: float) -> List[np.ndarray]:
-        """States at the checkpoint times dt, 2dt, ..., duration (periodic
-        coordinates wrapped), from one odeint call over the whole horizon."""
+    def dynamics_multi_step(self, state: np.ndarray, action, duration: float, dt: float):
+        """Checkpoint states dt, 2dt, ..., duration, and the infinity-norm
+        tolerance budget of the centre trajectory at each one.
+
+        Periodic coordinates on the reported states are wrapped. The budget is
+        accumulated on the unwrapped integration, piecewise between checkpoints,
+        matching cpp Dynamics::dynamics_multi_step.
+        """
         n_steps = int(np.ceil(duration / dt))
-        t_eval = np.linspace(0, duration, n_steps + 1)
-        solution = odeint(self.ode, state, t_eval, args=(action,), atol=ODE_ATOL, rtol=ODE_RTOL)
+        y = np.array(state, dtype=float, copy=True)
+        error = 0.0
+        t_prev = 0.0
         states = []
-        for s in solution[1:]:
-            self.normalize_state(s)
-            states.append(s.copy())
-        return states
+        errors = []
+
+        def f(s, action=action):
+            return self.ode(s, 0.0, action)
+
+        for i in range(1, n_steps + 1):
+            t = duration * i / n_steps
+            y, error = integrate(f, y, t - t_prev, self.L_f, error)
+            t_prev = t
+            reported = y.copy()
+            self.normalize_state(reported)
+            states.append(reported)
+            errors.append(error)
+        return states, errors
 
     def validate(self):
         """Sanity checks run once at start-up."""

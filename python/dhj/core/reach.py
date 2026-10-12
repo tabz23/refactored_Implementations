@@ -2,8 +2,10 @@
 
 A cell of half-width r (infinity norm) around its centre reaches, after time
 t under a fixed action, a set contained in the box of half-width
-r * exp(L_f t) around the centre trajectory. Boxes are taken at the checkpoint
-times dt, 2 dt, ..., tau and every leaf meeting any of them is a successor.
+r * exp(L_f t) around the exact centre trajectory. The centre used here is
+numerical, so each reach box adds the integrator tolerance budget carried
+with that trajectory. Boxes are taken at the checkpoint times dt, 2 dt, ..., tau
+and every leaf meeting any of them is a successor.
 """
 import numpy as np
 
