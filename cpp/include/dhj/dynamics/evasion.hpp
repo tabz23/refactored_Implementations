@@ -1,7 +1,9 @@
 // evasion.hpp - 3-D pursuit/evasion in relative coordinates (x, y, theta).
 //
 //     x' = -v + v cos(theta) + u y,  y' = v sin(theta) - u x,  theta' = -u,
-//     u in linspace(-1, 1, 5)
+//     default actions u in linspace(-1, 1, 5)
+//     --two-abstractions uses the centers of five equal cells of [-1, 1]:
+//     u in {-0.8, -0.4, 0, 0.4, 0.8}, each with control radius 1/5
 //
 // Obstacle: disc of radius 1.0 at the origin.  Target: disc of radius 0.5 at (2.5, 0).
 //
@@ -19,7 +21,8 @@ namespace dhj {
 
 class Evasion : public Dynamics<3> {
 public:
-    Evasion(double dt, double tau, double v_const = 1.0, double obstacle_radius = 1.0, double target_radius = 0.5)
+    Evasion(double dt, double tau, double v_const = 1.0, double obstacle_radius = 1.0, double target_radius = 0.5,
+            bool centered_controls = false)
         : Dynamics<3>(dt, tau), v_const_(v_const), obstacle_radius_(obstacle_radius), target_radius_(target_radius) {
         bounds_ = {{{{-3.0, 3.0}}, {{-3.0, 3.0}}, {{-kPi, kPi}}}};
         obstacle_position_ = {0.0, 0.0};
@@ -28,7 +31,13 @@ public:
         L_l_ = std::sqrt(2.0);
         L_r_ = std::sqrt(2.0);
         actions_.resize(5);
-        for (int i = 0; i < 5; ++i) actions_[static_cast<std::size_t>(i)] = -1.0 + 2.0 * i / 4.0;  // np.linspace(-1, 1, 5)
+        for (int i = 0; i < 5; ++i) {
+            // Equal-cell centers, or np.linspace(-1, 1, 5) when the flag is off.
+            actions_[static_cast<std::size_t>(i)] = centered_controls ? -1.0 + (2.0 * i + 1.0) / 5.0
+                                                                      : -1.0 + 2.0 * i / 4.0;
+        }
+        // ||F(x,u)-F(x,v)||_inf = |u-v| max(|x|, |y|, 1) <= 3 |u-v| on [-3, 3]^2.
+        set_scalar_control(3.0, actions_, -1.0, 1.0);
     }
 
     const char* name() const override { return "evasion"; }

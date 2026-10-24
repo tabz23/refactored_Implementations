@@ -40,6 +40,8 @@ struct Args {
     double delta_max = 1e-6;
     double phase0_tol = 1e-3;   // unused unless --phase0-tol is passed; otherwise phase 0 uses tolerance
     bool phase0_tol_set = false;
+    // Upper bound uses the control-cell tube; lower bound keeps the discrete action.
+    bool two_abstractions = false;
     // execution
     int workers = 0;         // 0 => hardware threads - 1
     bool precompute = false;
@@ -91,6 +93,8 @@ struct Args {
         "  --no-conservative             force conservative stopping off\n"
         "  --delta-max FLOAT             delta_max for conservative stopping (default: 1e-6)\n"
         "  --phase0-tol FLOAT            phase-0 residual tol (default: same as --delta-min)\n"
+        "  --two-abstractions            V_upper successors cover each control cell;\n"
+        "                                V_lower successors keep the discrete action\n"
         "execution:\n"
         "  --workers INT                 worker threads (default: hardware threads - 1)\n"
         "  --precompute                  precompute successor sets up front\n"
@@ -188,6 +192,7 @@ inline Args parse_args(int argc, char** argv) {
         }
         else if (f == "--delta-max") { a.delta_max = parse_double(need(i), "--delta-max"); ++i; }
         else if (f == "--phase0-tol") { a.phase0_tol = parse_double(need(i), "--phase0-tol"); a.phase0_tol_set = true; ++i; }
+        else if (f == "--two-abstractions") { a.two_abstractions = true; }
         else if (f == "--workers") { a.workers = static_cast<int>(parse_long(need(i), "--workers")); ++i; }
         else if (f == "--precompute") { a.precompute = true; }
         else if (f == "--seq-queries") { a.seq_queries = true; }
@@ -237,6 +242,7 @@ inline std::string derive_out_dir(const Args& a) {
         name = a.dynamics + "_res" + std::to_string(a.initial_resolution) + "_eps" + py_repr(a.epsilon) +
                "_dmin" + py_exp(a.tolerance, 0) + "_dmax" + py_exp(a.delta_max, 0) + "_gamma" + py_repr(a.gamma) +
                "_dt" + py_repr(a.dt) + "_tau" + py_repr(a.tau) + "_" + cons;
+    if (a.two_abstractions) name += "_twoabs";
     if (!a.tag.empty()) name += "_" + a.tag;
     return a.results_root + "/" + a.mode_name + "/" + name;
 }
@@ -276,6 +282,7 @@ inline std::string args_json(const Args& a, const std::string& indent) {
     j += in + "\"tag\": " + s(a.tag) + ",\n";
     j += in + "\"tau\": " + py_repr(a.tau) + ",\n";
     j += in + "\"tolerance\": " + py_repr(a.tolerance) + ",\n";
+    j += in + "\"two_abstractions\": " + b(a.two_abstractions) + ",\n";
     j += in + "\"v_max\": " + py_repr(a.v_max) + ",\n";
     j += in + "\"velocity\": " + py_repr(a.velocity) + ",\n";
     j += in + "\"vi_iterations\": " + std::to_string(a.vi_iterations) + ",\n";

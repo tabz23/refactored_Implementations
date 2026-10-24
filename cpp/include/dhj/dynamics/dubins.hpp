@@ -1,6 +1,9 @@
 // dubins.hpp - Dubins car, state (x, y, theta), control u = turn rate.
 //
-//     x' = v cos(theta),  y' = v sin(theta),  theta' = u,   u in {-1, 0, 1}
+//     x' = v cos(theta),  y' = v sin(theta),  theta' = u
+//     default actions u in {-1, 0, 1}
+//     --two-abstractions uses the centers of three equal cells of [-1, 1]:
+//     u in {-2/3, 0, 2/3}, each with control radius 1/3
 //
 // Obstacle: disc of radius 1.3 at the origin (failure set).
 // Target:   disc of radius 0.5 at (2.5, 0) (reach set; ignored in avoid mode).
@@ -21,7 +24,8 @@ namespace dhj {
 
 class DubinsCar : public Dynamics<3> {
 public:
-    DubinsCar(double dt, double tau, double v_const = 1.0, double obstacle_radius = 1.3, double target_radius = 0.5)
+    DubinsCar(double dt, double tau, double v_const = 1.0, double obstacle_radius = 1.3, double target_radius = 0.5,
+              bool centered_controls = false)
         : Dynamics<3>(dt, tau), v_const_(v_const), obstacle_radius_(obstacle_radius), target_radius_(target_radius) {
         bounds_ = {{{{-3.0, 3.0}}, {{-3.0, 3.0}}, {{-kPi, kPi}}}};
         obstacle_position_ = {0.0, 0.0};
@@ -29,7 +33,10 @@ public:
         L_f_ = v_const;
         L_l_ = std::sqrt(2.0);
         L_r_ = std::sqrt(2.0);
-        actions_ = {-1.0, 0.0, 1.0};
+        // θ' = u, so the vector field is 1-Lipschitz in the turn rate on U = [-1, 1].
+        if (centered_controls) actions_ = {-2.0 / 3.0, 0.0, 2.0 / 3.0};
+        else actions_ = {-1.0, 0.0, 1.0};
+        set_scalar_control(1.0, actions_, -1.0, 1.0);
     }
 
     const char* name() const override { return "dubins"; }

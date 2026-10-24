@@ -20,6 +20,7 @@
 // or a vector (double integrator acceleration pair) without the core caring.
 #pragma once
 
+#include <algorithm>
 #include <array>
 #include <cmath>
 #include <cstddef>
@@ -103,6 +104,22 @@ public:
     double L_f() const { return L_f_; }
     double L_l() const { return L_l_; }
     double L_r() const { return L_r_; }
+    // Lipschitz constant of the vector field in the control, infinity norm.
+    // Zero when the dynamics does not depend on a control.
+    double control_lipschitz() const { return L_u_; }
+    // Infinity-norm radius of the control cell owned by action i. The cells are
+    // the Voronoi partition of the declared control box, so their union is the
+    // whole box and each discrete action is an admissible control inside its cell.
+    double control_cell_radius(std::size_t i) const { return i < rho_.size() ? rho_[i] : 0.0; }
+    // Extra radius (Lu/Lx)*(exp(Lx t)-1)*rho that the sampled flow needs in
+    // order to cover every control in the cell of this action. Lemma 2 of the
+    // control-discretization note. Added only to the upper-bound successor.
+    double control_inflation(double t, std::size_t action) const {
+        const double rho = control_cell_radius(action);
+        if (!(rho > 0.0) || !(L_u_ > 0.0) || !(t > 0.0)) return 0.0;
+        if (!(L_f_ > 0.0)) return L_u_ * t * rho;
+        return (L_u_ / L_f_) * (std::exp(L_f_ * t) - 1.0) * rho;
+    }
     double dt() const { return dt_; }
     double tau() const { return tau_; }
     int n_steps() const { return n_steps_; }
@@ -172,6 +189,10 @@ public:
         j += in + "\"L_f\": " + py_repr(L_f_) + ",\n";
         j += in + "\"L_l\": " + py_repr(L_l_) + ",\n";
         j += in + "\"L_r\": " + py_repr(L_r_) + ",\n";
+        j += in + "\"L_u\": " + py_repr(L_u_) + ",\n";
+        j += in + "\"control_radii\": [";
+        for (std::size_t i = 0; i < rho_.size(); ++i) j += std::string(i ? ", " : "") + py_repr(rho_[i]);
+        j += "],\n";
         j += in + "\"periodic_dims\": [";
         bool first = true;
         for (std::size_t d : periodic_dims()) { j += (first ? "" : ", ") + std::to_string(d); first = false; }
@@ -207,6 +228,25 @@ protected:
     int n_steps_ = 1;
     // Subclasses MUST set these in their constructor.
     double L_f_ = std::nan(""), L_l_ = std::nan(""), L_r_ = std::nan("");
+    // Optional. L_u_ = 0 and an empty rho_ mean the control cell adds no radius.
+    double L_u_ = 0.0;
+    std::vector<double> rho_;
+
+    // Voronoi radii of scalar actions inside [u_lo, u_hi], infinity norm.
+    void set_scalar_control(double lipschitz_u, const std::vector<double>& actions, double u_lo, double u_hi) {
+        L_u_ = lipschitz_u;
+        rho_.assign(actions.size(), 0.0);
+        if (actions.empty()) return;
+        std::vector<std::size_t> ord(actions.size());
+        for (std::size_t i = 0; i < ord.size(); ++i) ord[i] = i;
+        std::sort(ord.begin(), ord.end(), [&](std::size_t i, std::size_t j) { return actions[i] < actions[j]; });
+        for (std::size_t k = 0; k < ord.size(); ++k) {
+            const double a = actions[ord[k]];
+            const double left = k == 0 ? u_lo : 0.5 * (actions[ord[k - 1]] + a);
+            const double right = k + 1 == ord.size() ? u_hi : 0.5 * (a + actions[ord[k + 1]]);
+            rho_[ord[k]] = std::max(0.0, std::max(a - left, right - a));
+        }
+    }
 };
 
 }  // namespace dhj

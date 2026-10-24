@@ -26,12 +26,14 @@ inline std::vector<std::string> registered_dynamics() {
 template <typename Fn>
 bool with_dynamics(const Args& args, Fn&& fn) {
     if (args.dynamics == "dubins") {
-        DubinsCar dyn(args.dt, args.tau, args.velocity, /*obstacle_radius=*/1.3);
+        DubinsCar dyn(args.dt, args.tau, args.velocity, /*obstacle_radius=*/1.3, /*target_radius=*/0.5,
+                      args.two_abstractions);
         fn(dyn);
         return true;
     }
     if (args.dynamics == "evasion") {
-        Evasion dyn(args.dt, args.tau, args.velocity, /*obstacle_radius=*/1.0);
+        Evasion dyn(args.dt, args.tau, args.velocity, /*obstacle_radius=*/1.0, /*target_radius=*/0.5,
+                    args.two_abstractions);
         fn(dyn);
         return true;
     }

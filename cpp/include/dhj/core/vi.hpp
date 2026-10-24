@@ -64,6 +64,13 @@ public:
         std::printf("Initialized with gamma=%g, L_f=%g, L_l=%g,  L_r=%g\n", gamma_, dyn.L_f(), dyn.L_l(), dyn.L_r());
         std::printf("Contraction factor: gamma*L_f = %.4f\n", gamma_ * dyn.L_f());
         std::printf("Using %zu parallel workers\n", pool_.size());
+        if (args_.two_abstractions) {
+            std::printf("Two abstractions: V_lower uses the discrete-action tube; "
+                        "V_upper adds (L_u/L_f)*(exp(L_f*t)-1)*rho\n");
+            std::printf("  L_u=%g\n  control radii:", dyn.control_lipschitz());
+            for (std::size_t a = 0; a < n_actions_; ++a) std::printf(" %g", dyn.control_cell_radius(a));
+            std::printf("\n  control inflation at t=tau: %g\n", dyn.control_inflation(dyn.tau(), 0));
+        }
         if (args_.precompute) precompute_all_successors();
     }
 
@@ -105,18 +112,27 @@ public:
             const std::int64_t p = tree_.cell(id).parent;
             if (p >= 0) refined_parent[static_cast<std::size_t>(p)] = true;
         }
+        auto mentions_parent = [&](const std::vector<std::int32_t>& succ) {
+            for (std::int32_t sid : succ)
+                if (sid != kOOB && refined_parent[static_cast<std::size_t>(sid)]) return true;
+            return false;
+        };
         for (std::size_t key = 0; key < cache_.size(); ++key) {
             if (!cache_present_[key]) continue;
             const std::size_t cid = key / n_actions_;
-            bool drop = refined_parent[cid];
-            if (!drop)
-                for (std::int32_t sid : cache_[key])
-                    if (sid != kOOB && refined_parent[static_cast<std::size_t>(sid)]) { drop = true; break; }
+            bool drop = refined_parent[cid] || mentions_parent(cache_[key]);
+            if (!drop && args_.two_abstractions && key < cache_upper_.size() && cache_upper_present_[key])
+                drop = mentions_parent(cache_upper_[key]);
             if (drop) {
                 cache_[key].clear();
                 cache_[key].shrink_to_fit();
                 cache_present_[key] = 0;
                 --cache_entries_;
+                if (args_.two_abstractions && key < cache_upper_.size()) {
+                    cache_upper_[key].clear();
+                    cache_upper_[key].shrink_to_fit();
+                    cache_upper_present_[key] = 0;
+                }
             }
         }
         std::vector<std::uint32_t> affected;
@@ -279,6 +295,10 @@ private:
     void ensure_cache_capacity() {
         const std::size_t need = tree_.num_cells() * n_actions_;
         if (cache_.size() < need) { cache_.resize(need); cache_present_.resize(need, 0); }
+        if (args_.two_abstractions && cache_upper_.size() < need) {
+            cache_upper_.resize(need);
+            cache_upper_present_.resize(need, 0);
+        }
     }
 
     void compute_successors(const std::vector<std::uint32_t>& cell_ids) {
@@ -365,7 +385,8 @@ private:
         }
         const auto& gb = dyn_.state_bounds();
         out.clear();
-        bool oob = false;
+        std::vector<std::int32_t> out_hi;
+        bool oob = false, oob_hi = false;
         ++epoch;
         for (std::size_t i = 0; i < traj.size(); ++i) {
             const double expansion = r * reach_.growth_factors()[i] + ode_error[i];
@@ -376,11 +397,28 @@ private:
                 if (periodic_[d]) continue;
                 if (rb[d][0] < gb[d][0] || rb[d][1] > gb[d][1]) { oob = true; break; }
             }
+            if (args_.two_abstractions) {
+                const double pad = dyn_.control_inflation(reach_.checkpoint_times()[i], action_idx);
+                ++epoch;
+                Bounds<N> rb_hi{};
+                for (std::size_t d = 0; d < N; ++d)
+                    rb_hi[d] = {{traj[i][d] - expansion - pad, traj[i][d] + expansion + pad}};
+                tree_.for_each_intersecting(rb_hi, stamp, epoch, [&](std::uint32_t id) { out_hi.push_back(static_cast<std::int32_t>(id)); });
+                for (std::size_t d = 0; d < N; ++d) {
+                    if (periodic_[d]) continue;
+                    if (rb_hi[d][0] < gb[d][0] || rb_hi[d][1] > gb[d][1]) { oob_hi = true; break; }
+                }
+            }
         }
         if (oob) out.push_back(kOOB);
         const std::size_t key = static_cast<std::size_t>(cell_id) * n_actions_ + action_idx;
         cache_[key] = out;
         cache_present_[key] = 1;
+        if (args_.two_abstractions) {
+            if (oob_hi) out_hi.push_back(kOOB);
+            cache_upper_[key] = std::move(out_hi);
+            cache_upper_present_[key] = 1;
+        }
     }
 
     void recount_cache() {
@@ -388,7 +426,8 @@ private:
         for (std::size_t i = 0; i < cache_present_.size(); ++i) if (cache_present_[i]) ++cache_entries_;
     }
 
-    SuccGraph build_graph() const {
+    SuccGraph build_graph(const std::vector<std::vector<std::int32_t>>& cache,
+                          const std::vector<std::uint8_t>& present) const {
         const auto& leaves = tree_.leaves();
         const std::size_t n = leaves.size();
         std::vector<std::int32_t> id_to_pos(tree_.num_cells(), -1);
@@ -399,7 +438,7 @@ private:
         for (std::size_t i = 0; i < n; ++i)
             for (std::size_t a = 0; a < n_actions_; ++a) {
                 const std::size_t key = static_cast<std::size_t>(leaves[i]) * n_actions_ + a;
-                if (key < cache_present_.size() && cache_present_[key]) total += cache_[key].size();
+                if (key < present.size() && present[key]) total += cache[key].size();
             }
         g.idx.resize(total);
         std::size_t w = 0;
@@ -408,8 +447,8 @@ private:
             for (std::size_t a = 0; a < n_actions_; ++a) {
                 g.off[i * n_actions_ + a] = static_cast<std::uint32_t>(w);
                 const std::size_t key = static_cast<std::size_t>(leaves[i]) * n_actions_ + a;
-                if (key >= cache_present_.size() || !cache_present_[key]) continue;
-                for (std::int32_t sid : cache_[key]) {
+                if (key >= present.size() || !present[key]) continue;
+                for (std::int32_t sid : cache[key]) {
                     if (sid == kOOB) g.idx[w++] = oob_idx;
                     else {
                         const std::int32_t p = id_to_pos[static_cast<std::size_t>(sid)];
@@ -427,7 +466,14 @@ private:
         const double t_start = now_seconds();
         const auto& leaves = tree_.leaves();
         const std::size_t n = leaves.size();
-        const SuccGraph g = build_graph();
+        const SuccGraph g_lo = build_graph(cache_, cache_present_);
+        SuccGraph g_hi_store;
+        const SuccGraph* g_hi_ptr = &g_lo;
+        if (args_.two_abstractions) {
+            g_hi_store = build_graph(cache_upper_, cache_upper_present_);
+            g_hi_ptr = &g_hi_store;
+        }
+        const SuccGraph& g_hi = *g_hi_ptr;
 
         std::vector<double> Vu(n + 1), Vl(n + 1), lu(n + 1), ll(n + 1), ru(n + 1), rl(n + 1);
         for (std::size_t i = 0; i < n; ++i) {
@@ -461,14 +507,14 @@ private:
                 for (std::size_t i = b; i < e; ++i) {
                     double best_min = -kInf, best_max = -kInf;
                     for (std::size_t a = 0; a < n_actions_; ++a) {
-                        const std::uint32_t s = g.off[i * n_actions_ + a], t = g.off[i * n_actions_ + a + 1];
-                        if (s == t) continue;
+                        const std::uint32_t s_lo = g_lo.off[i * n_actions_ + a], t_lo = g_lo.off[i * n_actions_ + a + 1];
+                        const std::uint32_t s_hi = g_hi.off[i * n_actions_ + a], t_hi = g_hi.off[i * n_actions_ + a + 1];
+                        if (s_lo == t_lo && s_hi == t_hi) continue;
                         double lo = kInf, hi = -kInf;
-                        for (std::uint32_t k = s; k < t; ++k) {
-                            const std::uint32_t j = g.idx[k];
-                            lo = std::min(lo, Vl[j]);
-                            hi = std::max(hi, Vu[j]);
-                        }
+                        for (std::uint32_t k = s_lo; k < t_lo; ++k) lo = std::min(lo, Vl[g_lo.idx[k]]);
+                        for (std::uint32_t k = s_hi; k < t_hi; ++k) hi = std::max(hi, Vu[g_hi.idx[k]]);
+                        if (s_lo == t_lo) lo = -kInf;
+                        if (s_hi == t_hi) hi = -kInf;
                         if (discount) { lo *= gamma; hi *= gamma; }
                         best_min = std::max(best_min, lo);
                         best_max = std::max(best_max, hi);
@@ -620,6 +666,9 @@ private:
 
     std::vector<std::vector<std::int32_t>> cache_;
     std::vector<std::uint8_t> cache_present_;  // not vector<bool>: written concurrently
+    // Larger successor sets used only for V_upper when --two-abstractions is set.
+    std::vector<std::vector<std::int32_t>> cache_upper_;
+    std::vector<std::uint8_t> cache_upper_present_;
     std::size_t cache_entries_ = 0;
 };
 

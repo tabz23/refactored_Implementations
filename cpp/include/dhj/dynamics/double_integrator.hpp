@@ -38,6 +38,10 @@ public:
         // itertools.product([-a, 0, a], [-a, 0, a]): ax outer, ay inner.
         const double levels[3] = {-a_max, 0.0, a_max};
         for (double ax : levels) for (double ay : levels) actions_.push_back({ax, ay});
+        // ||F(x,u)-F(x,v)||_inf = ||u-v||_inf, and each component's Voronoi
+        // cell in [-a_max, a_max] has radius a_max/2, so the product cell does too.
+        L_u_ = 1.0;
+        rho_.assign(actions_.size(), 0.5 * a_max_);
     }
 
     const char* name() const override { return "double_integrator"; }

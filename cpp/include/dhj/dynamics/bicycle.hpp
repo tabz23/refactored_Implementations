@@ -43,6 +43,10 @@ public:
         const double w_levels[3] = {-omega_max_, 0.0, omega_max_};
         for (double a : a_levels)
             for (double w : w_levels) actions_.push_back({a, w});
+        // (v', δ') = (a, ω), so ||F(x,u)-F(x,v)||_inf = ||u-v||_inf.
+        // Product of the Voronoi cells of a in [-a_max, a_max] and ω in [-ω_max, ω_max].
+        L_u_ = 1.0;
+        rho_.assign(actions_.size(), std::max(0.5 * a_max_, 0.5 * omega_max_));
     }
 
     const char* name() const override { return "bicycle"; }
