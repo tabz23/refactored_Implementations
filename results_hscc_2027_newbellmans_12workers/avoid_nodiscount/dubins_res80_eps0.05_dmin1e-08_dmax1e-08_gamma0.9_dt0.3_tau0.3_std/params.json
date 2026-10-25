@@ -1,6 +1,6 @@
 {
-  "command": "./build/dhj --mode avoid_nodiscount --dynamics dubins --dt 0.3 --tau 0.3 --initial-resolution 80 --epsilon 0.05 --delta-min 1e-8 --delta-max 1e-8 --gamma 0.9 --refinements 6 --vi-iterations 20000 --checkpoint-every 0 --keep-checkpoints 0 --plot-dpi 300 --workers 12 --results-root /Users/i.k.tabbara/Documents/python directory/HSCC_2027/refactored_Implementations/results_hscc_2027_newbellmans_12workers",
-  "started": "2026-10-04T03:51:37",
+  "command": "./build/dhj_twoabs --mode avoid_nodiscount --dynamics dubins --dt 0.3 --tau 0.3 --initial-resolution 80 --epsilon 0.05 --delta-min 1e-8 --phase0-tol 1e-8 --delta-max 1e-8 --gamma 0.9 --refinements 6 --vi-iterations 20000 --checkpoint-every 0 --keep-checkpoints 0 --plot-dpi 300 --workers 12 --tag paperinit --results-root /Users/i.k.tabbara/Documents/python directory/HSCC_2027/refactored_Implementations/results_hscc_2027_newbellmans_12workers",
+  "started": "2026-10-24T19:08:11",
   "args": {
     "a_max": 1.0,
     "algorithm": 2,
@@ -20,6 +20,7 @@
     "out_dir": null,
     "phase0_tol": 1e-08,
     "plot_dpi": 300,
+    "plot_slice": -1,
     "plot_freq": 1000,
     "precompute": false,
     "refinements": 6,
@@ -27,9 +28,10 @@
     "results_root": "/Users/i.k.tabbara/Documents/python directory/HSCC_2027/refactored_Implementations/results_hscc_2027_newbellmans_12workers",
     "resume": null,
     "seq_queries": false,
-    "tag": "",
+    "tag": "paperinit",
     "tau": 0.3,
     "tolerance": 1e-08,
+    "two_abstractions": false,
     "v_max": 1.0,
     "velocity": 1.0,
     "vi_iterations": 20000,
@@ -44,6 +46,8 @@
     "L_f": 1.0,
     "L_l": 1.4142135623730951,
     "L_r": 1.4142135623730951,
+    "L_u": 1.0,
+    "control_radii": [0.5, 0.5, 0.5],
     "periodic_dims": [2],
     "state_names": ["x", "y", "θ"],
     "state_bounds": [[-3.0, 3.0], [-3.0, 3.0], [-3.141592653589793, 3.141592653589793]],
@@ -56,12 +60,12 @@
     "checkpoint_times": [0.3],
     "growth_factors": [1.3498588075760032],
     "workers": 12,
-    "out_dir": "/Users/i.k.tabbara/Documents/python directory/HSCC_2027/refactored_Implementations/results_hscc_2027_newbellmans_12workers/avoid_nodiscount/dubins_res80_eps0.05_dmin1e-08_dmax1e-08_gamma0.9_dt0.3_tau0.3_std"
+    "out_dir": "/Users/i.k.tabbara/Documents/python directory/HSCC_2027/refactored_Implementations/results_hscc_2027_newbellmans_12workers/avoid_nodiscount/dubins_res80_eps0.05_dmin1e-08_dmax1e-08_gamma0.9_dt0.3_tau0.3_std_paperinit"
   },
   "environment": {
     "host": "1J000AL-FYYVJW7",
     "implementation": "cpp",
     "compiler": "clang 16.0",
-    "build": "Oct  4 2026 00:42:14"
+    "build": "Oct 24 2026 19:08:05"
   }
 }

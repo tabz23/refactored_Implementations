@@ -86,10 +86,12 @@ class SafetyValueIterator:
         for cell_id, l_lower, l_upper, r_lower, r_upper in results:
             c = by_id[cell_id]
             c.l_lower, c.l_upper, c.r_lower, c.r_upper = l_lower, l_upper, r_lower, r_upper
-            # min(l, r) is the least value of the reach-avoid Bellman image, so
-            # lower iterates that start there increase and stay below the fixed
-            # point. Discounted upper values still start at l and decrease.
-            if self.mode.discounted:
+            # Reach-avoid lower iterates start at min(l, r). Discounted upper
+            # values start at l. Avoid has no target: both bounds start at l.
+            if self.mode is Mode.AVOID_NODISCOUNT:
+                c.V_lower = c.l_lower
+                c.V_upper = c.l_upper
+            elif self.mode.discounted:
                 c.V_lower = min(c.l_lower, c.r_lower)
                 c.V_upper = c.l_upper
             else:
@@ -404,7 +406,9 @@ class SafetyValueIterator:
                               conservative_mode: bool, delta_max: float):
         """Re-initialise every leaf, refresh the successor cache, sweep to convergence."""
         leaves = self.cell_tree.get_leaves()
-        kind = "V_lower = min(l, r), V_upper = l" if self.mode.discounted else "V = min(l, r)"
+        kind = ("V = l" if self.mode is Mode.AVOID_NODISCOUNT
+                else "V_lower = min(l, r), V_upper = l" if self.mode.discounted
+                else "V = min(l, r)")
         print(f"  Reinitializing ALL {len(leaves)} cells ({kind})")
         t0 = time.time()
         self.initialize_cells()

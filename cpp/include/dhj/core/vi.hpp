@@ -181,8 +181,10 @@ public:
     VIResult local_value_iteration(const std::vector<std::uint32_t>& new_cells, int max_iterations,
                                    double convergence_tol, bool conservative_mode, double delta_max) {
         const std::size_t n = tree_.num_leaves();
-        std::printf("  Reinitializing ALL %zu cells (%s)\n", n,
-                    mode_discounted(mode_) ? "V_lower = min(l, r), V_upper = l" : "V = min(l, r)");
+        const char* init_kind = mode_discounted(mode_) ? "V_lower = min(l, r), V_upper = l"
+                                : mode_ == Mode::AvoidNoDiscount ? "V = l"
+                                                                 : "V = min(l, r)";
+        std::printf("  Reinitializing ALL %zu cells (%s)\n", n, init_kind);
         const double t0 = now_seconds();
         initialize_cells();
         const double reinit = now_seconds() - t0;
@@ -276,11 +278,14 @@ private:
                 c.l_upper = l_center + L_l * r;
                 c.r_lower = r_center - L_r * r;
                 c.r_upper = r_center + L_r * r;
-                // min(l, r) is the least value the reach-avoid Bellman image can take, so
-                // the lower iterates that start there are monotone nondecreasing and
-                // stay below the fixed point. Discounted upper values still start at
-                // l and decrease. Undiscounted bounds both start at min(l, r).
-                if (mode_discounted(mode_)) {
+                // Reach-avoid: min(l, r) is the least value of the Bellman image, so
+                // lower iterates that start there increase and stay below the fixed
+                // point. Discounted upper values still start at l and decrease.
+                // Avoid has no target: both bounds start at l and decrease.
+                if (mode_ == Mode::AvoidNoDiscount) {
+                    c.V_lower = c.l_lower;
+                    c.V_upper = c.l_upper;
+                } else if (mode_discounted(mode_)) {
                     c.V_lower = std::min(c.l_lower, c.r_lower);
                     c.V_upper = c.l_upper;
                 } else {
