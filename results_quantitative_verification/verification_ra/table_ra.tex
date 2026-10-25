@@ -1,0 +1,20 @@
+\begin{table}[t]
+\caption{Verification of Proposition~\ref{prop:greedy} for Algorithm~\ref{alg:alg1} with $\gamma=0.96$ on a uniform grid of $120^3$ cells.}
+\label{tab:ra_verification}
+\small
+\begin{tabular}{lr}
+\toprule
+ & Dubins car \\
+\midrule
+Cells certified in $\mathcal R$ / $\mathcal L$ (\%) & 56.9 / 26.5 \\
+Certificate violations (lower / upper) & 0 / 0 \\
+Simulated initial states & 983{,}988 \\
+Reached $\mathcal T$ without entering $\mathcal F$ & 100.0\% \\
+Reach-time bound violations & 0 \\
+Median observed / bound (steps) & 19 / 37 \\
+$\min_t \gamma^t l(x_t)/\underline V_\gamma^{\mathrm{cons}}(s_0)$ & 1.02 \\
+$\min\,(J-\underline V_\gamma^{\mathrm{cons}}(s_0))$ & 0.002 \\
+Abstraction and value iteration time (s) & 2.1 \\
+\bottomrule
+\end{tabular}
+\end{table}

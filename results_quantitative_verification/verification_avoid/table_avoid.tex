@@ -1,0 +1,19 @@
+\begin{table}[t]
+\caption{Verification of Proposition~\ref{prop:avoid} for Algorithm~\ref{alg:alg1} with the avoid operators ($\gamma=1$) on a uniform grid of $120^3$ cells.}
+\label{tab:avoid_verification}
+\small
+\begin{tabular}{lr}
+\toprule
+ & Dubins car \\
+\midrule
+Cells with $\underline V_1^{\mathrm{cons}}>0$ / $\overline V_1^{\mathrm{cons}}<0$ (\%) & 56.3 / 26.9 \\
+Certificate violations (lower / upper) & 0 / 0 \\
+Simulated initial states ($\underline V_1^{\mathrm{cons}}>0$) & 973{,}616 \\
+Outside $\mathcal F$ and in the grid for 1000 steps & 100.0\% \\
+$\min_t l(x_t)/\underline V_1^{\mathrm{cons}}(s_0)$ & 1.002 \\
+Sampled states ($\overline V_1^{\mathrm{cons}}<0$) $\times$ controls & 2{,}320{,}160 \\
+Entered $\mathcal F$ or left the grid within the bound & 100.0\% \\
+Abstraction and value iteration time (s) & 2.3 \\
+\bottomrule
+\end{tabular}
+\end{table}

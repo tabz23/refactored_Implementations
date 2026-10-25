@@ -1,0 +1,114 @@
+[
+  {
+    "system": "dubins",
+    "run_dir": "/Users/i.k.tabbara/Documents/python directory/HSCC_2027/refactored_Implementations/results_quantitative_verification/avoid_nodiscount/dubins_res120_eps0.05_dmin1e-300_dmax1e-300_gamma1.0_dt0.3_tau0.3_std",
+    "cells": 1728000,
+    "grid": [
+      120,
+      120,
+      120
+    ],
+    "gamma": 1.0,
+    "tau": 0.3,
+    "actions": [
+      -1.0,
+      0.0,
+      1.0
+    ],
+    "L_f": 1.0,
+    "L_l": 1.4142135623730951,
+    "solver": {
+      "vi_iterations": 89,
+      "stop_tolerance": 1e-300,
+      "time_vi_s": 1.198,
+      "time_successors_s": 1.1,
+      "time_phase_s": 8.409
+    },
+    "classification_percent": {
+      "safe": 56.34351851851852,
+      "BRS": 26.8537037037037,
+      "unclassified": 16.802777777777777
+    },
+    "cells_with_V_upper_zero": 0,
+    "flow_check_max_error": 8.881784197001252e-16,
+    "cell_bound_max_error": 1.7763568394002505e-15,
+    "certificates": {
+      "reach_box_radius": 0.035339220943868745,
+      "max_successor_cells_per_axis": [
+        3,
+        3,
+        3
+      ],
+      "lower_cells_checked": 973616,
+      "lower_violations": 0,
+      "lower_max_deficit": 0.0,
+      "lower_violations_all_cells": 0,
+      "upper_iterations": 89,
+      "upper_violations": 0,
+      "upper_max_excess": 0.0,
+      "upper_cells_equal": 1728000,
+      "BRS_cells_recomputed": 464032
+    },
+    "simulation": {
+      "initial_states": 973616,
+      "points_per_cell": 1,
+      "horizon_steps": 1000,
+      "stayed_safe": 973616,
+      "entered_F_or_left_grid": 0,
+      "distance_violations": 0,
+      "margin_min": 1.0020993472181985,
+      "l_min_minus_Vlower_min": 0.002087743860517133,
+      "visited_cells_below_Vlower_s0": 0,
+      "Vlower_s0_median": 0.8892396616046653,
+      "Vlower_s0_max": 1.3380927953944335,
+      "l_min_median": 1.0077718204857196
+    },
+    "brs": {
+      "samples": 464032,
+      "start_outside_F": 219630,
+      "strategies": {
+        "constant u=-1": {
+          "violations": 0,
+          "left_grid": 189912,
+          "entered_F": 274120,
+          "hit_time_median": 0.0,
+          "hit_time_max": 7
+        },
+        "constant u=0": {
+          "violations": 0,
+          "left_grid": 189912,
+          "entered_F": 274120,
+          "hit_time_median": 0.0,
+          "hit_time_max": 7
+        },
+        "constant u=1": {
+          "violations": 0,
+          "left_grid": 189912,
+          "entered_F": 274120,
+          "hit_time_median": 0.0,
+          "hit_time_max": 7
+        },
+        "greedy on W": {
+          "violations": 0,
+          "left_grid": 189912,
+          "entered_F": 274120,
+          "hit_time_median": 0.0,
+          "hit_time_max": 7
+        },
+        "uniformly random": {
+          "violations": 0,
+          "left_grid": 189912,
+          "entered_F": 274120,
+          "hit_time_median": 0.0,
+          "hit_time_max": 7
+        }
+      },
+      "violations": 0,
+      "trajectories": 2320160,
+      "bound_median": 0.0,
+      "bound_max": 10,
+      "ratio_latest_hit_to_bound_max": 1.0
+    },
+    "verifier_seconds": 95.97590684890747
+  }
+]

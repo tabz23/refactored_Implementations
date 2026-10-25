@@ -1,0 +1,75 @@
+verifying /Users/i.k.tabbara/Documents/python directory/HSCC_2027/refactored_Implementations/results_quantitative_verification/ra_discount/dubins_res120_eps0.05_dmin1e-08_dmax1e-08_gamma0.96_dt0.3_tau0.3_std
+{
+  "system": "dubins",
+  "run_dir": "/Users/i.k.tabbara/Documents/python directory/HSCC_2027/refactored_Implementations/results_quantitative_verification/ra_discount/dubins_res120_eps0.05_dmin1e-08_dmax1e-08_gamma0.96_dt0.3_tau0.3_std",
+  "cells": 1728000,
+  "grid": [
+    120,
+    120,
+    120
+  ],
+  "gamma": 0.96,
+  "tau": 0.3,
+  "actions": [
+    -1.0,
+    0.0,
+    1.0
+  ],
+  "L_f": 1.0,
+  "L_l": 1.4142135623730951,
+  "L_r": 1.4142135623730951,
+  "solver": {
+    "vi_iterations": 71,
+    "time_vi_s": 0.987,
+    "time_successors_s": 1.144,
+    "time_phase_s": 8.305
+  },
+  "classification_percent": {
+    "R": 56.94375,
+    "L": 26.52175925925926,
+    "unclassified": 16.53449074074074
+  },
+  "flow_check_max_error": 8.881784197001252e-16,
+  "cell_bound_max_error": 1.7763568394002505e-15,
+  "certificates": {
+    "reach_box_radius": 0.035339220943868745,
+    "max_successor_cells_per_axis": [
+      3,
+      3,
+      3
+    ],
+    "lower_cells_checked": 983988,
+    "lower_violations": 0,
+    "lower_max_deficit": 0.0,
+    "lower_violations_all_cells": 0,
+    "upper_cells_checked": 1728000,
+    "upper_violations": 0,
+    "upper_max_excess": 0.0
+  },
+  "simulation": {
+    "initial_states": 983988,
+    "points_per_cell": 1,
+    "r_star": 0.4276206364560201,
+    "reached_safely": 983988,
+    "entered_F_or_left_grid": 0,
+    "unfinished": 0,
+    "time_bound_violations": 0,
+    "t_star_median": 21.0,
+    "t_star_max": 45,
+    "reach_time_median": 19.0,
+    "reach_time_max": 44,
+    "bound_median": 37.0,
+    "bound_max": 147,
+    "slack_median": 17.0,
+    "slack_min": 0,
+    "ratio_time_to_bound_max": 0.7142857142857143,
+    "margin_min": 1.02133073222596,
+    "margin_violations": 0,
+    "J_minus_Vlower_min": 0.0018238290064777618,
+    "J_below_Vlower": 0,
+    "J_minus_Vupper_max": -0.001952376617341156,
+    "J_above_Vupper": 0
+  },
+  "verifier_seconds": 10.307862997055054
+}
+wrote /Users/i.k.tabbara/Documents/python directory/HSCC_2027/refactored_Implementations/results_quantitative_verification/verification_ra
