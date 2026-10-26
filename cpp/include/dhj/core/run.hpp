@@ -20,11 +20,10 @@
 
 namespace dhj {
 
-inline std::string derived_json(double eta_min, const GronwallReachabilityAnalyzer& reach, int workers,
+inline std::string derived_json(const GronwallReachabilityAnalyzer& reach, int workers,
                                 const std::string& out_dir, const std::string& indent) {
     const std::string in = indent + "  ";
     std::string j = "{\n";
-    j += in + "\"eta_min\": " + py_repr(eta_min) + ",\n";
     j += in + "\"n_checkpoints\": " + std::to_string(reach.n_checkpoints()) + ",\n";
     j += in + "\"checkpoint_times\": [";
     for (std::size_t i = 0; i < reach.checkpoint_times().size(); ++i) j += std::string(i ? ", " : "") + py_repr(reach.checkpoint_times()[i]);
@@ -50,7 +49,7 @@ void run_algorithm_1(const Args& args, const Dynamics<N>& dyn, const std::string
     timers.spatial_index += tree.index_build_seconds();
 
     GronwallReachabilityAnalyzer reach(dyn.L_f(), dyn.dt(), dyn.tau());
-    write_params(out_dir, args, dyn.describe_json("  "), derived_json(0.0, reach, args.workers, out_dir, "  "));
+    write_params(out_dir, args, dyn.describe_json("  "), derived_json(reach, args.workers, out_dir, "  "));
     SafetyValueIterator<N> vi(args, dyn, tree, reach, out_dir, pool, timers);
 
     const double t0 = now_seconds();
@@ -99,12 +98,11 @@ void run_algorithm_2(const Args& args, const Dynamics<N>& dyn, const std::string
     }
 
     GronwallReachabilityAnalyzer reach(dyn.L_f(), dyn.dt(), dyn.tau());
-    write_params(out_dir, args, dyn.describe_json("  "),
-                 derived_json(args.epsilon / (2.0 * dyn.L_l()), reach, args.workers, out_dir, "  "));
+    write_params(out_dir, args, dyn.describe_json("  "), derived_json(reach, args.workers, out_dir, "  "));
     AdaptiveRefinement<N> adaptive(args, dyn, *tree, reach, out_dir, pool, timers);
 
     const double t0 = now_seconds();
-    adaptive.refine(args.epsilon, args.refinements, args.vi_iterations, resuming ? &resume_meta : nullptr);
+    adaptive.refine(args.eps_min, args.refinements, args.vi_iterations, resuming ? &resume_meta : nullptr);
     std::printf("ALGORITHM 2 COMPLETE\n");
     std::printf("Total time: %.2f seconds\n", now_seconds() - t0);
     timers.final_cells = tree->num_leaves();

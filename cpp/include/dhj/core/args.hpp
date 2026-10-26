@@ -31,7 +31,7 @@ struct Args {
     double tolerance = 1e-13;
     int plot_freq = 1000;
     // algorithm 2 / 3
-    double epsilon = 0.1;
+    double eps_min = 0.01;   // threshold of Algorithm 2 on the cell radius
     int initial_resolution = 15;
     int refinements = 100;
     int vi_iterations = 20000;
@@ -83,7 +83,8 @@ struct Args {
         "  --tolerance, --delta-min F    convergence tolerance (default: 1e-13)\n"
         "  --plot-freq INT               plot every N sweeps (default: 1000)\n"
         "algorithm 2/3:\n"
-        "  --epsilon FLOAT               refinement error tolerance (default: 0.1)\n"
+        "  --eps-min FLOAT               Algorithm 2 refines a cell only while its radius (half its\n"
+        "                                largest side) exceeds eps_min (default: 0.01)\n"
         "  --initial-resolution INT      initial coarse grid (default: 15)\n"
         "  --refinements INT             max refinement phases (default: 100)\n"
         "  --vi-iterations INT           VI sweeps per phase (default: 20000)\n"
@@ -172,7 +173,7 @@ inline Args parse_args(int argc, char** argv) {
         else if (f == "--iterations") { a.iterations = static_cast<int>(parse_long(need(i), "--iterations")); ++i; }
         else if (f == "--tolerance" || f == "--delta-min") { a.tolerance = parse_double(need(i), "--tolerance"); ++i; }
         else if (f == "--plot-freq") { a.plot_freq = static_cast<int>(parse_long(need(i), "--plot-freq")); ++i; }
-        else if (f == "--epsilon") { a.epsilon = parse_double(need(i), "--epsilon"); ++i; }
+        else if (f == "--eps-min") { a.eps_min = parse_double(need(i), "--eps-min"); ++i; }
         else if (f == "--initial-resolution") { a.initial_resolution = static_cast<int>(parse_long(need(i), "--initial-resolution")); ++i; }
         else if (f == "--refinements") { a.refinements = static_cast<int>(parse_long(need(i), "--refinements")); ++i; }
         else if (f == "--vi-iterations") { a.vi_iterations = static_cast<int>(parse_long(need(i), "--vi-iterations")); ++i; }
@@ -210,6 +211,7 @@ inline Args parse_args(int argc, char** argv) {
     }
     if (!have_mode) { std::fprintf(stderr, "error: --mode is required\n"); usage_and_exit(argv[0], 2); }
     if (a.algorithm != 1 && a.algorithm != 2) { std::fprintf(stderr, "error: --algorithm must be 1 or 2\n"); std::exit(2); }
+    if (!(a.eps_min > 0.0)) { std::fprintf(stderr, "error: --eps-min must be positive\n"); std::exit(2); }
     if (a.iterations < 0) a.iterations = mode_default_iterations(a.mode);
     if (a.workers <= 0) {
         const unsigned hc = std::thread::hardware_concurrency();
@@ -239,7 +241,7 @@ inline std::string derive_out_dir(const Args& a) {
         name = "algorithm1_" + a.dynamics + "_res" + std::to_string(a.resolution) + "_dmin" + py_exp(a.tolerance, 0) +
                "_gamma" + py_repr(a.gamma) + "_dt" + py_repr(a.dt) + "_tau" + py_repr(a.tau) + "_" + cons;
     else
-        name = a.dynamics + "_res" + std::to_string(a.initial_resolution) + "_eps" + py_repr(a.epsilon) +
+        name = a.dynamics + "_res" + std::to_string(a.initial_resolution) + "_epsmin" + py_repr(a.eps_min) +
                "_dmin" + py_exp(a.tolerance, 0) + "_dmax" + py_exp(a.delta_max, 0) + "_gamma" + py_repr(a.gamma) +
                "_dt" + py_repr(a.dt) + "_tau" + py_repr(a.tau) + "_" + cons;
     if (a.two_abstractions) name += "_twoabs";
@@ -261,7 +263,7 @@ inline std::string args_json(const Args& a, const std::string& indent) {
     j += in + "\"dt\": " + py_repr(a.dt) + ",\n";
     j += in + "\"dump_csv\": " + b(a.dump_csv) + ",\n";
     j += in + "\"dynamics\": " + s(a.dynamics) + ",\n";
-    j += in + "\"epsilon\": " + py_repr(a.epsilon) + ",\n";
+    j += in + "\"eps_min\": " + py_repr(a.eps_min) + ",\n";
     j += in + "\"gamma\": " + py_repr(a.gamma) + ",\n";
     j += in + "\"initial_resolution\": " + std::to_string(a.initial_resolution) + ",\n";
     j += in + "\"iterations\": " + std::to_string(a.iterations) + ",\n";

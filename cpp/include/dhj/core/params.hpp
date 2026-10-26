@@ -1,7 +1,7 @@
 // params.hpp - params.json and phases.csv, the machine-readable run record.
 //
 // params.json  all CLI arguments, the dynamics description, derived quantities
-//              (eta_min, growth factors, workers) and the environment.
+//              (growth factors, workers) and the environment.
 // phases.csv   one row per completed refinement phase: |cells|, boundary
 //              cells, VI sweeps, timings. Same columns as the Python package.
 #pragma once

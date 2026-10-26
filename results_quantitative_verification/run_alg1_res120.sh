@@ -2,9 +2,9 @@
 # Runs Algorithm 1 once (no refinement) for the Dubins car on a uniform 120^3
 # grid and dumps the value tables, so that verify_quantitative.py can check the
 # guarantees of the paper:
-#   ra     reach-avoid with gamma = 0.96 (Proposition 4 and the classification).
+#   ra     reach-avoid with gamma = 0.96 (Proposition 3, label prop:greedy, and the classification).
 #          The value iteration stops when both sup-norm changes are below 1e-8.
-#   avoid  avoid value function with gamma = 1 (Proposition 5). The iterates take
+#   avoid  avoid value function with gamma = 1 (Proposition 4, label prop:avoid). The iterates take
 #          values in a finite set, so a nonzero change is far above 1e-300 and the
 #          iteration stops only when nothing changes, as in the paper.
 #
@@ -46,7 +46,7 @@ run() {
   local mode="$1" gamma="$2" tol="$3"
   echo "=== START ${mode} dubins $(date) ==="
   ./build/dhj_head --mode "$mode" --dynamics dubins \
-    --dt 0.3 --tau 0.3 --initial-resolution 120 --epsilon 0.05 \
+    --dt 0.3 --tau 0.3 --initial-resolution 120 --eps-min 1e-6 \
     --delta-min "$tol" --phase0-tol "$tol" --delta-max "$tol" --gamma "$gamma" \
     --refinements 0 --vi-iterations 100033 \
     --checkpoint-every 0 --keep-checkpoints 0 --dump-csv \

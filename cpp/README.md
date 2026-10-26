@@ -44,12 +44,13 @@ make tools                # -> build/dhj_compare_checkpoints
 ```bash
 ./build/dhj --mode ra_nodiscount --dynamics dubins \
     --dt 0.3 --tau 0.3 --gamma 0.9 --delta-min 1e-8 --delta-max 1e-8 \
-    --epsilon 0.05 --initial-resolution 20 --vi-iterations 100033 --conservative
+    --eps-min 0.0088 --initial-resolution 20 --vi-iterations 100033 --conservative
 ```
 
-Flags are identical to `python/run.py` (`--mode`, `--algorithm`, `--dynamics`,
+Flags are identical to `python/run.py`, except that `--eps-min` (the threshold of Algorithm 2 on
+the cell radius) replaces `python/run.py`'s `--epsilon` (`--mode`, `--algorithm`, `--dynamics`,
 `--velocity`, `--a-max`, `--v-max`, `--dt`, `--tau`, `--gamma`, `--resolution`,
-`--iterations`, `--tolerance|--delta-min`, `--plot-freq`, `--epsilon`,
+`--iterations`, `--tolerance|--delta-min`, `--plot-freq`, `--eps-min`,
 `--initial-resolution`, `--refinements`, `--vi-iterations`, `--conservative`,
 `--delta-max`, `--phase0-tol`, `--workers`, `--precompute`, `--results-root`,
 `--out-dir`, `--tag`, `--no-plot`, `--dump-csv`, `--checkpoint-every`,

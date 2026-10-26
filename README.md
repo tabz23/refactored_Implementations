@@ -44,12 +44,15 @@ python run.py --mode ra_nodiscount --dynamics dubins --dt 0.3 --tau 0.3 --gamma 
 # C++
 cd cpp && make
 ./build/dhj --mode ra_nodiscount --dynamics dubins --dt 0.3 --tau 0.3 --gamma 0.9 \
-    --delta-min 1e-8 --delta-max 1e-8 --epsilon 0.05 --initial-resolution 20 \
+    --delta-min 1e-8 --delta-max 1e-8 --eps-min 0.0088 --initial-resolution 20 \
     --vi-iterations 100033 --conservative
 ```
 
+The C++ solver takes the threshold of Algorithm 2 on the cell radius directly, as `--eps-min`.
+The Python package still takes `--epsilon`, which it converts to a threshold.
+
 Both write to `refactored_Implementations/results/<mode>/<dynamics>_res<R>_eps<ε>_dmin<δ>_dmax<δmax>_gamma<γ>_dt<dt>_tau<τ>_<cons|std>/`
-(override with `--out-dir`, `--results-root`, `--tag`). The directory contains
+(C++: `_epsmin<ε_min>` instead of `_eps<ε>`; override with `--out-dir`, `--results-root`, `--tag`). The directory contains
 
 | file | content |
 |---|---|

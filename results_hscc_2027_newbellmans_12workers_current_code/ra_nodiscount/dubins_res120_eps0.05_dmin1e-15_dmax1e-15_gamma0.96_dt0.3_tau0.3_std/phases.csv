@@ -1,0 +1,2 @@
+phase,n_leaves,boundary_cells,refinable_cells,refined_parents,vi_iterations,converged,time_vi_s,time_successors_s,time_phase_s,wall_since_start_s,timestamp
+0,1728000,285716,285716,0,64,True,0.993,1.098,2.640,2.659,2026-10-26T01:42:51

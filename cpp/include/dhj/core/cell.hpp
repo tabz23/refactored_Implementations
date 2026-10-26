@@ -45,6 +45,9 @@ struct Cell {
     }
 
     double max_range() const { return range(max_range_dim()); }
+
+    // Cell radius max_j eta_{x,j}(s) of the paper: half the largest side.
+    double max_radius() const { return 0.5 * max_range(); }
 };
 
 template <std::size_t N>

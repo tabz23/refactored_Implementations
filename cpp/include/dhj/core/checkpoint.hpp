@@ -11,7 +11,7 @@
 // port so its checkpoints remain readable:
 //
 //   magic "DHJCKPT1" | version u32 | dim u32 | mode u32 | phase u32 |
-//   total_refined u64 | initial_resolution u32 | pad u32 | epsilon f64 |
+//   total_refined u64 | initial_resolution u32 | pad u32 | eps_min f64 |
 //   root_bounds f64[2*dim] | num_cells u64 | num_leaves u64 |
 //   cells: { bounds f64[2*dim], parent i32, child0 i32,
 //            V_upper, V_lower, l_upper, l_lower, r_upper, r_lower (f64) } x num_cells |
@@ -42,7 +42,7 @@ struct CheckpointMeta {
     std::uint32_t phase = 0;
     std::uint64_t total_refined = 0;
     std::uint32_t initial_resolution = 0;
-    double epsilon = 0.0;
+    double eps_min = 0.0;
     Bounds<N> root_bounds{};
 };
 
@@ -86,7 +86,7 @@ inline void save_checkpoint(const std::string& path, Mode mode, const CellTree<N
         detail::put_u64(p, meta.total_refined);
         detail::put_u32(p, meta.initial_resolution);
         detail::put_u32(p, 0);
-        detail::put_f64(p, meta.epsilon);
+        detail::put_f64(p, meta.eps_min);
         for (std::size_t d = 0; d < N; ++d) { detail::put_f64(p, meta.root_bounds[d][0]); detail::put_f64(p, meta.root_bounds[d][1]); }
         detail::put_u64(p, static_cast<std::uint64_t>(tree.num_cells()));
         detail::put_u64(p, static_cast<std::uint64_t>(tree.num_leaves()));
@@ -151,7 +151,7 @@ inline CheckpointMeta<N> load_checkpoint(const std::string& path, Mode mode, con
         meta.total_refined = detail::get_u64(p);
         meta.initial_resolution = detail::get_u32(p);
         (void)detail::get_u32(p);
-        meta.epsilon = detail::get_f64(p);
+        meta.eps_min = detail::get_f64(p);
         for (std::size_t d = 0; d < N; ++d) { meta.root_bounds[d][0] = detail::get_f64(p); meta.root_bounds[d][1] = detail::get_f64(p); }
         num_cells = static_cast<std::size_t>(detail::get_u64(p));
         num_leaves = static_cast<std::size_t>(detail::get_u64(p));

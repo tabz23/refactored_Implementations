@@ -4,11 +4,11 @@ This directory holds two runs of Algorithm 1 (no refinement) for the Dubins car 
 a uniform 120 × 120 × 120 grid, their verification, the tables and figures, and the
 scripts that produce and replicate all of it:
 
-* reach-avoid with γ = 0.96: the proposition labelled `prop:greedy` (under the
+* reach-avoid with γ = 0.96: Proposition 3, labelled `prop:greedy` (under the
   greedy policy, safe arrival in T within ⌈log(V_lower(s0)/r*)/log γ⌉ steps) and the
   soundness of both value bounds;
-* avoid with γ = 1: the proposition labelled `prop:avoid` (under its policy π*,
-  dist(x_t, F) ≥ V_lower(s0) for all t) and the soundness of both value bounds.
+* avoid with γ = 1: Proposition 4, labelled `prop:avoid` (under its policy π*,
+  l(x_t) ≥ V_lower(s0) for all t) and the soundness of both value bounds.
 
 ## Reproduce
 
@@ -105,8 +105,7 @@ Avoid checks (`verification_avoid/`):
    for the avoid problem: W ≡ −1 passes it.)
 6. *Simulation of the safe cells.* One state drawn uniformly in every cell with
    V_lower > 0, closed loop under π* for 1000 steps (300 s). For every trajectory: no
-   entry into F (l ≤ 0) and no exit from [−3, 3]²; l(x_t) ≥ V_lower(s0) at every step,
-   i.e. dist(x_t, F) ≥ V_lower(s0) since l is the signed distance to F; and the cells
+   entry into F (l ≤ 0) and no exit from [−3, 3]²; l(x_t) ≥ V_lower(s0) at every step; and the cells
    visited never have V_lower below V_lower(s0).
 7. *Simulation of the BRS cells.* One state drawn uniformly in every cell with
    V_upper < 0, under five controls: each constant action, the greedy action on W,

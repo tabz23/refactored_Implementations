@@ -1,7 +1,8 @@
 // refine.hpp - Algorithm 2/3: adaptive refinement of the boundary cells.
 //
-// Each phase: identify boundary cells larger than eta_min = eps / (2 L_l),
-// bisect them along their widest dimension, rebuild the spatial index, run
+// Each phase: identify boundary cells whose radius max_j eta_{x,j}(s) exceeds
+// eps_min (--eps-min, Algorithm 2 of the paper), bisect them along their
+// widest dimension, rebuild the spatial index, run
 // the local value iteration on the whole leaf set, save the figure, write a
 // checkpoint and a row in phases.csv.
 #pragma once
@@ -40,14 +41,12 @@ public:
     // `resume` (may be null) is the loop state read from a checkpoint; the tree
     // then already holds converged values for `resume->phase` phases and phase 0
     // is skipped. `max_refinements` counts total phases, not additional ones.
-    void refine(double epsilon, int max_refinements, int vi_iterations_per_refinement,
+    void refine(double eps_min, int max_refinements, int vi_iterations_per_refinement,
                 const CheckpointMeta<N>* resume = nullptr) {
-        const double eta_min = epsilon / (2.0 * dyn_.L_l());
         std::printf("\n%s\n", std::string(70, '=').c_str());
         std::printf("ADAPTIVE REFINEMENT CONFIGURATION\n");
         std::printf("%s\n", std::string(70, '=').c_str());
-        std::printf("  Error tolerance eps: %g\n", epsilon);
-        std::printf("  Minimum cell size eta_min: %.6f\n", eta_min);
+        std::printf("  Refinement threshold eps_min (cell radius): %g\n", eps_min);
         std::printf("  Maximum refinements: %d\n", max_refinements);
         std::printf("  VI iterations per refinement: %d\n", vi_iterations_per_refinement);
         std::printf("  Conservative mode: %s\n", py_bool(args_.conservative).c_str());
@@ -90,29 +89,29 @@ public:
             std::printf("Saved initial visualization: %s/value_function_phase_0_complete.png\n", output_dir_.c_str());
             vi_.print_statistics("Classification after phase 0:");
             const auto boundary = vi_.identify_boundary_cells();
-            const auto refinable = filter_refinable(boundary, eta_min);
+            const auto refinable = filter_refinable(boundary, eps_min);
             phase_log_.append(0, tree_.num_leaves(), boundary.size(), refinable.size(), 0, conv.iterations, conv.converged,
                               timers_.value_iteration - vi0, timers_.ode + timers_.queries - succ0, phase_time,
                               now_seconds() - t_start_);
-            save_phase_checkpoint(0, 0, epsilon, false);
+            save_phase_checkpoint(0, 0, eps_min, false);
         }
 
         std::vector<std::uint32_t> boundary = vi_.identify_boundary_cells();
-        std::vector<std::uint32_t> refinable = filter_refinable(boundary, eta_min);
+        std::vector<std::uint32_t> refinable = filter_refinable(boundary, eps_min);
         std::printf("\n%s\nINITIAL QUEUE STATE\n%s\n", std::string(70, '=').c_str(), std::string(70, '=').c_str());
         std::printf("Total boundary cells: %zu\n", boundary.size());
-        std::printf("  Refinable (>eta_min=%.6f): %zu\n", eta_min, refinable.size());
+        std::printf("  Refinable (radius > eps_min=%g): %zu\n", eps_min, refinable.size());
         std::printf("  Below threshold: %zu\n", boundary.size() - refinable.size());
 
         while (refinement_iter < max_refinements && !refinable.empty()) {
             boundary = vi_.identify_boundary_cells();
-            refinable = filter_refinable(boundary, eta_min);
+            refinable = filter_refinable(boundary, eps_min);
             std::printf("\n%s\nREFINEMENT PHASE %d\n%s\n", std::string(70, '=').c_str(), refinement_iter + 1,
                         std::string(70, '=').c_str());
             const double phase_start = now_seconds();
             const double succ0 = timers_.ode + timers_.queries, vi0 = timers_.value_iteration;
             std::printf("Boundary cells: %zu\n", boundary.size());
-            std::printf("  Refinable (>eta_min=%.6f): %zu\n", eta_min, refinable.size());
+            std::printf("  Refinable (radius > eps_min=%g): %zu\n", eps_min, refinable.size());
             std::printf("  Below threshold: %zu\n", boundary.size() - refinable.size());
             std::printf("  Cumulative refined: %zu\n", total_refined);
             if (refinable.empty()) {
@@ -174,16 +173,16 @@ public:
             ++refinement_iter;
 
             const auto boundary_after = vi_.identify_boundary_cells();
-            const auto refinable_after = filter_refinable(boundary_after, eta_min);
+            const auto refinable_after = filter_refinable(boundary_after, eps_min);
             phase_log_.append(refinement_iter, tree_.num_leaves(), boundary_after.size(), refinable_after.size(),
                               n_refined, conv.iterations, conv.converged, timers_.value_iteration - vi0,
                               timers_.ode + timers_.queries - succ0, phase_time, now_seconds() - t_start_);
-            save_phase_checkpoint(refinement_iter, total_refined, epsilon, false);
+            save_phase_checkpoint(refinement_iter, total_refined, eps_min, false);
             // Like the paper scripts, `refinable` is re-evaluated at the top of
             // the next phase (which prints "No refinable cells remaining").
         }
 
-        save_phase_checkpoint(refinement_iter, total_refined, epsilon, true);
+        save_phase_checkpoint(refinement_iter, total_refined, eps_min, true);
 
         std::printf("\n%s\nADAPTIVE REFINEMENT COMPLETE\n%s\n", std::string(70, '=').c_str(), std::string(70, '=').c_str());
         std::printf("Refinement Summary:\n");
@@ -192,7 +191,7 @@ public:
         std::printf("  Child cells created: %zu\n", total_refined * 2);
         std::printf("  Final cells: %zu\n", tree_.num_leaves());
         const auto final_boundary = vi_.identify_boundary_cells();
-        const auto final_refinable = filter_refinable(final_boundary, eta_min);
+        const auto final_refinable = filter_refinable(final_boundary, eps_min);
         std::printf("Final Boundary State:\n");
         std::printf("  Boundary cells: %zu\n", final_boundary.size());
         std::printf("  Still refinable: %zu\n", final_refinable.size());
@@ -202,7 +201,7 @@ public:
     }
 
 private:
-    void save_phase_checkpoint(int phase, std::size_t total_refined, double epsilon, bool force) {
+    void save_phase_checkpoint(int phase, std::size_t total_refined, double eps_min, bool force) {
         if (args_.checkpoint_every <= 0) return;
         if (!force && phase % args_.checkpoint_every != 0) return;
         if (phase == last_saved_phase_) return;
@@ -210,7 +209,7 @@ private:
         meta.phase = static_cast<std::uint32_t>(phase);
         meta.total_refined = static_cast<std::uint64_t>(total_refined);
         meta.initial_resolution = static_cast<std::uint32_t>(args_.initial_resolution);
-        meta.epsilon = epsilon;
+        meta.eps_min = eps_min;
         meta.root_bounds = tree_.root_bounds();
         const std::string path = checkpoint_path(ckpt_dir_, phase);
         const double t0 = now_seconds();
@@ -242,24 +241,25 @@ private:
         }
     }
 
-    std::vector<std::uint32_t> filter_refinable(const std::vector<std::uint32_t>& boundary, double eta_min) const {
+    // Size condition of Algorithm 2: max_j eta_{x,j}(s) > eps_min.
+    std::vector<std::uint32_t> filter_refinable(const std::vector<std::uint32_t>& boundary, double eps_min) const {
         std::vector<std::uint32_t> out;
         out.reserve(boundary.size());
-        for (std::uint32_t id : boundary) if (tree_.cell(id).max_range() > eta_min) out.push_back(id);
+        for (std::uint32_t id : boundary) if (tree_.cell(id).max_radius() > eps_min) out.push_back(id);
         return out;
     }
 
     void print_size_stats(const std::vector<std::uint32_t>& ids) const {
         std::vector<double> sizes;
         sizes.reserve(ids.size());
-        for (std::uint32_t id : ids) sizes.push_back(tree_.cell(id).max_range());
+        for (std::uint32_t id : ids) sizes.push_back(tree_.cell(id).max_radius());
         std::sort(sizes.begin(), sizes.end());
         double mean = 0.0;
         for (double v : sizes) mean += v;
         mean /= static_cast<double>(sizes.size());
         const std::size_t m = sizes.size() / 2;
         const double median = sizes.size() % 2 ? sizes[m] : 0.5 * (sizes[m - 1] + sizes[m]);
-        std::printf("  Refinable cell size statistics:\n");
+        std::printf("  Refinable cell radius statistics:\n");
         std::printf("    Max:    %.6f\n", sizes.back());
         std::printf("    Mean:   %.6f\n", mean);
         std::printf("    Min:    %.6f\n", sizes.front());

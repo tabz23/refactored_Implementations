@@ -27,11 +27,11 @@ OUT="$(cd "$OUT" && pwd)"
 
 # 2. Verification: seed 0, one random state per cell, 14 example paths.
 "$PY" -I "$HERE/verify_quantitative.py" \
-  "$OUT/ra_discount/dubins_res120_eps0.05_dmin1e-08_dmax1e-08_gamma0.96_dt0.3_tau0.3_std" \
+  "$OUT/ra_discount/dubins_res120_epsmin1e-06_dmin1e-08_dmax1e-08_gamma0.96_dt0.3_tau0.3_std" \
   --out "$OUT/verification_ra" --seed 0 --points-per-cell 1 --paths 14 \
   2>&1 | tee "$OUT/verification_ra.log"
 "$PY" -I "$HERE/verify_quantitative.py" \
-  "$OUT/avoid_nodiscount/dubins_res120_eps0.05_dmin1e-300_dmax1e-300_gamma1.0_dt0.3_tau0.3_std" \
+  "$OUT/avoid_nodiscount/dubins_res120_epsmin1e-06_dmin1e-300_dmax1e-300_gamma1.0_dt0.3_tau0.3_std" \
   --out "$OUT/verification_avoid" --seed 0 --points-per-cell 1 --paths 14 --horizon 1000 \
   2>&1 | tee "$OUT/verification_avoid.log"
 
