@@ -13,6 +13,12 @@ and the outputs of Algorithm 1 with stopping tolerances δ̄\* and δ̲\* satisf
 
 The check uses the second form, with δ̄\* = δ̲\* = δ\* = 10⁻¹².
 
+A second script, `unclassified_check.py`, checks the theorem's last claim on the same 40
+runs: every cell s that the classification theorem (`thm:soundness`) leaves unclassified,
+i.e., V̲_γ^cons(s) ≤ 0 < V̄_γ^cons(s), satisfies |V_γ(x)| ≤ β := (2Lη + γδ\*)/(1−γ) for all
+x ∈ [[s]]. The paper reports this check in Appendix H, subsection *Bound on unclassified
+cells* (`app:bv_unclassified`). Details are in the section *Unclassified cells* below.
+
 ## Reproduce
 
 ```bash
@@ -24,6 +30,30 @@ The check uses the second form, with δ̄\* = δ̲\* = δ\* = 10⁻¹².
 
 Needs Python 3 with numpy and matplotlib (recorded: Python 3.12.8, numpy 2.3.3,
 matplotlib 3.10.6); the sweep takes about 3.5 minutes.
+
+The check of the last claim is a separate script. Run it with the same Python as
+`reproduce.sh`. It reads `bound_verification.py` and `summary.json` from this folder, writes
+nothing, prints one JSON line per run, and ends with `ALL CHECKS PASS` or `SOME CHECK FAILED`:
+
+```bash
+python unclassified_check.py | tee DIR/unclassified_check.log   # about 3.5 minutes
+python unclassified_check.py 20 50 60   # quick test: 20 sampled cells per run, N = 50 and 60
+```
+
+The arguments are `[SAMPLES_PER_RUN] [N ...]`. The defaults (200 sampled cells per run, all
+eight N, seed 0) reproduce `unclassified_check.log`. To compare a rerun with it, ignoring
+timings:
+
+```bash
+python - unclassified_check.log DIR/unclassified_check.log <<'EOF'
+import json, sys
+def rows(path):
+    return [{k: v for k, v in json.loads(line).items() if k != "seconds"}
+            for line in open(path) if line.startswith("{")]
+ref, new = (rows(p) for p in sys.argv[1:3])
+print("identical to the reference results" if ref == new else "DIFFERENT from the reference results")
+EOF
+```
 
 ## Setup
 
@@ -62,6 +92,35 @@ gap is at most twice the bound. For every (γ, N) the script reports this larges
 (V̲ > 0), in 𝓛 (V̄ ≤ 0) and unclassified, and, per γ, the least-squares slope of
 log(largest gap) against log η (1 for a linear rate).
 
+### Unclassified cells (`unclassified_check.py`)
+
+The theorem's last claim bounds |V_γ(x)| by β = (2Lη + γδ\*)/(1−γ) on every unclassified
+cell. The script reruns Algorithm 1 with the functions of `bound_verification.py`, checks
+that the iteration counts and G match `summary.json` (`same_as_appendix_H`), and bounds
+|V_γ(x)| in two ways.
+
+1. **All unclassified cells.** Soundness gives V̲_γ^cons(s) ≤ V_γ(x) ≤ V̄_γ^cons(s), so on an
+   unclassified cell |V_γ(x)| ≤ M(s) := max{V̄_γ^cons(s), −V̲_γ^cons(s)}. The script takes
+   the largest M(s) over all unclassified cells and reports its ratio to β (`sound_ratio`).
+2. **Sampled states, exhaustive search.** This bound on V_γ does not depend on Algorithm 1,
+   whose outputs only identify the unclassified cells.
+   * *Sampling.* In each run: 200 unclassified cells drawn uniformly at random without
+     replacement, plus the two unclassified cells with the largest V̄_γ^cons and the largest
+     −V̲_γ^cons, and one state drawn uniformly at random in each of these 202 cells. One
+     generator, `numpy.random.default_rng(0)`, serves all runs, in the order N = 50, …, 120
+     and, for each N, γ = 0.3, …, 0.7.
+   * *Search.* V_H(x) is the largest discounted reach-avoid measure g_γ(ξ, t) over all 3^H
+     action sequences in {−1, 0, 1}^H and all t ≤ H. The trajectories use the closed-form
+     flow (`flow` in `bound_verification.py`). Then
+     V_H(x) ≤ V_γ(x) ≤ max{V_H(x), γ^(H+1)·r_max} with r_max = max r = 0.5, because the
+     Bellman equation gives V_γ(x) ≥ g_γ(ξ, t) for every action sequence, and every time
+     t > H contributes at most γ^t·r(x_t) ≤ γ^(H+1)·r_max. H is the smallest horizon with
+     γ^(H+1)·r_max ≤ 0.01: H = 3, 4, 5, 7, 10 for γ = 0.3, 0.4, 0.5, 0.6, 0.7.
+   * *Checks.* V_H(x) ≥ −β and max{V_H(x), γ^(H+1)·r_max} ≤ β, which give |V_γ(x)| ≤ β
+     (`direct_ok`, `direct_ratio`). In addition, the interval
+     [V_H(x), max{V_H(x), γ^(H+1)·r_max}] must overlap [V̲_γ^cons(s), V̄_γ^cons(s)], because
+     both contain V_γ(x) (`soundness_violations`, `overlap_min_slack`).
+
 ## Files
 
 | file | content |
@@ -74,6 +133,8 @@ log(largest gap) against log η (1 for a linear rate).
 | `bound_verification.{pdf,png}` | largest gap against η with the bound, and their ratio |
 | `value_functions/gamma<γ>_N<N>.png` | for every run: the lower bound, the upper bound and the classification computed by Algorithm 1, in six heading slices (0, π, ±π/4, ±π/2); no value tables are saved |
 | `run.log` | console output of the last run |
+| `unclassified_check.py` | the check of the theorem's last claim on unclassified cells (imports `bound_verification.py`) |
+| `unclassified_check.log` | its output for the paper: one JSON line per run, a summary line, and `ALL CHECKS PASS` |
 
 ## Results
 
@@ -101,5 +162,10 @@ the theorem holds for every state of every cell in every run. With δ\* = 10⁻�
   at the maximizing cells is set by l or r two or three steps away, G/η varies by 10% across N
   (6.68 for N ∈ {60, 80, 100, 120}, 6.00 to 6.64 otherwise), and G is slightly larger for N = 120
   than for N = 110 (the grids are not nested).
-* The unclassified cells are contained in {x : |V_γ(x)| ≤ 2Lη/(1−γ)}, as the theorem's last
-  statement says, so for every κ > 0 they contain no state with |V_γ(x)| ≥ κ once 2Lη/(1−γ) < κ.
+* Unclassified cells (`unclassified_check.log`). The recomputed runs match `summary.json`.
+  * Over all unclassified cells (14,756 to 112,996 per run), the largest M(s) is 0.58 to
+    0.71 of β, so the last claim holds at every state of every unclassified cell.
+  * At all 8,080 sampled states, the exhaustive-search interval lies in [−β, β]. Per run,
+    the largest |V_H(x)| is 0.30 to 0.70 of β, and γ^(H+1)·r_max is at most 0.053·β.
+  * The interval overlaps [V̲_γ^cons(s), V̄_γ^cons(s)] at every state, with the smallest
+    overlap 0.0034.

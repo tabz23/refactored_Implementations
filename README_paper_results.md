@@ -11,7 +11,7 @@ LaTeX labels are given too, because numbering can change.
 |---|---|---|---|
 | `results_hscc_2027_newbellmans_12workers_current_code/` | Figs. 2–5, the runtimes in the Fig. 3–5 captions and in §9.2.3 | `regenerate_hscc_newbellmans_tol1e-15_current_code.sh` | about 1 hour |
 | `results_quantitative_verification/` | §9.2.5, the closed-loop validation of Proposition 3 (`prop:greedy`) and Proposition 4 (`prop:avoid`) | `reproduce.sh` | about 3 minutes |
-| `results_bound_verification/` | Appendix H (`app:bound_verification`), the numerical check of Theorem 4 (`thm:convergence`), and its figure | `reproduce.sh` | about 3.5 minutes |
+| `results_bound_verification/` | Appendix H (`app:bound_verification`): the numerical check of Theorem 4 (`thm:convergence`), its figure, and the check of its last claim on unclassified cells (`app:bv_unclassified`) | `reproduce.sh` and `unclassified_check.py` | about 3.5 minutes each |
 
 The other paper results do not come from this code. Fig. 1 and Fig. 4(e) come from the
 MATLAB HJ reachability toolbox. Fig. 4(c,d) come from ROCS 2.0.
@@ -280,6 +280,9 @@ cd results_bound_verification
 ./reproduce.sh            # writes ../results_bound_verification_rerun and compares
                           # every number except timings with the stored summary.json
 ./reproduce.sh "$PWD"     # regenerates the results in this folder instead
+python unclassified_check.py | tee DIR/unclassified_check.log
+                          # the check of the last claim (unclassified cells); compare it
+                          # with unclassified_check.log as described in the folder README
 ```
 
 ### What it checks
@@ -297,6 +300,12 @@ cd results_bound_verification
   * Theorem 2 gives $\underline V^{\mathrm{cons}} \le V_\gamma \le \overline V^{\mathrm{cons}}$,
     so both errors bounded in Theorem 4 are at most G.
   * G at or below the bound therefore confirms the theorem's inequalities for that run.
+* **Unclassified cells:** `unclassified_check.py` checks Theorem 4's last claim,
+  $|V_\gamma(x)| \le (2L\varepsilon + \gamma\delta^*)/(1-\gamma)$ on every cell with
+  $\underline V^{\mathrm{cons}} \le 0 < \overline V^{\mathrm{cons}}$, in two ways.
+  * Through Theorem 2, on all unclassified cells.
+  * At 8,080 sampled states, by exhaustive search over action sequences with the
+    closed-form flow, which bounds $V_\gamma$ without Algorithm 1.
 
 ### Results (stored `summary.json`)
 
@@ -304,6 +313,9 @@ cd results_bound_verification
   $(1-\gamma)G/(2L\varepsilon+\gamma\delta^*) \in [0.637, 0.727]$.
 * The paper's figure is `bound_verification_paper.pdf`, copied to the paper repository as
   `new_figures/bound_verification_paper.pdf`.
+* Unclassified cells (stored `unclassified_check.log`): all checks pass. The ratio to the
+  bound is 0.58 to 0.71 over all unclassified cells, through Theorem 2. It is 0.30 to 0.70
+  at the sampled states, by exhaustive search.
 
 ### Alignment with the paper
 
