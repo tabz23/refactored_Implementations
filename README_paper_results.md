@@ -10,8 +10,8 @@ LaTeX labels are given too, because numbering can change.
 | Folder | Paper results | Script | Time (Apple M3 Pro) |
 |---|---|---|---|
 | `results_hscc_2027_newbellmans_12workers_current_code/` | Figs. 2–5, the runtimes in the Fig. 3–5 captions and in §9.2.3 | `regenerate_hscc_newbellmans_tol1e-15_current_code.sh` | about 1 hour |
-| `results_quantitative_verification/` | §9.2.5, the closed-loop validation of Proposition 3 (`prop:greedy`) and Proposition 4 (`prop:avoid`) | `reproduce.sh` | about 3 minutes |
-| `results_bound_verification/` | Appendix H (`app:bound_verification`): the numerical check of Theorem 4 (`thm:convergence`), its figure, and the check of its last claim on unclassified cells (`app:bv_unclassified`) | `reproduce.sh` and `unclassified_check.py` | about 3.5 minutes each |
+| `results_quantitative_verification/` | §9.2.5, the closed-loop validation of Proposition 4 (`prop:greedy`) and Proposition 6 (`prop:avoid`) | `reproduce.sh` | about 3 minutes |
+| `results_bound_verification/` | Appendix H (`app:bound_verification`): the numerical check of Theorem 3 (`thm:convergence`), its figure, and the check of its last claim on unclassified cells (`app:bv_unclassified`) | `reproduce.sh` and `unclassified_check.py` | about 3.5 minutes each |
 
 The other paper results do not come from this code. Fig. 1 and Fig. 4(e) come from the
 MATLAB HJ reachability toolbox. Fig. 4(c,d) come from ROCS 2.0.
@@ -104,7 +104,7 @@ The script does four things:
 
 | Script name | Mode | Setup | Paper |
 |---|---|---|---|
-| `dubins120_std` | `ra_nodiscount` (γ = 1, Algorithm 1 with the modifications of Proposition 2, `prop:gamma_1`) | Dubins car, 120³ grid (cell radius π/120 ≈ 0.026), t_s = 0.3, no refinement | Fig. 4(a), §9.2.3 |
+| `dubins120_std` | `ra_nodiscount` (γ = 1, Algorithm 1 with the modifications of Proposition 3, `prop:gamma_1`) | Dubins car, 120³ grid (cell radius π/120 ≈ 0.026), t_s = 0.3, no refinement | Fig. 4(a), §9.2.3 |
 | `dubins120_discount` | `ra_discount` (γ = 0.96, δ\* = 1e-8) | the same grid | Fig. 4(b), §9.2.3 |
 | `avoid80` | `avoid_nodiscount` (γ = 1, Section 8) | Dubins car, 80³ grid (cell radius π/80 ≈ 0.039), Algorithm 2, 6 refinements | Fig. 5 |
 | `dubins20_discount` | `ra_discount` (γ = 0.96, δ\* = 1e-8) | Dubins car, 20³ grid (cell radius π/20 ≈ 0.157), Algorithm 2, 13 refinements | Fig. 2 |
@@ -240,13 +240,13 @@ cd results_quantitative_verification
      $\overline T\,\overline V \le \overline V$;
    * closed-loop simulation with the exact flow from one uniformly random initial state in
      each cell with $\underline V^{\mathrm{cons}} > 0$, under the policy $\hat\pi$ of
-     Proposition 3. Each trajectory must reach the target within
+     Proposition 4. Each trajectory must reach the target within
      $\bar t = \lceil\log(\underline V(s_0)/r^*)/\log\gamma\rceil$ steps with
      $r^* = \max_s \underline r(s)$, never enter F or leave the grid, and keep
      $\gamma^\tau l(x_\tau) \ge \underline V(s_0)$ until it arrives.
 4. **Avoid checks:**
    * the certificate $\underline V \le \min\{\underline l, \max_a \min_{s'} \underline V\}$;
-   * closed-loop simulation for 1000 steps under the policy $\pi^*$ of Proposition 4. Each
+   * closed-loop simulation for 1000 steps under the policy $\pi^*$ of Proposition 6. Each
      trajectory must keep $l(x_\tau) \ge \underline V_1(s_0)$.
 
 ### Results (stored `summary.json`, the numbers in §9.2.5)
@@ -262,14 +262,14 @@ cd results_quantitative_verification
 ### Alignment with the paper
 
 * **The policies are the propositions' definitions:**
-  * $\hat\pi(s) \in \arg\max_a \min\{\underline l(s), \max\{\underline r(s), \gamma\min_{s'} \underline V(s')\}\}$ (Proposition 3);
-  * $\pi^*(s) \in \arg\max_a \min_{s'} \underline V_1(s')$ (Proposition 4).
+  * $\hat\pi(s) \in \arg\max_a \min\{\underline l(s), \max\{\underline r(s), \gamma\min_{s'} \underline V(s')\}\}$ (Proposition 4);
+  * $\pi^*(s) \in \arg\max_a \min_{s'} \underline V_1(s')$ (Proposition 6).
 * **$t^*$ follows the proof:** it is the first τ with $\underline V(s_\tau) \le \underline r(s_\tau)$.
 * **Naming in the outputs:** the summary key `distance_violations` counts trajectories with
   $\min_\tau l(x_\tau) < \underline V_1(s_0)$. It keeps its old name so that reruns still compare
   against the stored `summary.json`.
 
-## 3. Convergence bound (Appendix H, Theorem 4)
+## 3. Convergence bound (Appendix H, Theorem 3)
 
 Folder: `results_bound_verification/`. Its `README.md` has the details.
 
@@ -290,20 +290,20 @@ python unclassified_check.py | tee DIR/unclassified_check.log
 * **Implementation:** `bound_verification.py` is an independent numpy implementation of
   Algorithm 1 and does not use the C++ solver.
 * **System:** a periodic Dubins car on the torus [−3, 3)² × [−π, π), so that f maps X into
-  X, as Theorem 4 assumes.
+  X, as Theorem 3 assumes.
 * **Sweep:** γ ∈ {0.3, 0.4, 0.5, 0.6, 0.7} and N ∈ {50, 60, …, 120}.
   * Every γ satisfies γL_f < 1 with L_f = e^0.3.
   * Each grid has N³ cells with radius ε = π/N.
   * δ\* = 1e-12 and L = √2.
 * **Quantity checked:** $G = \max_s(\overline V^{\mathrm{cons}}(s) - \underline V^{\mathrm{cons}}(s))$,
   against the bound $(2L\varepsilon + \gamma\delta^*)/(1-\gamma)$.
-  * Theorem 2 gives $\underline V^{\mathrm{cons}} \le V_\gamma \le \overline V^{\mathrm{cons}}$,
-    so both errors bounded in Theorem 4 are at most G.
+  * Theorem 1 gives $\underline V^{\mathrm{cons}} \le V_\gamma \le \overline V^{\mathrm{cons}}$,
+    so both errors bounded in Theorem 3 are at most G.
   * G at or below the bound therefore confirms the theorem's inequalities for that run.
-* **Unclassified cells:** `unclassified_check.py` checks Theorem 4's last claim,
+* **Unclassified cells:** `unclassified_check.py` checks Theorem 3's last claim,
   $|V_\gamma(x)| \le (2L\varepsilon + \gamma\delta^*)/(1-\gamma)$ on every cell with
   $\underline V^{\mathrm{cons}} \le 0 < \overline V^{\mathrm{cons}}$, in two ways.
-  * Through Theorem 2, on all unclassified cells.
+  * Through Theorem 1, on all unclassified cells.
   * At 8,080 sampled states, by exhaustive search over action sequences with the
     closed-form flow, which bounds $V_\gamma$ without Algorithm 1.
 
@@ -314,7 +314,7 @@ python unclassified_check.py | tee DIR/unclassified_check.log
 * The paper's figure is `bound_verification_paper.pdf`, copied to the paper repository as
   `new_figures/bound_verification_paper.pdf`.
 * Unclassified cells (stored `unclassified_check.log`): all checks pass. The ratio to the
-  bound is 0.58 to 0.71 over all unclassified cells, through Theorem 2. It is 0.30 to 0.70
+  bound is 0.58 to 0.71 over all unclassified cells, through Theorem 1. It is 0.30 to 0.70
   at the sampled states, by exhaustive search.
 
 ### Alignment with the paper
@@ -341,8 +341,8 @@ This folder is not yet committed to git.
 
 | Paper | Solver |
 |---|---|
-| Algorithm 1, discounted | `ra_discount`: $\underline V^{(0)} = \min\{\underline l, \underline r\}$, $\overline V^{(0)} = \overline l$; the operators of Theorem 1; stops when both sup-norm changes are at most δ\* (`vi.hpp`) |
-| Proposition 2 (γ = 1, reach–avoid) | `ra_nodiscount`: both bounds start at $\min\{l, r\}$; γ is not applied |
+| Algorithm 1, discounted | `ra_discount`: $\underline V^{(0)} = \min\{\underline l, \underline r\}$, $\overline V^{(0)} = \overline l$; the operators of Proposition 1; stops when both sup-norm changes are at most δ\* (`vi.hpp`) |
+| Proposition 3 (γ = 1, reach–avoid) | `ra_nodiscount`: both bounds start at $\min\{l, r\}$; γ is not applied |
 | Section 8 (avoid) | `avoid_nodiscount`: both bounds start at $l$; the operators $\mathcal T^{\mathrm{av}}$ |
 | Section 4 (abstraction) | reach box of radius $L_f$ × cell radius around the integrated image of the center, with $L_f = e^{\lambda t_s}$ (Grönwall); successors are the cells meeting the box; outside the grid is one absorbing sink with value −1 |
 | Section 5 (cell bounds) | $l(x_c) \pm L_l\,$radius and $r(x_c) \pm L_r\,$radius, with $L_l = L_r = \sqrt2$ |
@@ -362,14 +362,14 @@ None of these is stated in the paper.
    bicycle (λ = 2.152) hold on the state box. A trajectory from an edge cell can leave the
    box within a step, where the valid constants are about 21.38 and 2.28.
 4. **Unsafe test in the avoid case:** the solver labels a cell unsafe when
-   $\overline V \le 0$. The paper's avoid certificate (Proposition 4(2), Fig. 5 caption) uses
+   $\overline V \le 0$. The paper's avoid certificate (Proposition 6(2), Fig. 5 caption) uses
    $\overline V < 0$. The two agree unless a cell has $\overline V = 0$ exactly. Upper values
    come only from the cell bounds $\overline l(s)$ and the sink value −1, so this does not
    happen in practice; the §9.2.5 avoid run has no such cell (`cells_with_V_upper_zero` = 0).
 5. **Algorithm 2 stops at an iteration limit:** the paper's Algorithm 2 runs until its queue is
    empty. With `--eps-min 1e-6`, every run stops after `--refinements` iterations while the
    queue is still nonempty, and the figures show that output.
-   * Theorem 3 applies after every iteration, because each iteration ends with Algorithm 1 on
+   * Theorem 2 applies after every iteration, because each iteration ends with Algorithm 1 on
      the current grid.
    * The captions and §9.2.2 give the iteration counts for Fig. 5 (six) and the bicycle
      (eight).

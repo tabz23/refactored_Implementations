@@ -4,10 +4,10 @@ This directory holds two runs of Algorithm 1 (no refinement) for the Dubins car 
 a uniform 120 × 120 × 120 grid, their verification, the tables and figures, and the
 scripts that produce and replicate all of it:
 
-* reach-avoid with γ = 0.96: Proposition 3, labelled `prop:greedy` (under the
+* reach-avoid with γ = 0.96: Proposition 4, labelled `prop:greedy` (under the
   greedy policy, safe arrival in T within ⌈log(V_lower(s0)/r*)/log γ⌉ steps) and the
   soundness of both value bounds;
-* avoid with γ = 1: Proposition 4, labelled `prop:avoid` (under its policy π*,
+* avoid with γ = 1: Proposition 6, labelled `prop:avoid` (under its policy π*,
   l(x_t) ≥ V_lower(s0) for all t) and the soundness of both value bounds.
 
 ## Reproduce

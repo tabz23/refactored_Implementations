@@ -1,11 +1,11 @@
-"""Numerical check of the last claim of Theorem 4 (paper Appendix H, subsection "Bound on unclassified cells", label app:bv_unclassified).
+"""Numerical check of the last claim of Theorem 3 (paper Appendix H, subsection "Bound on unclassified cells", label app:bv_unclassified).
 
 Claim: on a uniform grid with cell radius eta, every cell s with V_lower(s) <= 0 < V_upper(s)
 (outputs of Algorithm 1) satisfies |V_gamma(x)| <= (2 L eta + gamma delta*)/(1 - gamma) for all
 x in [[s]], where delta* = max of the two stopping tolerances (both 1e-12 here).
 
 For every (gamma, N) of bound_verification.py, Algorithm 1 is rerun with that code, and
-  (1) sound check: by Theorem 2, V_lower(s) <= V_gamma(x) <= V_upper(s), so on an unclassified
+  (1) sound check: by Theorem 1, V_lower(s) <= V_gamma(x) <= V_upper(s), so on an unclassified
       cell |V_gamma(x)| <= max(V_upper(s), -V_lower(s)). The largest such value over all
       unclassified cells is compared with the bound. This covers every state of every cell.
   (2) direct check, independent of the abstraction: at random states in random unclassified

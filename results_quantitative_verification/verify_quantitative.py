@@ -1,15 +1,15 @@
 #!/usr/bin/env python3
 """Check the guarantees of the paper on Algorithm 1 runs over a uniform grid.
 
-Result numbers follow the paper as of 2026-10-26: Proposition 3 is labelled
-prop:greedy and Proposition 4 is labelled prop:avoid.
+Result numbers follow the paper as of 2026-10-28: Proposition 4 is labelled
+prop:greedy and Proposition 6 is labelled prop:avoid.
 
 Usage:
     python verify_quantitative.py RUN_DIR [RUN_DIR ...] --out OUT_DIR
 
 Each RUN_DIR is a results directory written by build/dhj_head with --dump-csv and
---refinements 0, and all of them use the same mode: ra_discount (Proposition 3
-and the classification, checks below) or avoid_nodiscount (Proposition 4, see
+--refinements 0, and all of them use the same mode: ra_discount (Proposition 4
+and the classification, checks below) or avoid_nodiscount (Proposition 6, see
 verify_avoid). Only the dumped grid, values and l/r bounds are read. The
 abstraction is recomputed independently of the solver:
 
@@ -24,8 +24,8 @@ abstraction is recomputed independently of the solver:
 Checks for ra_discount:
   1. the cell bounds l_lower, l_upper, r_lower, r_upper, recomputed from the centers;
   2. lower-bound certificate: (T_hat V_lower)(s) >= V_lower(s) for every cell, where
-     T_hat uses the greedy action of Proposition 3. For cells with V_lower > 0 this
-     is the inequality the proof of Proposition 3 starts from;
+     T_hat uses the greedy action of Proposition 4. For cells with V_lower > 0 this
+     is the inequality the proof of Proposition 4 starts from;
   3. upper-bound certificate: (T_bar V_upper)(s) <= V_upper(s) for every cell. With
      A = U this gives V_gamma <= V_upper, so the cells with V_upper <= 0 are sound;
   4. closed-loop simulation with the exact flow from random states in every cell
@@ -259,7 +259,7 @@ def simulate(grid, dyn, actions, gamma, tau, pi, x0, max_steps, record=None):
     """Closed loop under u_t = actions[pi(cell(x_t))] with the exact flow.
 
     A trajectory is followed until t*, the first time with
-    V_lower(s_t) <= r_lower(s_t) (the time used in the proof of Proposition 3),
+    V_lower(s_t) <= r_lower(s_t) (the time used in the proof of Proposition 4),
     or until it enters F (l <= 0) or leaves the grid along x or y.
     """
     m = x0.shape[0]
@@ -321,7 +321,7 @@ def upper_avoid_iteration(grid, tables):
 
     Returns the fixed point, the number of iterations, the first iteration k at
     which W^(k)(s) < 0 for every cell (-1 if never) and the per-action maxima at
-    the fixed point. Every W^(k) is an upper bound on V_1 (proof of Proposition 4).
+    the fixed point. Every W^(k) is an upper bound on V_1 (proof of Proposition 6).
     """
     W = grid.lu.copy()
     first_neg = np.where(W < 0.0, 0, -1)
@@ -419,13 +419,13 @@ def first_hits(grid, dyn, actions, tau, x0, steps, choose):
 
 
 def verify_avoid(run_dir, out_dir, rng, points_per_cell, n_paths, horizon):
-    """Checks of Proposition 4 (avoid value function, gamma = 1).
+    """Checks of Proposition 6 (avoid value function, gamma = 1).
 
     1. the cell bounds l_lower, l_upper, recomputed from the centers;
     2. lower-bound certificate: V_lower(s) <= l_lower(s) and
        min_{s' in Delta(s, pi(s))} V_lower(s') >= V_lower(s) for every cell with
        V_lower > 0, where pi(s) maximizes min_{s'} V_lower(s') (the policy of
-       Proposition 4). This is the invariance used in the proof, so every state of
+       Proposition 6). This is the invariance used in the proof, so every state of
        such a cell keeps l(x_t) >= V_lower(s0) for all t under pi;
     3. upper bound: V_upper >= W in every cell, where W is the fixed point of
        upper_avoid_iteration, so the cells with V_upper < 0 lie in the BRS;
@@ -444,7 +444,7 @@ def verify_avoid(run_dir, out_dir, rng, points_per_cell, n_paths, horizon):
     name = dyn["name"]
     tau, dt = float(dyn["tau"]), float(dyn["dt"])
     if args["mode"] != "avoid_nodiscount":
-        raise ValueError("Proposition 4 needs an avoid run")
+        raise ValueError("Proposition 6 needs an avoid run")
     if abs(tau - dt) > 1e-12:
         raise ValueError("expects one checkpoint per step (dt == tau)")
     actions = [float(a) for a in dyn["actions"]]
@@ -673,7 +673,7 @@ def verify(run_dir, out_dir, rng, points_per_cell, n_paths):
     name = dyn["name"]
     gamma, tau, dt = float(args["gamma"]), float(dyn["tau"]), float(dyn["dt"])
     if args["mode"] != "ra_discount" or not (0.0 < gamma < 1.0):
-        raise ValueError("Proposition 3 needs a discounted reach-avoid run")
+        raise ValueError("Proposition 4 needs a discounted reach-avoid run")
     if abs(tau - dt) > 1e-12:
         raise ValueError("expects one checkpoint per step (dt == tau)")
     actions = [float(a) for a in dyn["actions"]]

@@ -2,9 +2,9 @@
 # Runs Algorithm 1 once (no refinement) for the Dubins car on a uniform 120^3
 # grid and dumps the value tables, so that verify_quantitative.py can check the
 # guarantees of the paper:
-#   ra     reach-avoid with gamma = 0.96 (Proposition 3, label prop:greedy, and the classification).
+#   ra     reach-avoid with gamma = 0.96 (Proposition 4, label prop:greedy, and the classification).
 #          The value iteration stops when both sup-norm changes are below 1e-8.
-#   avoid  avoid value function with gamma = 1 (Proposition 4, label prop:avoid). The iterates take
+#   avoid  avoid value function with gamma = 1 (Proposition 6, label prop:avoid). The iterates take
 #          values in a finite set, so a nonzero change is far above 1e-300 and the
 #          iteration stops only when nothing changes, as in the paper.
 #
