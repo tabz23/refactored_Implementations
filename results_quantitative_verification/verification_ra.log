@@ -70,6 +70,6 @@ verifying /Users/i.k.tabbara/Documents/python directory/HSCC_2027/refactored_Imp
     "J_minus_Vupper_max": -0.001952376617341156,
     "J_above_Vupper": 0
   },
-  "verifier_seconds": 10.307862997055054
+  "verifier_seconds": 8.239748001098633
 }
 wrote /Users/i.k.tabbara/Documents/python directory/HSCC_2027/refactored_Implementations/results_quantitative_verification/verification_ra

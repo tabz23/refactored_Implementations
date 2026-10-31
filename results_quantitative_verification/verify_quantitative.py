@@ -24,8 +24,9 @@ abstraction is recomputed independently of the solver:
 Checks for ra_discount:
   1. the cell bounds l_lower, l_upper, r_lower, r_upper, recomputed from the centers;
   2. lower-bound certificate: (T_hat V_lower)(s) >= V_lower(s) for every cell, where
-     T_hat uses the greedy action of Proposition 4. For cells with V_lower > 0 this
-     is the inequality the proof of Proposition 4 starts from;
+     T_hat is the lower Bellman operator. The greedy action of Proposition 4,
+     argmax_a min_{s' in Delta(s,a)} V_lower(s'), attains its maximum, so for cells
+     with V_lower > 0 this is the inequality the proof of Proposition 4 starts from;
   3. upper-bound certificate: (T_bar V_upper)(s) <= V_upper(s) for every cell. With
      A = U this gives V_gamma <= V_upper, so the cells with V_upper <= 0 are sound;
   4. closed-loop simulation with the exact flow from random states in every cell
@@ -224,17 +225,20 @@ def reduce_successors(table, V, op):
 
 
 def certificates(grid, dyn, actions, gamma, tau):
-    Q, Mmax, kmax_all = [], None, []
+    Q, Mlo, Mmax, kmax_all = [], [], None, []
     for u in actions:
         tab = successor_table(grid, dyn, u, tau)
         mlo = reduce_successors(tab, grid.Vl, np.minimum)
         Mhi = reduce_successors(tab, grid.Vu, np.maximum)
         e = tab["e"]
         Q.append(np.minimum(grid.ll, np.maximum(grid.rl, gamma * mlo)))
+        Mlo.append(mlo)
         Mmax = Mhi if Mmax is None else np.maximum(Mmax, Mhi)
         kmax_all.append(tab["kmax"])
     Q = np.stack(Q)
-    pi = np.argmax(Q, axis=0).astype(np.int8)
+    # Policy of Proposition 4: argmax_a min_{s' in Delta(s,a)} V_lower(s'). Q is
+    # non-decreasing in that minimum, so the policy also attains max_a Q.
+    pi = np.argmax(np.stack(Mlo), axis=0).astype(np.int8)
     T_hat = Q.max(axis=0)
     T_bar = np.minimum(grid.lu, np.maximum(grid.ru, gamma * Mmax))
     green = grid.Vl > 0.0

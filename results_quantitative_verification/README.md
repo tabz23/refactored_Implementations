@@ -73,8 +73,9 @@ values and l/r bounds and recomputes everything else independently of the solver
 Reach-avoid checks (`verification_ra/`):
 
 3. *Policy.* The greedy policy of the proposition:
+   π̂(s) = argmax_a min_{s′ ∈ Δ(s,a)} V_lower(s′) (ties: first action). With
    Q(s, a) = min{ l_lower(s), max{ r_lower(s), γ · min_{s′ ∈ Δ(s,a)} V_lower(s′) } },
-   π̂(s) = argmax_a Q(s, a) (ties: first action).
+   which is non-decreasing in that minimum, π̂(s) also maximizes Q(s, ·).
 4. *Lower certificate.* max_a Q(s, a) ≥ V_lower(s) for every cell. For cells with
    V_lower > 0 this is the inequality the proof of the proposition starts from, so
    the guarantee holds for every state in those cells, not only sampled ones.
