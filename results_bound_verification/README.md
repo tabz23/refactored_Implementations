@@ -151,7 +151,7 @@ the theorem holds for every state of every cell in every run. With δ\* = 10⁻�
 | 0.7 | 0.94 | 0.71 | 0.94 | 11.8% → 5.0% |
 
 * The largest gap decreases linearly in η (fitted slopes 0.94 to 1.00), as the theorem
-  predicts, and its ratio to the bound stays between 0.64 and 0.73 for every γ and N, so
+  predicts, and its ratio to the bound stays between 0.637 and 0.727 for every γ and N, so
   the factor 1/(1−γ) captures the dependence on γ.
 * The curves for γ ≤ 0.6 are straight lines because G = max_s (V̄_γ^cons(s) − V̲_γ^cons(s)) is an
   exact multiple of η there. For γ = 0.3, G = 2Lη in every run, attained e.g. inside the obstacle,
@@ -163,9 +163,9 @@ the theorem holds for every state of every cell in every run. With δ\* = 10⁻�
   (6.68 for N ∈ {60, 80, 100, 120}, 6.00 to 6.64 otherwise), and G is slightly larger for N = 120
   than for N = 110 (the grids are not nested).
 * Unclassified cells (`unclassified_check.log`). The recomputed runs match `summary.json`.
-  * Over all unclassified cells (14,756 to 112,996 per run), the largest M(s) is 0.58 to
-    0.71 of β, so the last claim holds at every state of every unclassified cell.
+  * Over all unclassified cells (14,756 to 112,996 per run), the largest M(s) is 0.583 to
+    0.714 of β, so the last claim holds at every state of every unclassified cell.
   * At all 8,080 sampled states, the exhaustive-search interval lies in [−β, β]. Per run,
-    the largest |V_H(x)| is 0.30 to 0.70 of β, and γ^(H+1)·r_max is at most 0.053·β.
+    the largest |V_H(x)| is 0.299 to 0.697 of β, and γ^(H+1)·r_max is at most 0.053·β.
   * The interval overlaps [V̲_γ^cons(s), V̄_γ^cons(s)] at every state, with the smallest
     overlap 0.0034.

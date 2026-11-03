@@ -4,7 +4,7 @@ Paper: *A Quantitative Approach to Reach–Avoid Reachability Analysis for Discr
 Nonlinear Control Systems*.
 
 Three folders hold every result in the paper that this code produces. Each one has a script
-that regenerates it from scratch. Result numbers below follow the paper as of 2026-10-26.
+that regenerates it from scratch. Result numbers below follow the paper as of 2026-11-03.
 LaTeX labels are given too, because numbering can change.
 
 | Folder | Paper results | Script | Time (Apple M3 Pro) |
@@ -251,32 +251,35 @@ cd results_quantitative_verification
      trajectory must keep $l(x_\tau) \ge \underline V_1(s_0)$.
 5. **Violation checks** (`verify_violation.py`, the second claim of Proposition 4, on the
    reach–avoid run):
-   * the start states are one uniformly random state and the 8 vertices of every cell with
+   * the start states are one uniformly random state and the 8 corners of every cell with
      $\overline V^{\mathrm{cons}} < 0$;
    * eight policies (each constant action, three random-action runs, $\hat\pi$, and the
      one-step greedy policy on $\overline V$), plus an exhaustive search over every action
      sequence from every start state, which covers every policy;
    * each trajectory must satisfy $l(x_t) \le \gamma^{-t}\overline V(s_0)$ at some
      $t \le \bar t_{\mathcal F} = \lfloor\log(\overline V(s_0)/l_{\min})/\log\gamma\rfloor$,
-     with $\gamma^\tau r(x_\tau) \le \overline V(s_0)$ before $t$. The solver gives the
+     with $\gamma^\tau r(x_\tau) \le \overline V(s_0)$ before $t$ (the proof's inequality,
+     which implies the paper's $r(x_\tau) \le 0$). The solver gives the
      absorbing failure state outside the grid the fixed value −1 (its $l$ and $r$ bounds are
      −1 too), and the verifier models it as an absorbing state with $l = r = -1$. Hence
      $l_{\min} = -1.3$, at the obstacle center.
 
-### Results (stored `summary.json`, the numbers in §9.2.5)
+### Results (stored `summary.json` and `report.json`; §9.2.5 reports the ones marked)
 
-* **Reach–avoid:** 71 iterations and 983,988 trajectories, with 0 violations.
-  * The median arrival time is 19 steps against a median bound of 37.
-  * $t \le 0.72\,\bar t$ for all trajectories (maximum 0.714). There are 76 trajectories with
+* **Reach–avoid:** 71 iterations and 983,988 trajectories, with 0 violations (in §9.2.5).
+  * The median arrival time is 19 steps against a median bound of 37 (not in the paper).
+  * $t \le 0.72\,\bar t$ for all trajectories (maximum 0.714; in §9.2.5). There are 76 trajectories with
     $\bar t = 0$, and all of them start inside T.
-  * $\gamma^\tau l(x_\tau)/\underline V(s_0) \ge 1.02$.
-* **Avoid:** 89 iterations and 973,616 trajectories, with 0 violations.
-  * $l(x_\tau)/\underline V_1(s_0) \ge 1.002$ over all 1000 steps.
+  * $\gamma^\tau l(x_\tau)/\underline V(s_0) \ge 1.02$ (minimum 1.021; in §9.2.5).
+* **Avoid:** 89 iterations and 973,616 trajectories, with 0 violations (in §9.2.5).
+  * $l(x_\tau)/\underline V_1(s_0) \ge 1.002$ over all 1000 steps (minimum 1.0021; in §9.2.5).
 * **Violation** (`verification_ra_violation/report.json`): 458,296 cells with
   $\overline V^{\mathrm{cons}} < 0$ and 4,124,664 start states, with 0 violations under the
-  eight policies and in the exhaustive search (40,024,654 action sequences).
-  * Over all sequences, the latest time $t$ has a median of 1 step and a maximum of 8,
-    and $t \le 0.5\,\bar t_{\mathcal F}$; $\bar t_{\mathcal F}$ has a median of 15 steps.
+  eight policies and in the exhaustive search (40,024,654 action sequences). The cell and
+  state counts and the 0 violations are in §9.2.5.
+  * Over all sequences, the latest time $t$ is at most 8 steps and at most
+    $0.5\,\bar t_{\mathcal F}$ (both in §9.2.5). Its median is 1 step, and $\bar t_{\mathcal F}$ has a
+    median of 15 steps (not in the paper).
   * Before $t$, $\gamma^\tau r(x_\tau)/\overline V(s_0) \ge 1.006$ (at least 1 is required).
   * The depth bound $l(x_t) \le \gamma^{-t}\overline V(s_0)$ is attained exactly in some
     cells; $\gamma^t$ must be formed by repeated multiplication, as in the solver, or these
@@ -285,7 +288,9 @@ cd results_quantitative_verification
 ### Alignment with the paper
 
 * **The policies are the propositions' definitions:**
-  * $\hat\pi(s) \in \arg\max_a \min\{\underline l(s), \max\{\underline r(s), \gamma\min_{s'} \underline V(s')\}\}$ (Proposition 4);
+  * $\hat\pi(s) \in \arg\max_a \min_{s'} \underline V(s')$ (Proposition 4; it also maximizes
+    $\min\{\underline l(s), \max\{\underline r(s), \gamma\min_{s'} \underline V(s')\}\}$, which is
+    non-decreasing in that minimum);
   * $\pi^*(s) \in \arg\max_a \min_{s'} \underline V_1(s')$ (Proposition 6).
 * **$t^*$ follows the proof:** it is the first τ with $\underline V(s_\tau) \le \underline r(s_\tau)$.
 * **Naming in the outputs:** the summary key `distance_violations` counts trajectories with
@@ -337,8 +342,9 @@ python unclassified_check.py | tee DIR/unclassified_check.log
 * The paper's figure is `bound_verification_paper.pdf`, copied to the paper repository as
   `new_figures/bound_verification_paper.pdf`.
 * Unclassified cells (stored `unclassified_check.log`): all checks pass. The ratio to the
-  bound is 0.58 to 0.71 over all unclassified cells, through Theorem 1. It is 0.30 to 0.70
-  at the sampled states, by exhaustive search.
+  bound is 0.583 to 0.714 over all unclassified cells, through Theorem 1, and 0.299 to 0.697
+  at the sampled states, by exhaustive search. Appendix H rounds these outward, to 0.58–0.72
+  and 0.29–0.70.
 
 ### Alignment with the paper
 
@@ -349,7 +355,6 @@ The implementation follows the paper exactly:
   center, with closed cell boxes.
 * The cell bounds: $\pm L\varepsilon$ around the center values.
 
-This folder is not yet committed to git.
 
 ## Code version and alignment with the paper
 

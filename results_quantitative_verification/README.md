@@ -130,7 +130,7 @@ trajectory, t_hit is the first time with γ^t l(x_t) ≤ V_upper(s0).
 
 1. *Upper certificate.* As in check 5 of the reach-avoid checks.
 2. *Start states.* One state drawn uniformly (`numpy.random.default_rng(0)`) and the
-   8 vertices of every cell with V_upper < 0: 458,296 × 9 = 4,124,664 states.
+   8 corners (vertices) of every cell with V_upper < 0: 458,296 × 9 = 4,124,664 states.
 3. *Policies.* Each constant action, uniformly random actions (3 seeds), π̂ of the
    first claim, and the one-step greedy policy on V_upper (argmax_a V_upper of the cell
    containing Φ(x, a, τ), with the sink counted as −1). For every trajectory: t_hit
