@@ -58,11 +58,13 @@ verifying /Users/i.k.tabbara/Documents/python directory/HSCC_2027/refactored_Imp
     "t_star_max": 45,
     "reach_time_median": 19.0,
     "reach_time_max": 44,
-    "bound_median": 37.0,
-    "bound_max": 147,
-    "slack_median": 17.0,
+    "bound_median": 36.0,
+    "bound_max": 146,
+    "bound_attained": 576,
+    "bound_zero": 480,
+    "slack_median": 16.0,
     "slack_min": 0,
-    "ratio_time_to_bound_max": 0.7142857142857143,
+    "ratio_time_to_bound_max": 0.7272727272727273,
     "margin_min": 1.02133073222596,
     "margin_violations": 0,
     "J_minus_Vlower_min": 0.0018238290064777618,
@@ -70,6 +72,6 @@ verifying /Users/i.k.tabbara/Documents/python directory/HSCC_2027/refactored_Imp
     "J_minus_Vupper_max": -0.001952376617341156,
     "J_above_Vupper": 0
   },
-  "verifier_seconds": 8.239748001098633
+  "verifier_seconds": 8.030606985092163
 }
-wrote /Users/i.k.tabbara/Documents/python directory/HSCC_2027/refactored_Implementations/results_quantitative_verification/verification_ra
+wrote verification_ra

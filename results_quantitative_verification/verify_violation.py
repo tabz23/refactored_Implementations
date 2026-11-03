@@ -37,7 +37,8 @@ Checks:
 gamma^t is formed by repeated multiplication, as in the solver: some cells attain the
 bound exactly (V_upper(s0) = -gamma^k for trajectories that leave the grid at step k),
 and pow() rounds differently by one ulp. Hits within TOL = 1e-12 are counted as ties and
-reported; with repeated multiplication there are none.
+reported; with repeated multiplication there are none. tbar(s0) is computed by
+time_bound in verify_quantitative.py, as the time bound of the first claim.
 
 Usage (the run reported in the paper and in README.md, about 20 s):
     python verify_violation.py RUN_DIR --out verification_ra_violation \
@@ -46,7 +47,6 @@ Usage (the run reported in the paper and in README.md, about 20 s):
 import argparse
 import itertools
 import json
-import math
 import sys
 import time
 from pathlib import Path
@@ -55,7 +55,7 @@ import numpy as np
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from verify_quantitative import (SINK, Grid, certificates, check_flow, flow, l_fun,  # noqa: E402
-                                 load_run, outside_grid, r_fun, wrap)
+                                 load_run, outside_grid, r_fun, time_bound, wrap)
 
 TOL = 1e-12   # ties: the solver forms gamma^k by repeated multiplication, so bounds can be
               # attained exactly; a hit within TOL is counted (and reported) as a tie
@@ -306,7 +306,7 @@ def main():
         kind = np.concatenate([kind, np.ones(verts.shape[0], dtype=np.int8)])
     report["start_states"] = {"uniform": int((kind == 0).sum()), "vertices": int((kind == 1).sum())}
     vbar = grid.Vu[cells[:, 0], cells[:, 1], cells[:, 2]]
-    tbar = np.floor(np.log(vbar / l_min) / math.log(gamma)).astype(int)
+    tbar = time_bound(l_min, vbar, gamma)
     report["tbar"] = {"median": float(np.median(tbar)), "max": int(tbar.max()), "min": int(tbar.min()),
                       "quantiles_10_50_90_99": [float(q) for q in np.quantile(tbar, [0.1, 0.5, 0.9, 0.99])]}
     print(json.dumps({k: report[k] for k in ("cells_V_upper_negative", "min_V_upper", "tbar", "upper_certificate")}),

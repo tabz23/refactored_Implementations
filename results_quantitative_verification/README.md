@@ -6,7 +6,7 @@ scripts that produce and replicate all of it:
 
 * reach-avoid with γ = 0.96: Proposition 4, labelled `prop:greedy`, and the soundness
   of both value bounds. Its first claim: under the greedy policy, safe arrival in T within
-  ⌈log(V_lower(s0)/r*)/log γ⌉ steps. Its second claim (violation, checked by
+  ⌊log(V_lower(s0)/r*)/log γ⌋ steps. Its second claim (violation, checked by
   `verify_violation.py`): if V_upper(s0) < 0, every policy reaches F, before T, within
   ⌊log(V_upper(s0)/l_min)/log γ⌋ steps;
 * avoid with γ = 1: Proposition 6, labelled `prop:avoid` (under its policy π*,
@@ -91,10 +91,16 @@ Reach-avoid checks (`verification_ra/`):
    exact flow, followed until t*, the first time with V_lower(s_t) ≤ r_lower(s_t)
    (the time used in the proof), or until it enters F (l ≤ 0) or leaves [−3, 3]².
    For every trajectory: no entry into F and no exit up to t*; the target (r > 0)
-   reached no later than t*; t* ≤ B(s0) = ⌈log(V_lower(s0)/r*)/log γ⌉ with
+   reached no later than t*; t* ≤ B(s0) = ⌊log(V_lower(s0)/r*)/log γ⌋ with
    r* = max_s r_lower(s) = 0.4276; γ^t l(x_t) ≥ V_lower(s0) for t ≤ t*; and the achieved
    J = max_{t ≤ t*} min{ γ^t r(x_t), min_{τ ≤ t} γ^τ l(x_τ) } satisfies
    V_lower(s0) ≤ J ≤ V_upper(s0).
+7. *Time bound.* B(s0) is computed by `time_bound`: the largest k with
+   γ^k r* ≥ V_lower(s0), with the product formed by repeated multiplication, as in the
+   solver. The bound is attained (t* = B(s0)) by 576 trajectories, and 77 of them have
+   V_lower(s0) = γ^k r* exactly as the solver computed it, where `log` or `pow` can be
+   off by one ulp. On this run, B(s0) equals `floor(log(V_lower(s0)/r*)/log γ)` for every
+   trajectory.
 
 Avoid checks (`verification_avoid/`):
 
@@ -143,7 +149,8 @@ trajectory, t_hit is the first time with γ^t l(x_t) ≤ V_upper(s0).
 5. *Rounding.* γ^t is formed by repeated multiplication, as in the solver. Some cells
    attain the bound exactly: V_upper(s0) = −γ^k, and the trajectory leaves the grid at
    step k. With `pow`, 5,924 of these ties show up as one-ulp misses. Hits within 1e-12
-   would be reported as ties; there are none.
+   would be reported as ties; there are none. t̄_F(s0) is computed by `time_bound`, as
+   B(s0).
 
 ## Results
 
@@ -156,8 +163,9 @@ Reach-avoid, γ = 0.96 (`verification_ra/table_ra.tex`):
 | simulated initial states | 983,988 |
 | reached T without entering F or leaving the grid | 100 % |
 | reach-time bound violations | 0 |
-| median observed reach time / median bound (steps) | 19 / 37 |
-| largest observed reach time / bound | 0.71 |
+| median observed reach time / median bound (steps) | 19 / 36 |
+| largest observed reach time / bound | 0.73 (40/55) |
+| trajectories with t* = B(s0) (bound attained) / with B(s0) = 0 | 576 / 480 |
 | min γ^t l(x_t) / V_lower(s0) (≥ 1 required) | 1.021 |
 | min J − V_lower(s0) (≥ 0 required) / max J − V_upper(s0) (≤ 0 required) | 0.0018 / −0.0020 |
 | abstraction + value iteration time (s) | 2.1 |

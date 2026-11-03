@@ -30,10 +30,13 @@ Checks for ra_discount:
   3. upper-bound certificate: (T_bar V_upper)(s) <= V_upper(s) for every cell. With
      A = U this gives V_gamma <= V_upper, so the cells with V_upper <= 0 are sound;
   4. closed-loop simulation with the exact flow from random states in every cell
-     with V_lower > 0, under the greedy policy: the trajectory must reach T within
-     ceil(log(V_lower(s0)/r*)/log(gamma)) steps, never enter F or leave the grid,
-     keep gamma^t l(x_t) >= V_lower(s0) up to the reach time, and achieve a
-     measure max_t g_gamma(x, t) between V_lower(s0) and V_upper(s0).
+     with V_lower > 0, under the greedy policy, followed until t*, the first time
+     with V_lower(s_t) <= r_lower(s_t) (the time t of the proof). Each trajectory
+     must satisfy t* <= floor(log(V_lower(s0)/r*)/log(gamma)), the time bound of
+     the proposition with r* = max_s r_lower(s) (computed by time_bound), reach T
+     no later than t*, never enter F or leave the grid up to t*, keep
+     gamma^t l(x_t) >= V_lower(s0) for t <= t*, and achieve a measure
+     max_{t <= t*} g_gamma(x, t) between V_lower(s0) and V_upper(s0).
 """
 import argparse
 import csv
@@ -57,6 +60,26 @@ IDX_EPS = 1e-9   # index ranges are widened by this fraction of a cell (keeps th
 SINK = -1.0      # value of the out-of-bounds sink, as in the solver
 PAPER_SLICE = {"dubins": 0.0, "evasion": math.pi}
 AVOID_PATH_STEPS = 60   # steps drawn of each example avoid trajectory (all steps are checked)
+
+
+def time_bound(scale, v, gamma):
+    """The time bounds of Proposition 4, floor(log(v / scale) / log(gamma)), elementwise.
+
+    For 0 < |v| <= |scale| this is the largest k >= 0 with |scale| gamma^k >= |v|, and it
+    is -1 if |v| > |scale|. The products are formed as q_0 = |scale|, q_(k+1) =
+    gamma * q_k, the order in which the solver multiplies by gamma. Rounded
+    multiplication is monotone, so a bound that is attained exactly, with
+    V_lower(s0) = gamma^k r* as the solver computed it, gives k, whereas log() or pow()
+    can be off by one ulp there.
+    """
+    v = np.abs(np.asarray(v, dtype=float))
+    if not 0.0 < gamma < 1.0 or v.size == 0 or not v.min() > 0.0:
+        raise ValueError("time_bound needs gamma in (0, 1) and nonzero values")
+    q = [abs(float(scale))]
+    while q[-1] >= v.min():
+        q.append(gamma * q[-1])
+    # q is decreasing: the number of q_k >= |v|, minus one, is the largest such k.
+    return np.searchsorted(-np.array(q), -v, side="right") - 1
 
 
 # ------------------------------------------------------------------- dynamics
@@ -709,7 +732,8 @@ def verify(run_dir, out_dir, rng, points_per_cell, n_paths):
     x0 = grid.lo + (cells + rng.uniform(size=cells.shape)) * grid.h
     v0 = grid.Vl[cells[:, 0], cells[:, 1], cells[:, 2]]
     r_star = float(grid.rl.max())
-    bound = np.ceil(np.log(v0 / r_star) / math.log(gamma)).astype(int)
+    # First claim of Proposition 4: t* <= floor(log(V_lower(s0)/r*)/log(gamma)).
+    bound = time_bound(r_star, v0, gamma)
     # Example paths: start at cell centers in the theta slice shown in the paper.
     k = int(np.clip(np.floor((PAPER_SLICE[name] - grid.lo[2]) / grid.h[2]), 0, grid.n[2] - 1))
     in_slice = np.flatnonzero(cells[:, 2] == k)
@@ -734,6 +758,8 @@ def verify(run_dir, out_dir, rng, points_per_cell, n_paths):
         "reach_time_max": int(res["reach_t"][ok].max()),
         "bound_median": float(np.median(bound[ok])),
         "bound_max": int(bound.max()),
+        "bound_attained": int((res["star_t"] == bound)[ok].sum()),
+        "bound_zero": int((bound == 0).sum()),
         "slack_median": float(np.median((bound - res["reach_t"])[ok])),
         "slack_min": int((bound - res["reach_t"])[ok].min()),
         "ratio_time_to_bound_max": float((res["reach_t"][ok] / np.maximum(bound[ok], 1)).max()),
@@ -811,6 +837,8 @@ def write_outputs(results, out_dir):
         row(r"Reach-time bound violations", lambda r: f"{r['simulation']['time_bound_violations']}"),
         row(r"Median observed / bound (steps)",
             lambda r: f"{r['simulation']['reach_time_median']:.0f} / {r['simulation']['bound_median']:.0f}"),
+        row(r"Largest observed / bound",
+            lambda r: f"{r['simulation']['ratio_time_to_bound_max']:.2f}"),
         row(r"$\min_t \gamma^t l(x_t)/\underline V_\gamma^{\mathrm{cons}}(s_0)$",
             lambda r: f"{r['simulation']['margin_min']:.2f}"),
         row(r"$\min\,(J-\underline V_\gamma^{\mathrm{cons}}(s_0))$",
