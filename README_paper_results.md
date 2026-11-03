@@ -10,7 +10,7 @@ LaTeX labels are given too, because numbering can change.
 | Folder | Paper results | Script | Time (Apple M3 Pro) |
 |---|---|---|---|
 | `results_hscc_2027_newbellmans_12workers_current_code/` | Figs. 2–5, the runtimes in the Fig. 3–5 captions and in §9.2.3 | `regenerate_hscc_newbellmans_tol1e-15_current_code.sh` | about 1 hour |
-| `results_quantitative_verification/` | §9.2.5, the closed-loop validation of Proposition 4 (`prop:greedy`) and Proposition 6 (`prop:avoid`) | `reproduce.sh` | about 3 minutes |
+| `results_quantitative_verification/` | §9.2.5, the validation of both claims of Proposition 4 (`prop:greedy`) and of Proposition 6 (`prop:avoid`) | `reproduce.sh` | about 3.5 minutes |
 | `results_bound_verification/` | Appendix H (`app:bound_verification`): the numerical check of Theorem 3 (`thm:convergence`), its figure, and the check of its last claim on unclassified cells (`app:bv_unclassified`) | `reproduce.sh` and `unclassified_check.py` | about 3.5 minutes each |
 
 The other paper results do not come from this code. Fig. 1 and Fig. 4(e) come from the
@@ -216,6 +216,7 @@ Folder: `results_quantitative_verification/`. Its `README.md` has the details.
 cd results_quantitative_verification
 ./reproduce.sh            # writes ../results_quantitative_verification_rerun and compares
                           # every number except timings with the stored summary.json
+                          # files and verification_ra_violation/report.json
 ./reproduce.sh "$PWD"     # regenerates the results in this folder instead
 ```
 
@@ -248,6 +249,19 @@ cd results_quantitative_verification
    * the certificate $\underline V \le \min\{\underline l, \max_a \min_{s'} \underline V\}$;
    * closed-loop simulation for 1000 steps under the policy $\pi^*$ of Proposition 6. Each
      trajectory must keep $l(x_\tau) \ge \underline V_1(s_0)$.
+5. **Violation checks** (`verify_violation.py`, the second claim of Proposition 4, on the
+   reach–avoid run):
+   * the start states are one uniformly random state and the 8 vertices of every cell with
+     $\overline V^{\mathrm{cons}} < 0$;
+   * eight policies (each constant action, three random-action runs, $\hat\pi$, and the
+     one-step greedy policy on $\overline V$), plus an exhaustive search over every action
+     sequence from every start state, which covers every policy;
+   * each trajectory must satisfy $l(x_t) \le \gamma^{-t}\overline V(s_0)$ at some
+     $t \le \bar t_{\mathcal F} = \lfloor\log(\overline V(s_0)/l_{\min})/\log\gamma\rfloor$,
+     with $\gamma^\tau r(x_\tau) \le \overline V(s_0)$ before $t$. The solver gives the
+     absorbing failure state outside the grid the fixed value −1 (its $l$ and $r$ bounds are
+     −1 too), and the verifier models it as an absorbing state with $l = r = -1$. Hence
+     $l_{\min} = -1.3$, at the obstacle center.
 
 ### Results (stored `summary.json`, the numbers in §9.2.5)
 
@@ -258,6 +272,14 @@ cd results_quantitative_verification
   * $\gamma^\tau l(x_\tau)/\underline V(s_0) \ge 1.02$.
 * **Avoid:** 89 iterations and 973,616 trajectories, with 0 violations.
   * $l(x_\tau)/\underline V_1(s_0) \ge 1.002$ over all 1000 steps.
+* **Violation** (`verification_ra_violation/report.json`): 458,296 cells with
+  $\overline V^{\mathrm{cons}} < 0$ and 4,124,664 start states, with 0 violations under the
+  eight policies and in the exhaustive search (40,024,654 action sequences).
+  * Over all sequences, the latest time $t$ has a median of 1 step and a maximum of 8,
+    and $t \le 0.5\,\bar t_{\mathcal F}$; $\bar t_{\mathcal F}$ has a median of 15 steps.
+  * The depth bound $l(x_t) \le \gamma^{-t}\overline V(s_0)$ is attained exactly in some
+    cells; $\gamma^t$ must be formed by repeated multiplication, as in the solver, or these
+    ties show up as one-ulp misses.
 
 ### Alignment with the paper
 

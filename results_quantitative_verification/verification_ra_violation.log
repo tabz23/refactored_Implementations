@@ -1,0 +1,63 @@
+certificates ...
+{"cells_V_upper_negative": 458296, "min_V_upper": -1.22762063645602, "tbar": {"median": 15.0, "max": 152, "min": 1, "quantiles_10_50_90_99": [7.0, 15.0, 60.0, 105.0]}, "upper_certificate": {"upper_cells_checked": 1728000, "upper_violations": 0, "upper_max_excess": 0.0}}
+constant u=-1 {"trajectories": 4124664, "satisfy_claim": 4124664, "violations": 0, "no_hit": 0, "hit_after_bound": 0, "r_condition_violated": 0, "visited_T_before_hit": 0, "hit_at_t0": 1580225, "hits_that_are_ties_(|slack|<=1e-12)": 0, "hit_in_obstacle": 2467080, "hit_by_leaving_grid": 1657584, "t_hit_median_(t_hit>0)": 1.0, "t_hit_max": 7, "tbar_median_(t_hit>0)": 10.0, "max_t_hit_over_tbar": 0.5, "min_tbar_minus_t_hit": 1, "min_hit_slack": 0.0, "min_r_slack": 0.0016686854253251115, "seconds": 0.6}
+constant u=0 {"trajectories": 4124664, "satisfy_claim": 4124664, "violations": 0, "no_hit": 0, "hit_after_bound": 0, "r_condition_violated": 0, "visited_T_before_hit": 0, "hit_at_t0": 1580225, "hits_that_are_ties_(|slack|<=1e-12)": 0, "hit_in_obstacle": 2467080, "hit_by_leaving_grid": 1657584, "t_hit_median_(t_hit>0)": 1.0, "t_hit_max": 7, "tbar_median_(t_hit>0)": 10.0, "max_t_hit_over_tbar": 0.4666666666666667, "min_tbar_minus_t_hit": 1, "min_hit_slack": 0.0, "min_r_slack": 0.0016686854253251115, "seconds": 0.5}
+constant u=1 {"trajectories": 4124664, "satisfy_claim": 4124664, "violations": 0, "no_hit": 0, "hit_after_bound": 0, "r_condition_violated": 0, "visited_T_before_hit": 0, "hit_at_t0": 1580225, "hits_that_are_ties_(|slack|<=1e-12)": 0, "hit_in_obstacle": 2467080, "hit_by_leaving_grid": 1657584, "t_hit_median_(t_hit>0)": 1.0, "t_hit_max": 7, "tbar_median_(t_hit>0)": 10.0, "max_t_hit_over_tbar": 0.5, "min_tbar_minus_t_hit": 1, "min_hit_slack": 0.0, "min_r_slack": 0.0016686854253251115, "seconds": 0.6}
+random actions (seed 1000) {"trajectories": 4124664, "satisfy_claim": 4124664, "violations": 0, "no_hit": 0, "hit_after_bound": 0, "r_condition_violated": 0, "visited_T_before_hit": 0, "hit_at_t0": 1580225, "hits_that_are_ties_(|slack|<=1e-12)": 0, "hit_in_obstacle": 2467080, "hit_by_leaving_grid": 1657584, "t_hit_median_(t_hit>0)": 1.0, "t_hit_max": 7, "tbar_median_(t_hit>0)": 10.0, "max_t_hit_over_tbar": 0.5, "min_tbar_minus_t_hit": 1, "min_hit_slack": 0.0, "min_r_slack": 0.0016686854253251115, "seconds": 0.6}
+random actions (seed 1001) {"trajectories": 4124664, "satisfy_claim": 4124664, "violations": 0, "no_hit": 0, "hit_after_bound": 0, "r_condition_violated": 0, "visited_T_before_hit": 0, "hit_at_t0": 1580225, "hits_that_are_ties_(|slack|<=1e-12)": 0, "hit_in_obstacle": 2467080, "hit_by_leaving_grid": 1657584, "t_hit_median_(t_hit>0)": 1.0, "t_hit_max": 7, "tbar_median_(t_hit>0)": 10.0, "max_t_hit_over_tbar": 0.5, "min_tbar_minus_t_hit": 1, "min_hit_slack": 0.0, "min_r_slack": 0.0016686854253251115, "seconds": 0.6}
+random actions (seed 1002) {"trajectories": 4124664, "satisfy_claim": 4124664, "violations": 0, "no_hit": 0, "hit_after_bound": 0, "r_condition_violated": 0, "visited_T_before_hit": 0, "hit_at_t0": 1580225, "hits_that_are_ties_(|slack|<=1e-12)": 0, "hit_in_obstacle": 2467080, "hit_by_leaving_grid": 1657584, "t_hit_median_(t_hit>0)": 1.0, "t_hit_max": 7, "tbar_median_(t_hit>0)": 10.0, "max_t_hit_over_tbar": 0.5, "min_tbar_minus_t_hit": 1, "min_hit_slack": 0.0, "min_r_slack": 0.0016686854253251115, "seconds": 0.6}
+Prop. 4 policy on V_lower {"trajectories": 4124664, "satisfy_claim": 4124664, "violations": 0, "no_hit": 0, "hit_after_bound": 0, "r_condition_violated": 0, "visited_T_before_hit": 0, "hit_at_t0": 1580225, "hits_that_are_ties_(|slack|<=1e-12)": 0, "hit_in_obstacle": 2467080, "hit_by_leaving_grid": 1657584, "t_hit_median_(t_hit>0)": 1.0, "t_hit_max": 7, "tbar_median_(t_hit>0)": 10.0, "max_t_hit_over_tbar": 0.5, "min_tbar_minus_t_hit": 1, "min_hit_slack": 0.0, "min_r_slack": 0.0016686854253251115, "seconds": 0.7}
+greedy on V_upper {"trajectories": 4124664, "satisfy_claim": 4124664, "violations": 0, "no_hit": 0, "hit_after_bound": 0, "r_condition_violated": 0, "visited_T_before_hit": 0, "hit_at_t0": 1580225, "hits_that_are_ties_(|slack|<=1e-12)": 0, "hit_in_obstacle": 2467080, "hit_by_leaving_grid": 1657584, "t_hit_median_(t_hit>0)": 1.0, "t_hit_max": 8, "tbar_median_(t_hit>0)": 10.0, "max_t_hit_over_tbar": 0.5, "min_tbar_minus_t_hit": 1, "min_hit_slack": 0.0, "min_r_slack": 0.0016686854253251115, "seconds": 1.2}
+  exhaustive: 4096/4124664 states
+  exhaustive: 86016/4124664 states
+  exhaustive: 167936/4124664 states
+  exhaustive: 249856/4124664 states
+  exhaustive: 331776/4124664 states
+  exhaustive: 413696/4124664 states
+  exhaustive: 495616/4124664 states
+  exhaustive: 577536/4124664 states
+  exhaustive: 659456/4124664 states
+  exhaustive: 741376/4124664 states
+  exhaustive: 823296/4124664 states
+  exhaustive: 905216/4124664 states
+  exhaustive: 987136/4124664 states
+  exhaustive: 1069056/4124664 states
+  exhaustive: 1150976/4124664 states
+  exhaustive: 1232896/4124664 states
+  exhaustive: 1314816/4124664 states
+  exhaustive: 1396736/4124664 states
+  exhaustive: 1478656/4124664 states
+  exhaustive: 1560576/4124664 states
+  exhaustive: 1642496/4124664 states
+  exhaustive: 1724416/4124664 states
+  exhaustive: 1806336/4124664 states
+  exhaustive: 1888256/4124664 states
+  exhaustive: 1970176/4124664 states
+  exhaustive: 2052096/4124664 states
+  exhaustive: 2134016/4124664 states
+  exhaustive: 2215936/4124664 states
+  exhaustive: 2297856/4124664 states
+  exhaustive: 2379776/4124664 states
+  exhaustive: 2461696/4124664 states
+  exhaustive: 2543616/4124664 states
+  exhaustive: 2625536/4124664 states
+  exhaustive: 2707456/4124664 states
+  exhaustive: 2789376/4124664 states
+  exhaustive: 2871296/4124664 states
+  exhaustive: 2953216/4124664 states
+  exhaustive: 3035136/4124664 states
+  exhaustive: 3117056/4124664 states
+  exhaustive: 3198976/4124664 states
+  exhaustive: 3280896/4124664 states
+  exhaustive: 3362816/4124664 states
+  exhaustive: 3444736/4124664 states
+  exhaustive: 3526656/4124664 states
+  exhaustive: 3608576/4124664 states
+  exhaustive: 3690496/4124664 states
+  exhaustive: 3772416/4124664 states
+  exhaustive: 3854336/4124664 states
+  exhaustive: 3936256/4124664 states
+  exhaustive: 4018176/4124664 states
+  exhaustive: 4100096/4124664 states
+exhaustive {"states": 4124664, "exhausted": 4124664, "not_exhausted_(frontier_cap)": 0, "violations": 0, "no_hit_by_tbar": 0, "sink_without_hit": 0, "r_violation": 0, "visited_T_before_hit": 0, "action_prefixes_checked": 40024654, "max_frontier": 555, "latest_hit_max": 8, "latest_hit_median_(>0)": 1.0, "tbar_median_(latest_hit>0)": 10.0, "max_latest_hit_over_tbar": 0.5, "min_tbar_minus_latest_hit": 1, "min_hit_slack": 0.0, "states_with_a_tie_hit": 0, "min_r_slack": 0.0016686854253251115, "seconds": 2.8}
+wrote verification_ra_violation

@@ -4,9 +4,11 @@ This directory holds two runs of Algorithm 1 (no refinement) for the Dubins car 
 a uniform 120 × 120 × 120 grid, their verification, the tables and figures, and the
 scripts that produce and replicate all of it:
 
-* reach-avoid with γ = 0.96: Proposition 4, labelled `prop:greedy` (under the
-  greedy policy, safe arrival in T within ⌈log(V_lower(s0)/r*)/log γ⌉ steps) and the
-  soundness of both value bounds;
+* reach-avoid with γ = 0.96: Proposition 4, labelled `prop:greedy`, and the soundness
+  of both value bounds. Its first claim: under the greedy policy, safe arrival in T within
+  ⌈log(V_lower(s0)/r*)/log γ⌉ steps. Its second claim (violation, checked by
+  `verify_violation.py`): if V_upper(s0) < 0, every policy reaches F, before T, within
+  ⌊log(V_upper(s0)/l_min)/log γ⌋ steps;
 * avoid with γ = 1: Proposition 6, labelled `prop:avoid` (under its policy π*,
   l(x_t) ≥ V_lower(s0) for all t) and the soundness of both value bounds.
 
@@ -19,7 +21,7 @@ scripts that produce and replicate all of it:
 ./reproduce.sh "$PWD"     # regenerates the results in this directory
 ```
 
-This takes about three minutes and needs a C++17 compiler, Python with numpy, scipy
+This takes a little over three minutes and needs a C++17 compiler, Python with numpy, scipy
 and matplotlib, and optionally LaTeX for the figure text (`reproduce.sh` lists
 the recorded versions). `provenance.txt` records the commit (d8463b7, no
 uncommitted solver changes), the compiler and the solver binary hash; the binary
@@ -31,11 +33,13 @@ embeds its build time, so the hash changes with every build.
 |---|---|
 | `run_alg1_res120.sh` | builds `cpp/build/dhj_head` and runs the solver for both cases |
 | `verify_quantitative.py` | the verifier; writes the tables, figures and reports |
-| `reproduce.sh` | runs both scripts and compares the numbers |
+| `verify_violation.py` | the check of the violation claim of Proposition 4; imports `verify_quantitative.py` |
+| `reproduce.sh` | runs the three scripts and compares the numbers |
 | `ra_discount/dubins_res120_…/`, `avoid_nodiscount/dubins_res120_…/` | solver output: `value_function_phase_0.csv` (every cell: bounds, V_lower, V_upper, l and r bounds), `params.json`, `phases.csv`, `run.log`, figure |
 | `verification_ra/` | `table_ra.tex`, figure `ra_verification.{pdf,png}`, per-panel figures, `summary.json`, `dubins/report.json` |
 | `verification_avoid/` | `table_avoid.tex`, figure `avoid_verification.{pdf,png}`, per-panel figures, `summary.json`, `dubins/report.json` |
-| `solver.log`, `verification_ra.log`, `verification_avoid.log` | console output of the last run |
+| `verification_ra_violation/` | `report.json` (every number), `sampled_states.npz` and `exhaustive.npz` (per start state) |
+| `solver.log`, `verification_ra.log`, `verification_avoid.log`, `verification_ra_violation.log` | console output of the last run |
 
 The CSV, NPY and NPZ files are excluded from git by `.gitignore` (hundreds of MB).
 `*/dubins/trajectories.npz` holds every simulated initial state and its outcome.
@@ -114,6 +118,33 @@ Avoid checks (`verification_avoid/`):
    within k̄(s0) steps, the first iteration with W^(k)(s0) < 0 (W^(k)(s0) < 0 means
    that every control sequence does so within k steps).
 
+Violation checks (`verification_ra_violation/`, script `verify_violation.py`, on the
+reach-avoid run). The second claim of Proposition 4: if V_upper(s0) < 0, then for every
+policy and every x0 in [[s0]], the trajectory reaches F at some time
+t ≤ t̄_F(s0) = ⌊log(V_upper(s0)/l_min)/log γ⌋ with l(x_t) ≤ γ^(−t) V_upper(s0), and
+r(x_τ) ≤ γ^(−τ) V_upper(s0) < 0 (so x_τ ∉ T) for τ < t. The solver gives the sink
+outside the grid the fixed value −1, and its l and r bounds are −1 as well
+(`cpp/include/dhj/core/vi.hpp`). The verifier models it as an absorbing state with
+l = r = −1, whose value is −1. Hence l_min = −1.3, at the obstacle center. For a
+trajectory, t_hit is the first time with γ^t l(x_t) ≤ V_upper(s0).
+
+1. *Upper certificate.* As in check 5 of the reach-avoid checks.
+2. *Start states.* One state drawn uniformly (`numpy.random.default_rng(0)`) and the
+   8 vertices of every cell with V_upper < 0: 458,296 × 9 = 4,124,664 states.
+3. *Policies.* Each constant action, uniformly random actions (3 seeds), π̂ of the
+   first claim, and the one-step greedy policy on V_upper (argmax_a V_upper of the cell
+   containing Φ(x, a, τ), with the sink counted as −1). For every trajectory: t_hit
+   exists, t_hit ≤ t̄_F(s0), and γ^τ r(x_τ) ≤ V_upper(s0) for τ < t_hit.
+4. *Exhaustive search.* From every start state, every action sequence is followed until
+   t_hit. A branch is a violation if it reaches t̄_F(s0) without t_hit, enters the sink
+   too late (γ^t < −V_upper(s0)), or has γ^τ r(x_τ) > V_upper(s0) before t_hit. Every
+   policy, stationary or not, generates one of these sequences, so this covers every
+   policy from these states.
+5. *Rounding.* γ^t is formed by repeated multiplication, as in the solver. Some cells
+   attain the bound exactly: V_upper(s0) = −γ^k, and the trajectory leaves the grid at
+   step k. With `pow`, 5,924 of these ties show up as one-ulp misses. Hits within 1e-12
+   would be reported as ties; there are none.
+
 ## Results
 
 Reach-avoid, γ = 0.96 (`verification_ra/table_ra.tex`):
@@ -147,6 +178,24 @@ Avoid, γ = 1 (`verification_avoid/table_avoid.tex`):
 | of the sampled BRS states: inside F at t = 0 / left the grid / entered F later | 244,402 / 189,912 / 29,718 |
 | abstraction + value iteration time (s) | 2.3 |
 
+Violation (second claim of Proposition 4), γ = 0.96 (`verification_ra_violation/report.json`):
+
+| | Dubins car |
+|---|---|
+| cells with V_upper < 0 / with V_upper = 0 | 458,296 / 0 |
+| min V_upper / l_min | −1.228 / −1.3 |
+| t̄_F(s0): median / max (steps) | 15 / 152 |
+| upper certificate violations | 0 |
+| start states (uniform + vertices) | 4,124,664 |
+| violations under the 8 policies | 0 |
+| exhaustive search: action sequences followed / largest frontier | 40,024,654 / 555 |
+| exhaustive search: violations | 0 |
+| latest t_hit over all sequences: median / max (steps) | 1 / 8 |
+| largest (latest t_hit) / t̄_F(s0) | 0.5 |
+| start states with t_hit = 0 (deep enough in F at t = 0) | 1,580,225 |
+| min V_upper(s0) − γ^t l(x_t) at t_hit / min V_upper(s0) − γ^τ r(x_τ) before t_hit | 0 (bound attained) / 0.0017 |
+| verifier time (s) | about 18 |
+
 ## Scope
 
 The checks concern the sampled system at the sampling instants. Leaving the grid
@@ -154,4 +203,7 @@ counts as failure (the solver's sink), so cells with V_upper ≤ 0 (reach-avoid)
 V_upper < 0 (avoid) are certified with respect to the failure set extended by the
 region outside the grid; 189,912 of the sampled avoid BRS states fail by leaving
 the grid. The certificates cover every state of a cell and all times; the
-simulations cover one state per cell and, in the avoid case, 1000 steps.
+simulations cover one state per cell and, in the avoid case, 1000 steps. The
+violation checks cover nine start states per cell with V_upper < 0 and every action
+sequence from them; under the constant and random policies, 1,657,584 of the
+4,124,664 trajectories reach the failure set by leaving the grid.

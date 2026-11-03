@@ -2,10 +2,12 @@
 # Produces or replicates every result in this directory: two runs of Algorithm 1
 # for the Dubins car on a uniform 120^3 grid (reach-avoid with gamma = 0.96, and
 # the avoid value function with gamma = 1) and their verification with
-# verify_quantitative.py, including the tables and figures.
+# verify_quantitative.py, including the tables and figures, and the check of the
+# violation claim of Proposition 4 with verify_violation.py.
 #
 #   ./reproduce.sh          writes everything to ../results_quantitative_verification_rerun
-#                           and compares the numbers with verification_*/summary.json here
+#                           and compares the numbers with verification_*/summary.json and
+#                           verification_ra_violation/report.json here
 #   ./reproduce.sh DIR      the same, into DIR
 #   ./reproduce.sh "$PWD"   regenerates the results in this directory (no comparison)
 #
@@ -35,6 +37,13 @@ OUT="$(cd "$OUT" && pwd)"
   --out "$OUT/verification_avoid" --seed 0 --points-per-cell 1 --paths 14 --horizon 1000 \
   2>&1 | tee "$OUT/verification_avoid.log"
 
+# Violation claim of Proposition 4: from one random state and the 8 vertices of every
+# cell with V_upper < 0, eight policies and an exhaustive search over all action sequences.
+"$PY" -I "$HERE/verify_violation.py" \
+  "$OUT/ra_discount/dubins_res120_epsmin1e-06_dmin1e-08_dmax1e-08_gamma0.96_dt0.3_tau0.3_std" \
+  --out "$OUT/verification_ra_violation" --seed 0 --corners --exhaustive -1 --random-seeds 3 \
+  2>&1 | tee "$OUT/verification_ra_violation.log"
+
 # 3. Compare everything except timings with the reference numbers in this directory.
 if [[ "$OUT" != "$HERE" ]]; then
   for v in verification_ra verification_avoid; do
@@ -61,4 +70,20 @@ if len(ref) != len(new):
 print("identical to the reference results" if not diffs else "\n".join(diffs))
 EOF
   done
+  printf 'verification_ra_violation: '
+  "$PY" -I - "$HERE/verification_ra_violation/report.json" "$OUT/verification_ra_violation/report.json" <<'EOF'
+import json
+import sys
+
+def numbers(o):
+    """Everything except paths and wall-clock times."""
+    if isinstance(o, dict):
+        return {k: numbers(v) for k, v in o.items() if k not in ("run_dir", "seconds")}
+    return o
+
+
+ref, new = (numbers(json.load(open(p))) for p in sys.argv[1:3])
+diffs = [f"{k}: {ref[k]} -> {new.get(k)}" for k in ref if ref[k] != new.get(k)]
+print("identical to the reference results" if not diffs else "\n".join(diffs))
+EOF
 fi
