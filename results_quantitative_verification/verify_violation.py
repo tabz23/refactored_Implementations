@@ -100,6 +100,7 @@ def simulate(grid, dyn, actions, gamma, tau, x0, vbar, tbar, choose, extra=60):
     hit_by_sink = np.zeros(m, dtype=bool)
     hit_slack = np.full(m, np.nan)       # V_upper(s0) - gamma^t l(x_t) at t_hit (>= 0)
     r_slack = np.full(m, np.inf)         # min_{tau < t_hit} V_upper(s0) - gamma^tau r(x_tau) (>= 0 required)
+    r_ratio = np.full(m, np.inf)         # min_{tau < t_hit} gamma^tau r(x_tau) / V_upper(s0) (>= 1 required)
     in_T = np.zeros(m, dtype=bool)       # r(x_tau) > 0 for some tau < t_hit
     entered_F = np.full(m, -1)           # first time with l(x_t) <= 0 (F or sink)
     alive = np.ones(m, dtype=bool)
@@ -122,6 +123,7 @@ def simulate(grid, dyn, actions, gamma, tau, x0, vbar, tbar, choose, extra=60):
         hit_slack[ia[hit]] = (v - g * lx)[hit]
         nh = ~hit
         r_slack[ia[nh]] = np.minimum(r_slack[ia[nh]], (v - g * rx)[nh])
+        r_ratio[ia[nh]] = np.minimum(r_ratio[ia[nh]], (g * rx / v)[nh])
         in_T[ia[nh & (rx > 0.0)]] |= True
         alive[ia[hit]] = False
         alive[ia[nh & out]] = False          # in the sink without a hit: gamma^t * (-1) only increases
@@ -131,7 +133,7 @@ def simulate(grid, dyn, actions, gamma, tau, x0, vbar, tbar, choose, extra=60):
         a = choose(t, X, Y, TH, keep)
         X[keep], Y[keep], TH[keep] = step_all(dyn, actions, tau, X[keep], Y[keep], TH[keep], a)
     return {"hit_t": hit_t, "hit_by_sink": hit_by_sink, "hit_slack": hit_slack, "r_slack": r_slack,
-            "in_T": in_T, "entered_F": entered_F}
+            "r_ratio": r_ratio, "in_T": in_T, "entered_F": entered_F}
 
 
 def summarize(res, tbar):
@@ -165,6 +167,7 @@ def summarize(res, tbar):
     s["min_hit_slack"] = float(np.nanmin(res["hit_slack"])) if ok_hit.any() else None
     fin = np.isfinite(res["r_slack"])
     s["min_r_slack"] = float(res["r_slack"][fin].min()) if fin.any() else None
+    s["min_r_ratio_before_hit_(>=1_required)"] = float(res["r_ratio"][fin].min()) if fin.any() else None
     return s
 
 
@@ -178,7 +181,8 @@ def exhaustive(dyn, grid, actions, gamma, tau, x0, vbar, tbar, cap):
         "latest_hit": np.full(m, -1), "earliest_hit": np.full(m, 1 << 30), "leaves": np.zeros(m, np.int64),
         "max_frontier": np.zeros(m, np.int64), "no_hit_by_tbar": np.zeros(m, bool),
         "sink_without_hit": np.zeros(m, bool), "r_violation": np.zeros(m, bool), "in_T": np.zeros(m, bool),
-        "min_hit_slack": np.full(m, np.inf), "min_r_slack": np.full(m, np.inf), "exhausted": np.ones(m, bool),
+        "min_hit_slack": np.full(m, np.inf), "min_r_slack": np.full(m, np.inf), "min_r_ratio": np.full(m, np.inf),
+        "exhausted": np.ones(m, bool),
     }
 
     def run(rows):
@@ -205,6 +209,7 @@ def exhaustive(dyn, grid, actions, gamma, tau, x0, vbar, tbar, cap):
             if nh.any():
                 on = own[nh]
                 np.minimum.at(acc["min_r_slack"], on, (v - g * rx)[nh])
+                np.minimum.at(acc["min_r_ratio"], on, (g * rx / v)[nh])
                 acc["r_violation"][own[nh & (g * rx > v + TOL)]] = True
                 acc["in_T"][own[nh & (rx > 0.0)]] = True
             dead = nh & out
@@ -384,6 +389,8 @@ def main():
             "states_with_a_tie_hit": int((done & (ex["min_hit_slack"] < 0)).sum()),
             "min_r_slack": float(ex["min_r_slack"][done][np.isfinite(ex["min_r_slack"][done])].min())
             if np.isfinite(ex["min_r_slack"][done]).any() else None,
+            "min_r_ratio_before_hit_(>=1_required)": float(ex["min_r_ratio"][done][np.isfinite(ex["min_r_ratio"][done])].min())
+            if np.isfinite(ex["min_r_ratio"][done]).any() else None,
             "seconds": round(time.time() - ts, 1),
         }
         np.savez_compressed(out_dir / "exhaustive.npz", x0=x0[pick], vbar=vbar[pick], tbar=tbar[pick],

@@ -54,7 +54,8 @@
       "min_tbar_minus_t_hit": 1,
       "min_hit_slack": 0.0,
       "min_r_slack": 0.0016686854253251115,
-      "seconds": 0.6
+      "min_r_ratio_before_hit_(>=1_required)": 1.0057919398467436,
+      "seconds": 0.7
     },
     "constant u=0": {
       "trajectories": 4124664,
@@ -75,7 +76,8 @@
       "min_tbar_minus_t_hit": 1,
       "min_hit_slack": 0.0,
       "min_r_slack": 0.0016686854253251115,
-      "seconds": 0.5
+      "min_r_ratio_before_hit_(>=1_required)": 1.0057919398467436,
+      "seconds": 0.6
     },
     "constant u=1": {
       "trajectories": 4124664,
@@ -96,7 +98,8 @@
       "min_tbar_minus_t_hit": 1,
       "min_hit_slack": 0.0,
       "min_r_slack": 0.0016686854253251115,
-      "seconds": 0.6
+      "min_r_ratio_before_hit_(>=1_required)": 1.0057919398467436,
+      "seconds": 0.7
     },
     "random actions (seed 1000)": {
       "trajectories": 4124664,
@@ -117,7 +120,8 @@
       "min_tbar_minus_t_hit": 1,
       "min_hit_slack": 0.0,
       "min_r_slack": 0.0016686854253251115,
-      "seconds": 0.6
+      "min_r_ratio_before_hit_(>=1_required)": 1.0057919398467436,
+      "seconds": 0.7
     },
     "random actions (seed 1001)": {
       "trajectories": 4124664,
@@ -138,6 +142,7 @@
       "min_tbar_minus_t_hit": 1,
       "min_hit_slack": 0.0,
       "min_r_slack": 0.0016686854253251115,
+      "min_r_ratio_before_hit_(>=1_required)": 1.0057919398467436,
       "seconds": 0.6
     },
     "random actions (seed 1002)": {
@@ -159,6 +164,7 @@
       "min_tbar_minus_t_hit": 1,
       "min_hit_slack": 0.0,
       "min_r_slack": 0.0016686854253251115,
+      "min_r_ratio_before_hit_(>=1_required)": 1.0057919398467436,
       "seconds": 0.6
     },
     "Prop. 4 policy on V_lower": {
@@ -180,6 +186,7 @@
       "min_tbar_minus_t_hit": 1,
       "min_hit_slack": 0.0,
       "min_r_slack": 0.0016686854253251115,
+      "min_r_ratio_before_hit_(>=1_required)": 1.0057919398467436,
       "seconds": 0.7
     },
     "greedy on V_upper": {
@@ -201,7 +208,8 @@
       "min_tbar_minus_t_hit": 1,
       "min_hit_slack": 0.0,
       "min_r_slack": 0.0016686854253251115,
-      "seconds": 1.2
+      "min_r_ratio_before_hit_(>=1_required)": 1.0057919398467436,
+      "seconds": 1.4
     }
   },
   "simulation_all_policies": {
@@ -229,7 +237,8 @@
     "min_hit_slack": 0.0,
     "states_with_a_tie_hit": 0,
     "min_r_slack": 0.0016686854253251115,
-    "seconds": 2.8
+    "min_r_ratio_before_hit_(>=1_required)": 1.0057919398467436,
+    "seconds": 3.2
   },
-  "seconds": 17.2
+  "seconds": 19.0
 }

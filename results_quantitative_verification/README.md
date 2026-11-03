@@ -194,6 +194,7 @@ Violation (second claim of Proposition 4), γ = 0.96 (`verification_ra_violation
 | largest (latest t_hit) / t̄_F(s0) | 0.5 |
 | start states with t_hit = 0 (deep enough in F at t = 0) | 1,580,225 |
 | min V_upper(s0) − γ^t l(x_t) at t_hit / min V_upper(s0) − γ^τ r(x_τ) before t_hit | 0 (bound attained) / 0.0017 |
+| min γ^τ r(x_τ) / V_upper(s0) before t_hit (≥ 1 required) | 1.006 |
 | verifier time (s) | about 18 |
 
 ## Scope

@@ -277,6 +277,7 @@ cd results_quantitative_verification
   eight policies and in the exhaustive search (40,024,654 action sequences).
   * Over all sequences, the latest time $t$ has a median of 1 step and a maximum of 8,
     and $t \le 0.5\,\bar t_{\mathcal F}$; $\bar t_{\mathcal F}$ has a median of 15 steps.
+  * Before $t$, $\gamma^\tau r(x_\tau)/\overline V(s_0) \ge 1.006$ (at least 1 is required).
   * The depth bound $l(x_t) \le \gamma^{-t}\overline V(s_0)$ is attained exactly in some
     cells; $\gamma^t$ must be formed by repeated multiplication, as in the solver, or these
     ties show up as one-ulp misses.
