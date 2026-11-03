@@ -529,10 +529,11 @@ def verify_avoid(run_dir, out_dir, rng, points_per_cell, n_paths, horizon):
     sim = {"initial_states": int(cells.shape[0]), "points_per_cell": points_per_cell, "horizon_steps": horizon}
     res, paths = None, None
     if cells.size:
+        # Example paths (figures only): n_paths of the sampled trajectories, from cells in the
+        # theta slice shown in the paper. They keep their random initial states, like all others.
         k = int(np.clip(np.floor((PAPER_SLICE[name] - grid.lo[2]) / grid.h[2]), 0, grid.n[2] - 1))
         in_slice = np.flatnonzero(cells[:, 2] == k)
         record = rng.choice(in_slice, size=min(n_paths, in_slice.size), replace=False) if in_slice.size else np.array([], int)
-        x0[record] = grid.lo + (cells[record] + 0.5) * grid.h
         res, paths = simulate_avoid(grid, dyn, actions, tau, pi, x0, horizon, record=record)
         v0, ok = res["v0"], res["fail_t"] < 0
         sim.update({
@@ -734,11 +735,11 @@ def verify(run_dir, out_dir, rng, points_per_cell, n_paths):
     r_star = float(grid.rl.max())
     # First claim of Proposition 4: t* <= floor(log(V_lower(s0)/r*)/log(gamma)).
     bound = time_bound(r_star, v0, gamma)
-    # Example paths: start at cell centers in the theta slice shown in the paper.
+    # Example paths (figures only): n_paths of the sampled trajectories, from cells in the
+    # theta slice shown in the paper. They keep their random initial states, like all others.
     k = int(np.clip(np.floor((PAPER_SLICE[name] - grid.lo[2]) / grid.h[2]), 0, grid.n[2] - 1))
     in_slice = np.flatnonzero(cells[:, 2] == k)
     record = rng.choice(in_slice, size=min(n_paths, in_slice.size), replace=False) if in_slice.size else np.array([], int)
-    x0[record] = grid.lo + (cells[record] + 0.5) * grid.h
     res, paths = simulate(grid, dyn, actions, gamma, tau, pi, x0, int(bound.max()) + 5, record=record)
     res["bound"] = bound
     # ok: no failure before t*, t* reached, and the target reached no later than t*.
