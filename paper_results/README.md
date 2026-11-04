@@ -171,9 +171,10 @@ Notes on the arguments:
   13 refinements (2026-10-26, same flags otherwise) split to 1,435,125 cells in refinement 9
   and exceeded the machine's 18 GB of RAM. Its log stops during refinement 9, and `time.txt`
   reports a peak memory footprint of 57.3 GB. §9.2.2 of the paper reports this. The run is kept
-  in `results_hscc_2027_newbellmans_12workers_current_code/bicycle13_out_of_memory/`. Its
-  phases 0–8 are byte-identical to `bicycle8`'s (classifications, `phases.csv` counts and
-  PNGs), so only its `run.log`, `params.json` and `time.txt` are kept.
+  in the subfolder `bicycle13_out_of_memory/` of the `bicycle8` run folder
+  (`ra_nodiscount/bicycle_res5_…_std/`). Its phases 0–8 are byte-identical to `bicycle8`'s
+  (classifications, `phases.csv` counts and PNGs), so only its `run.log`, `params.json` and
+  `time.txt` are kept.
 
 ### Where the paper's numbers come from
 
