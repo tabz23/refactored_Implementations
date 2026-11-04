@@ -15,7 +15,14 @@ cd paper_results
 ./reproduce_all.sh            # everything, about 1 h 10 min; writes ./rerun_all and compares
 ./reproduce_all.sh --quick    # smoke test, about 20 min (fewer refinements in three cases)
 ./reproduce_all.sh --updated  # everything, into <folder>_updated next to the stored folders
+./reproduce_all.sh --updated --cases "di14 evasion12"   # finish an interrupted --updated run
 ```
+
+**Memory and disk.** The last refinement iterations of `di14` (14.8 million cells) and
+`evasion12` (24.8 million cells) need far more memory than the 18 GB of the machine, so macOS
+swaps to disk. Close memory-heavy apps and keep about 40 GB of disk free. If the disk fills,
+the system kills the solver ("Killed: 9" in the log); `--cases` then reruns only the cases
+that did not finish.
 
 Each comparison prints "same" or "identical", and the last line says whether everything
 matches. Runtimes are printed but not compared, since they depend on the machine.

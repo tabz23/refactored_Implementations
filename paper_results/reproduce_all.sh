@@ -12,6 +12,15 @@
 #                                        of the three folders above and compares; used to
 #                                        refresh the stored results with the current code.
 #                                        It stops if one of these folders already exists.
+#   ./reproduce_all.sh --updated --cases "di14 evasion12"
+#                                        finishes an interrupted --updated run: moves its
+#                                        incomplete step-1 runs to failed_<time>/, reruns the
+#                                        listed cases of step 1, compares all of step 1, and
+#                                        runs steps 2 and 3 unless their folders exist.
+#
+# Memory: the last iterations of di14 and evasion12 need far more than 18 GB, so macOS swaps
+# to disk. Close memory-heavy apps and keep about 40 GB of disk free; if the disk fills, the
+# system kills the solver.
 #
 # --quick is a smoke test of about 20 minutes. In step 1, vdp18, di14 and evasion12 stop
 # after 16, 10 and 9 refinements instead of 18, 14 and 12, and their phases are compared
@@ -27,24 +36,31 @@ set -euo pipefail
 HERE="$(cd "$(dirname "$0")" && pwd)"
 QUICK=0
 UPDATED=0
+CASES=""
 while [[ $# -gt 0 && "$1" == --* ]]; do
   case "$1" in
     --quick) QUICK=1 ;;
     --updated) UPDATED=1 ;;
-    *) echo "unknown option $1; usage: $0 [--quick] [OUT]  or  $0 --updated" >&2; exit 2 ;;
+    --cases) CASES="${2:-}"; [ -n "$CASES" ] || { echo "--cases needs a list of case names" >&2; exit 2; }; shift ;;
+    *) echo "unknown option $1; usage: $0 [--quick] [OUT]  or  $0 --updated [--cases \"NAMES\"]" >&2; exit 2 ;;
   esac
   shift
 done
 FIGS=results_hscc_2027_newbellmans_12workers_current_code
 REGEN=regenerate_hscc_newbellmans_tol1e-15_current_code.sh
+if [ -n "$CASES" ] && [ "$UPDATED" != 1 ]; then echo "--cases works only with --updated" >&2; exit 2; fi
 if [ "$UPDATED" = 1 ]; then
   if [ "$QUICK" = 1 ] || [ $# -gt 0 ]; then echo "--updated takes neither --quick nor OUT" >&2; exit 2; fi
   FIGS_OUT="$HERE/${FIGS}_updated"
   QV_OUT="$HERE/results_quantitative_verification_updated"
   BV_OUT="$HERE/results_bound_verification_updated"
-  for d in "$FIGS_OUT" "$QV_OUT" "$BV_OUT"; do
-    [ ! -e "$d" ] || { echo "$d already exists; move or delete it first" >&2; exit 2; }
-  done
+  if [ -z "$CASES" ]; then
+    for d in "$FIGS_OUT" "$QV_OUT" "$BV_OUT"; do
+      [ ! -e "$d" ] || { echo "$d already exists; move or delete it first, or finish it with --cases" >&2; exit 2; }
+    done
+  else
+    [ -d "$FIGS_OUT" ] || { echo "--cases finishes an earlier --updated run, but $FIGS_OUT does not exist" >&2; exit 2; }
+  fi
 else
   OUT="${1:-$HERE/rerun_all}"
   mkdir -p "$OUT"
@@ -57,16 +73,31 @@ export PYTHON="${PYTHON:-$HOME/miniconda3/bin/python}"
 export CPP_DIR="${CPP_DIR:-$(cd "$HERE/../cpp" && pwd)}"
 status=0
 start=$(date +%s)
-echo "reproduce_all: quick=$QUICK, updated=$UPDATED, solver sources in $CPP_DIR"
+echo "reproduce_all: quick=$QUICK, updated=$UPDATED, cases=${CASES:-all}, solver sources in $CPP_DIR"
 echo "  outputs: $FIGS_OUT, $QV_OUT, $BV_OUT"
 
 # ---------------------------------------------------------------- 1. Figs. 2-5
 echo "=== 1. Figs. 2-5 ($(date)) ==="
 mkdir -p "$FIGS_OUT"
+LOG1="$FIGS_OUT/regenerate.log"
+if [ -n "$CASES" ]; then
+  LOG1="$FIGS_OUT/regenerate_cases_$(date +%Y%m%d_%H%M%S).log"
+  # Runs that did not finish (no "Total time" in run.log) move aside, so that they are rerun.
+  failed="$FIGS_OUT/failed_$(date +%Y%m%d_%H%M%S)"
+  for d in "$FIGS_OUT"/ra_nodiscount/*/ "$FIGS_OUT"/ra_discount/*/ "$FIGS_OUT"/avoid_nodiscount/*/; do
+    [ -d "$d" ] || continue
+    if ! grep -q "^Total time:" "$d/run.log" 2>/dev/null; then
+      m="$(basename "$(dirname "$d")")"
+      mkdir -p "$failed/$m"
+      mv "${d%/}" "$failed/$m/"
+      echo "moved the incomplete run $m/$(basename "$d") to $(basename "$failed")/$m/"
+    fi
+  done
+fi
 cp "$HERE/$FIGS/$REGEN" "$HERE/$FIGS/plot_runtime.py" "$FIGS_OUT/"
-QUICK=$QUICK "$FIGS_OUT/$REGEN" > "$FIGS_OUT/regenerate.log" 2>&1 || {
-  echo "the step-1 script failed; see $FIGS_OUT/regenerate.log"; exit 1; }
-"$PYTHON" -I - "$HERE/$FIGS" "$FIGS_OUT" > "$FIGS_OUT/comparison.txt" <<'EOF' || status=1
+QUICK=$QUICK CASES="$CASES" "$FIGS_OUT/$REGEN" > "$LOG1" 2>&1 || {
+  echo "the step-1 script failed; see $LOG1"; exit 1; }
+"$PYTHON" -I - "$HERE/$FIGS" "$FIGS_OUT" "$QUICK" > "$FIGS_OUT/comparison.txt" <<'EOF' || status=1
 """Compare each new run with the stored run of the same case, phase by phase."""
 import csv
 import re
@@ -74,6 +105,7 @@ import sys
 from pathlib import Path
 
 ref_root, new_root = map(Path, sys.argv[1:3])
+quick = sys.argv[3] == "1"   # smoke test: the three slowest cases stop early by design
 MODES = ("ra_nodiscount", "ra_discount", "avoid_nodiscount")
 
 
@@ -113,6 +145,7 @@ def same_png(a, b):
 
 refs = {(m, key(m, d.name)): d for m in MODES for d in (ref_root / m).glob("*") if d.is_dir()}
 bad = 0
+seen = set()
 for m in MODES:
     for new in sorted(d for d in (new_root / m).glob("*") if d.is_dir()):
         ref = refs.get((m, key(m, new.name)))
@@ -132,10 +165,13 @@ for m in MODES:
         pngs = sorted(new.glob("value_function_phase_*.png"))
         bad_png = [p.name for p in pngs if not (ref / p.name).exists() or not same_png(p, ref / p.name)]
         t = re.search(r"Total time: ([\d.]+)", (new / "run.log").read_text())
-        ok = ok_cls and ok_csv and not bad_png
-        bad += not ok
         last = phases[-1] if phases else -1
-        print(f"{'same' if ok else 'DIFFERENT'}: {m}/{new.name}: phases 0-{last} of 0-{max(rb)}, "
+        complete = quick or last == max(rb)   # a full run must reach the stored run's last phase
+        ok = ok_cls and ok_csv and not bad_png and complete
+        bad += not ok
+        seen.add(ref)
+        label = "same" if ok else ("INCOMPLETE" if ok_cls and ok_csv and not bad_png else "DIFFERENT")
+        print(f"{label}: {m}/{new.name}: phases 0-{last} of 0-{max(rb)}, "
               f"{classified(nb[last]) if phases else float('nan'):.1f}% classified after phase {last}, "
               f"{len(pngs)} PNGs {'pixel-identical' if not bad_png else 'differ: ' + ', '.join(bad_png)}, "
               f"{t.group(1) if t else '?'} s")
@@ -143,6 +179,10 @@ for m in MODES:
             print("    the classification blocks in run.log differ")
         if not ok_csv:
             print("    phases.csv differs")
+for (m, _), ref in sorted(refs.items()):
+    if ref not in seen:
+        print(f"MISSING: no new run for the stored {m}/{ref.name}")
+        bad += 1
 sys.exit(1 if bad else 0)
 EOF
 cat "$FIGS_OUT/comparison.txt"
@@ -155,22 +195,30 @@ fi
 
 # ---------------------------------------------------------------- 2. Section 9.2.5
 echo "=== 2. Section 9.2.5 ($(date)) ==="
-mkdir -p "$QV_OUT"
-# The value tables of the solver runs are hundreds of MB; keep them out of git as in the stored folder.
-cp "$HERE/results_quantitative_verification/.gitignore" "$QV_OUT/"
-"$HERE/results_quantitative_verification/reproduce.sh" "$QV_OUT" > "$QV_OUT/reproduce.log" 2>&1 || status=1
+if [ -n "$CASES" ] && [ -e "$QV_OUT" ]; then
+  echo "kept from the earlier run (folder exists): $(basename "$QV_OUT")"
+else
+  mkdir -p "$QV_OUT"
+  # The value tables of the solver runs are hundreds of MB; keep them out of git as in the stored folder.
+  cp "$HERE/results_quantitative_verification/.gitignore" "$QV_OUT/"
+  "$HERE/results_quantitative_verification/reproduce.sh" "$QV_OUT" > "$QV_OUT/reproduce.log" 2>&1 || status=1
+fi
 grep -E "^verification_[a-z_]+: " "$QV_OUT/reproduce.log" || status=1
 [ "$(grep -c "identical to the reference results" "$QV_OUT/reproduce.log")" = 3 ] || status=1
 
 # ---------------------------------------------------------------- 3. Appendix H
 echo "=== 3. Appendix H ($(date)) ==="
-mkdir -p "$BV_OUT"
-"$HERE/results_bound_verification/reproduce.sh" "$BV_OUT" > "$BV_OUT/reproduce.log" 2>&1 || status=1
+if [ -n "$CASES" ] && [ -e "$BV_OUT/unclassified_check.log" ]; then
+  echo "kept from the earlier run (folder exists): $(basename "$BV_OUT")"
+else
+  mkdir -p "$BV_OUT"
+  "$HERE/results_bound_verification/reproduce.sh" "$BV_OUT" > "$BV_OUT/reproduce.log" 2>&1 || status=1
+  "$PYTHON" -I "$HERE/results_bound_verification/unclassified_check.py" \
+    > "$BV_OUT/unclassified_check.log" 2> "$BV_OUT/unclassified_check.err" || status=1
+fi
 printf 'error bounds (Theorem 3): '
 tail -1 "$BV_OUT/reproduce.log"
 grep -q "^identical to the reference results" "$BV_OUT/reproduce.log" || status=1
-"$PYTHON" -I "$HERE/results_bound_verification/unclassified_check.py" \
-  > "$BV_OUT/unclassified_check.log" 2> "$BV_OUT/unclassified_check.err" || status=1
 printf 'unclassified cells (Theorem 3): '
 "$PYTHON" -I - "$HERE/results_bound_verification/unclassified_check.log" "$BV_OUT/unclassified_check.log" <<'EOF' || status=1
 import json

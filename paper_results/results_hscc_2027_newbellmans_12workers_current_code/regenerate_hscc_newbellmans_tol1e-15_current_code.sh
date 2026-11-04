@@ -24,14 +24,29 @@
 #                         which stop once nothing changes beyond rounding.
 # All runs write PNG figures (--plot-dpi 300), no checkpoints, and use 12 worker threads.
 #
-# QUICK=1 runs a smoke test: the three slowest cases stop after fewer refinements
-# (vdp18 after 16, di14 after 10, evasion12 after 9), so every case takes at most a few
-# minutes. Their phases are the first phases of the full runs.
+# QUICK=1 runs a smoke test (reproduce_all.sh --quick): the three slowest cases stop after
+# fewer refinement iterations than in the paper, given by quick_refinements below, so every
+# case takes at most a few minutes. Their phases are the first phases of the full runs.
+#
+# CASES="di14 evasion12" runs only the listed cases and keeps the outputs already in this
+# folder (used by reproduce_all.sh --updated --cases to finish an interrupted run). The
+# provenance of such a rerun is appended to provenance.txt.
+#
+# Memory: the last iterations of di14 (14.8 million cells) and evasion12 (24.8 million cells)
+# need far more than 18 GB, so macOS swaps to disk. Close memory-heavy apps and keep about
+# 40 GB of disk free, or the system kills the solver when the disk fills.
 set -euo pipefail
 
 WORKERS=12
 QUICK="${QUICK:-0}"
-refinements() { if [ "$QUICK" = 1 ]; then echo "$2"; else echo "$1"; fi; }
+CASES="${CASES:-}"
+quick_refinements() {   # smoke test only; the cases below give the paper's values
+  case "$1" in
+    vdp18) echo 16 ;;      # instead of 18
+    di14) echo 10 ;;       # instead of 14
+    evasion12) echo 9 ;;   # instead of 12
+  esac
+}
 # The solver sources are the nearest cpp/ above this folder (refactored_Implementations/cpp);
 # set CPP_DIR to use another copy.
 ROOT="$(cd "$(dirname "$0")" && pwd)"
@@ -50,31 +65,48 @@ mkdir -p "$ROOT"
 # Rebuild the solver from the current source, so every run uses the latest code.
 c++ -std=c++17 -O3 -DNDEBUG -march=native -fno-math-errno -Iinclude -Wall -Wextra \
     src/main.cpp -o build/dhj -pthread -lz
-rm -f "$ROOT/solver_changes.diff"
-git diff --quiet -- . || git diff -- . > "$ROOT/solver_changes.diff"
-{
+suffix=""
+[ -z "$CASES" ] || suffix="_cases"
+rm -f "$ROOT/solver_changes${suffix}.diff"
+git diff --quiet -- . || git diff -- . > "$ROOT/solver_changes${suffix}.diff"
+provenance() {
   echo "date: $(date)"
   echo "quick: $QUICK"
+  [ -z "$CASES" ] || echo "cases: $CASES"
   echo "git commit: $(git rev-parse HEAD)"
   echo "uncommitted solver changes: $(git status --short -- . | tr '\n' ' ')"
   echo "compiler: $(c++ --version | head -1)"
   echo "binary sha256: $(shasum -a 256 build/dhj | cut -d' ' -f1)"
-} > "$ROOT/provenance.txt"
-cat "$ROOT/provenance.txt"
+}
+if [ -z "$CASES" ]; then
+  provenance > "$ROOT/provenance.txt"
+  cat "$ROOT/provenance.txt"
+else
+  { echo "--- rerun of: $CASES"; provenance; } | tee -a "$ROOT/provenance.txt"
+fi
 
-# Keep outputs of earlier runs instead of overwriting them.
-dest="$ROOT/previous_$(date +%Y%m%d_%H%M%S)"
-for m in ra_nodiscount ra_discount avoid_nodiscount; do
-  if [ -d "$ROOT/$m" ]; then
-    mkdir -p "$dest"
-    mv "$ROOT/$m" "$dest/"
-    echo "Moved earlier $m outputs to $dest"
-  fi
-done
+# Keep outputs of earlier runs instead of overwriting them (not when rerunning some cases).
+if [ -z "$CASES" ]; then
+  dest="$ROOT/previous_$(date +%Y%m%d_%H%M%S)"
+  for m in ra_nodiscount ra_discount avoid_nodiscount; do
+    if [ -d "$ROOT/$m" ]; then
+      mkdir -p "$dest"
+      mv "$ROOT/$m" "$dest/"
+      echo "Moved earlier $m outputs to $dest"
+    fi
+  done
+fi
 
 run() {
-  local name="$1"
+  local name="$1" quick
   shift
+  if [ -n "$CASES" ] && [[ " $CASES " != *" $name "* ]]; then
+    echo "=== SKIP ${name} (not in CASES) ==="
+    return
+  fi
+  quick="$(quick_refinements "$name")"
+  # In the smoke test, a second --refinements overrides the case's own (the last one counts).
+  if [ "$QUICK" = 1 ] && [ -n "$quick" ]; then set -- "$@" --refinements "$quick"; fi
   echo "=== START ${name} $(date) ==="
   caffeinate -ims ./build/dhj "$@" \
     --checkpoint-every 0 --plot-dpi 300 --workers "$WORKERS" --results-root "$ROOT"
@@ -114,19 +146,19 @@ run bicycle8 \
 # Fig. 3(a): Algorithm 2, reach-avoid with gamma = 1, van der Pol, 40^2 initial grid.
 run vdp18 \
   --mode ra_nodiscount --dynamics van_der_pol --dt 0.01 \
-  --initial-resolution 40 --refinements "$(refinements 18 16)" --eps-min 1e-6 \
+  --initial-resolution 40 --refinements 18 --eps-min 1e-6 \
   --delta-lower 1e-15 --delta-upper 1e-15
 
 # Fig. 3(c): Algorithm 2, reach-avoid with gamma = 1, planar double integrator, 10^4 initial grid.
 run di14 \
   --mode ra_nodiscount --dynamics double_integrator --dt 0.3 \
-  --initial-resolution 10 --refinements "$(refinements 14 10)" --eps-min 1e-6 \
+  --initial-resolution 10 --refinements 14 --eps-min 1e-6 \
   --delta-lower 1e-15 --delta-upper 1e-15
 
 # Fig. 3(b): Algorithm 2, reach-avoid with gamma = 1, 3D evasion, 30^3 initial grid.
 run evasion12 \
   --mode ra_nodiscount --dynamics evasion --dt 0.3 \
-  --initial-resolution 30 --refinements "$(refinements 12 9)" --eps-min 1e-6 \
+  --initial-resolution 30 --refinements 12 --eps-min 1e-6 \
   --delta-lower 1e-15 --delta-upper 1e-15
 
 echo "=== ALL DONE $(date) ==="
