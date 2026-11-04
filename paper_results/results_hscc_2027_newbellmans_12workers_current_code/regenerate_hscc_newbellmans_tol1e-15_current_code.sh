@@ -80,49 +80,49 @@ run() {
 run dubins120_std \
   --mode ra_nodiscount --dynamics dubins \
   --dt 0.3 --initial-resolution 120 --eps-min 1e-6 \
-  --delta-min 1e-15 --delta-max 1e-15 --gamma 0.96 \
+  --delta-min 1e-15 --gamma 0.96 \
   --refinements 0
 
 run dubins120_discount \
   --mode ra_discount --dynamics dubins \
   --dt 0.3 --initial-resolution 120 --eps-min 1e-6 \
-  --delta-min 1e-8 --delta-max 1e-8 --gamma 0.96 \
+  --delta-min 1e-8 --gamma 0.96 \
   --refinements 0
 
 run avoid80 \
   --mode avoid_nodiscount --dynamics dubins \
   --dt 0.3 --initial-resolution 80 --eps-min 1e-6 \
-  --delta-min 1e-15 --delta-max 1e-15 --gamma 0.9 \
+  --delta-min 1e-15 --gamma 0.9 \
   --refinements 6
 
 run dubins20_discount \
   --mode ra_discount --dynamics dubins \
   --dt 0.3 --initial-resolution 20 --eps-min 1e-6 \
-  --delta-min 1e-8 --delta-max 1e-8 --gamma 0.96 \
+  --delta-min 1e-8 --gamma 0.96 \
   --refinements 13
 
 run bicycle8 \
   --mode ra_nodiscount --dynamics bicycle --a-max 0.2 --v-max 1 \
   --dt 0.3 --initial-resolution 5 --eps-min 1e-6 \
-  --delta-min 1e-15 --delta-max 1e-15 --gamma 0.9 \
+  --delta-min 1e-15 --gamma 0.9 \
   --refinements 8
 
 run vdp18 \
   --mode ra_nodiscount --dynamics van_der_pol \
   --dt 0.01 --initial-resolution 40 --eps-min 1e-6 \
-  --delta-min 1e-15 --delta-max 1e-15 --gamma 0.96 \
+  --delta-min 1e-15 --gamma 0.96 \
   --refinements "$(refinements 18 16)"
 
 run di14 \
   --mode ra_nodiscount --dynamics double_integrator \
   --dt 0.3 --initial-resolution 10 --eps-min 1e-6 \
-  --delta-min 1e-15 --delta-max 1e-15 --gamma 0.9 \
+  --delta-min 1e-15 --gamma 0.9 \
   --refinements "$(refinements 14 10)"
 
 run evasion12 \
   --mode ra_nodiscount --dynamics evasion \
   --dt 0.3 --initial-resolution 30 --eps-min 1e-6 \
-  --delta-min 1e-15 --delta-max 1e-15 --gamma 0.96 \
+  --delta-min 1e-15 --gamma 0.96 \
   --refinements "$(refinements 12 9)"
 
 echo "=== ALL DONE $(date) ==="

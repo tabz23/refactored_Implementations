@@ -1,4 +1,4 @@
-// args.hpp - command line, mirroring refactored_Implementations/python/run.py.
+// args.hpp - command line of the dhj solver.
 #pragma once
 
 #include <cstdio>
@@ -17,7 +17,6 @@ struct Args {
     // problem
     Mode mode = Mode::RANoDiscount;
     std::string mode_name = "ra_nodiscount";
-    int algorithm = 2;
     std::string dynamics = "dubins";
     double velocity = 1.0;   // dubins / evasion
     double a_max = 1.0;      // double integrator
@@ -26,19 +25,13 @@ struct Args {
     double tau = 0.1;
     bool tau_set = false;    // false => tau = dt (one reach checkpoint per step)
     double gamma = 0.96;
-    // algorithm 1
-    int resolution = 10;
-    int iterations = -1;     // -1 => per-mode default
-    double tolerance = 1e-13;
+    // value iteration and Algorithm 2 (Algorithm 1 of the paper is Algorithm 2 with --refinements 0)
+    double tolerance = 1e-13;   // --delta-min: stop when both sup-norm changes are below it
     int plot_freq = 1000;
-    // algorithm 2 / 3
     double eps_min = 0.01;   // threshold of Algorithm 2 on the cell radius
     int initial_resolution = 15;
     int refinements = 100;
     int vi_iterations = 100000;
-    bool conservative = false;
-    bool conservative_set = false;   // true if --conservative or --no-conservative was passed
-    double delta_max = 1e-6;
     double phase0_tol = 1e-3;   // unused unless --phase0-tol is passed; otherwise phase 0 uses tolerance
     bool phase0_tol_set = false;
     // Upper bound uses the control-cell tube; lower bound keeps the discrete action.
@@ -69,9 +62,8 @@ struct Args {
         "Discrete Hamilton-Jacobi reach-avoid / avoid solver (C++).\n\n"
         "problem:\n"
         "  --mode {ra_nodiscount,ra_discount,avoid_nodiscount}   (required)\n"
-        "  --algorithm {1,2}             1 = fixed grid VI, 2 = adaptive refinement (default: 2)\n"
         "  --dynamics NAME               dubins | evasion | double_integrator | bicycle |\n"
-        "                                van_der_pol | van_der_pol_avoid (default: dubins)\n"
+        "                                van_der_pol (default: dubins)\n"
         "  --velocity FLOAT              constant speed for dubins/evasion (default: 1.0)\n"
         "  --a-max FLOAT                 acceleration bound for double_integrator and bicycle (default: 1.0)\n"
         "  --v-max FLOAT                 speed bound for double_integrator and bicycle (default: 1.0)\n"
@@ -79,23 +71,16 @@ struct Args {
         "  --tau FLOAT                   control duration, if it differs from --dt; --dt is then\n"
         "                                the spacing of the reach checkpoints (default: --dt)\n"
         "  --gamma FLOAT                 discount factor (default: 0.96)\n"
-        "algorithm 1:\n"
-        "  --resolution INT              grid resolution (default: 10)\n"
-        "  --iterations INT              max VI sweeps (default: 200 / 2000 / 20000 per mode)\n"
-        "  --tolerance, --delta-min F    convergence tolerance (default: 1e-13)\n"
-        "  --plot-freq INT               plot every N sweeps (default: 1000)\n"
-        "algorithm 2/3:\n"
+        "value iteration and Algorithm 2 (Algorithm 1 is Algorithm 2 with --refinements 0):\n"
+        "  --initial-resolution INT      initial uniform grid, cells per dimension (default: 15)\n"
+        "  --refinements INT             max refinement iterations of Algorithm 2 (default: 100)\n"
         "  --eps-min FLOAT               Algorithm 2 refines a cell only while its radius (half its\n"
         "                                largest side) exceeds eps_min (default: 0.01)\n"
-        "  --initial-resolution INT      initial coarse grid (default: 15)\n"
-        "  --refinements INT             max refinement phases (default: 100)\n"
+        "  --tolerance, --delta-min F    stop value iteration when both sup-norm changes are\n"
+        "                                below this (default: 1e-13)\n"
+        "  --phase0-tol FLOAT            the same, for the initial grid only (default: --delta-min)\n"
         "  --vi-iterations INT           max VI sweeps per phase (default: 100000)\n"
-        "  --conservative                conservative stopping (Algorithm 3);\n"
-        "                                off for ra_discount, which starts V_lower\n"
-        "                                at min(l, r) and uses residual stopping\n"
-        "  --no-conservative             force conservative stopping off\n"
-        "  --delta-max FLOAT             delta_max for conservative stopping (default: 1e-6)\n"
-        "  --phase0-tol FLOAT            phase-0 residual tol (default: same as --delta-min)\n"
+        "  --plot-freq INT               also plot every N sweeps of a phase (default: 1000)\n"
         "  --two-abstractions            V_upper successors cover each control cell;\n"
         "                                V_lower successors keep the discrete action\n"
         "execution:\n"
@@ -111,7 +96,7 @@ struct Args {
         "                                value writes a raster PNG at that dpi\n"
         "  --plot-slice INT              draw only this slice (default: all; 0 is θ=0 for Dubins)\n"
         "  --dump-csv                    write value_function_phase_N.csv per phase\n"
-        "checkpoints (algorithm 2):\n"
+        "checkpoints:\n"
         "  --checkpoint-every N          checkpoint every N phases (default: 1; 0 = never)\n"
         "  --keep-checkpoints K          keep only the newest K (default: 2; 0 = keep all)\n"
         "  --resume PATH|auto            resume from a checkpoint ('auto' = latest in <out-dir>/checkpoints)\n",
@@ -163,7 +148,6 @@ inline Args parse_args(int argc, char** argv) {
             if (!parse_mode(a.mode_name, a.mode)) { std::fprintf(stderr, "error: unknown --mode %s\n", a.mode_name.c_str()); std::exit(2); }
             have_mode = true;
         }
-        else if (f == "--algorithm") { a.algorithm = static_cast<int>(parse_long(need(i), "--algorithm")); ++i; }
         else if (f == "--dynamics") { a.dynamics = need(i); ++i; }
         else if (f == "--velocity") { a.velocity = parse_double(need(i), "--velocity"); ++i; }
         else if (f == "--a-max") { a.a_max = parse_double(need(i), "--a-max"); ++i; }
@@ -171,29 +155,12 @@ inline Args parse_args(int argc, char** argv) {
         else if (f == "--dt") { a.dt = parse_double(need(i), "--dt"); ++i; }
         else if (f == "--tau") { a.tau = parse_double(need(i), "--tau"); a.tau_set = true; ++i; }
         else if (f == "--gamma") { a.gamma = parse_double(need(i), "--gamma"); ++i; }
-        else if (f == "--resolution") { a.resolution = static_cast<int>(parse_long(need(i), "--resolution")); ++i; }
-        else if (f == "--iterations") { a.iterations = static_cast<int>(parse_long(need(i), "--iterations")); ++i; }
         else if (f == "--tolerance" || f == "--delta-min") { a.tolerance = parse_double(need(i), "--tolerance"); ++i; }
         else if (f == "--plot-freq") { a.plot_freq = static_cast<int>(parse_long(need(i), "--plot-freq")); ++i; }
         else if (f == "--eps-min") { a.eps_min = parse_double(need(i), "--eps-min"); ++i; }
         else if (f == "--initial-resolution") { a.initial_resolution = static_cast<int>(parse_long(need(i), "--initial-resolution")); ++i; }
         else if (f == "--refinements") { a.refinements = static_cast<int>(parse_long(need(i), "--refinements")); ++i; }
         else if (f == "--vi-iterations") { a.vi_iterations = static_cast<int>(parse_long(need(i), "--vi-iterations")); ++i; }
-        else if (f == "--conservative") {
-            if (a.conservative_set && !a.conservative) {
-                std::fprintf(stderr, "error: pass only one of --conservative and --no-conservative\n");
-                std::exit(2);
-            }
-            a.conservative = true; a.conservative_set = true;
-        }
-        else if (f == "--no-conservative") {
-            if (a.conservative_set && a.conservative) {
-                std::fprintf(stderr, "error: pass only one of --conservative and --no-conservative\n");
-                std::exit(2);
-            }
-            a.conservative = false; a.conservative_set = true;
-        }
-        else if (f == "--delta-max") { a.delta_max = parse_double(need(i), "--delta-max"); ++i; }
         else if (f == "--phase0-tol") { a.phase0_tol = parse_double(need(i), "--phase0-tol"); a.phase0_tol_set = true; ++i; }
         else if (f == "--two-abstractions") { a.two_abstractions = true; }
         else if (f == "--workers") { a.workers = static_cast<int>(parse_long(need(i), "--workers")); ++i; }
@@ -212,41 +179,25 @@ inline Args parse_args(int argc, char** argv) {
         else { std::fprintf(stderr, "error: unknown argument %s\n", argv[i]); usage_and_exit(argv[0], 2); }
     }
     if (!have_mode) { std::fprintf(stderr, "error: --mode is required\n"); usage_and_exit(argv[0], 2); }
-    if (a.algorithm != 1 && a.algorithm != 2) { std::fprintf(stderr, "error: --algorithm must be 1 or 2\n"); std::exit(2); }
     if (!(a.eps_min > 0.0)) { std::fprintf(stderr, "error: --eps-min must be positive\n"); std::exit(2); }
     if (!a.tau_set) a.tau = a.dt;
-    if (a.iterations < 0) a.iterations = mode_default_iterations(a.mode);
     if (a.workers <= 0) {
         const unsigned hc = std::thread::hardware_concurrency();
         a.workers = static_cast<int>(hc > 1 ? hc - 1 : 1);
     }
     if (a.results_root.empty()) a.results_root = default_results_root(argv[0]);
     if (!a.phase0_tol_set) a.phase0_tol = a.tolerance;
-    // ra_discount no longer uses the Algorithm 3 lower-bound correction.
-    if (mode_discounted(a.mode)) {
-        if (a.conservative_set && a.conservative)
-            std::fprintf(stderr, "warning: --conservative is ignored for ra_discount; "
-                                 "V_lower starts at min(l_lower, r_lower) and residual stopping is used\n");
-        a.conservative = false;
-    } else if (!a.conservative_set) {
-        a.conservative = false;
-    }
     return a;
 }
 
-// Same scheme as run.py::derive_out_dir, so Python and C++ runs of the same
-// configuration land in sibling directories.
+// <results_root>/<mode>/<dynamics>_res<R>_epsmin<eps_min>_dmin<delta_min>_gamma<gamma>_dt<dt>, plus
+// _tau<tau> if --tau differs from --dt, _twoabs, and _<tag>. Runs made before 2026-11-04 also
+// carry _dmax<...> (an option of the removed conservative mode), _tau<tau> and _std.
 inline std::string derive_out_dir(const Args& a) {
     if (!a.out_dir.empty()) return a.out_dir;
-    const std::string cons = a.conservative ? "cons" : "std";
-    std::string name;
-    if (a.algorithm == 1)
-        name = "algorithm1_" + a.dynamics + "_res" + std::to_string(a.resolution) + "_dmin" + py_exp(a.tolerance, 0) +
-               "_gamma" + py_repr(a.gamma) + "_dt" + py_repr(a.dt) + "_tau" + py_repr(a.tau) + "_" + cons;
-    else
-        name = a.dynamics + "_res" + std::to_string(a.initial_resolution) + "_epsmin" + py_repr(a.eps_min) +
-               "_dmin" + py_exp(a.tolerance, 0) + "_dmax" + py_exp(a.delta_max, 0) + "_gamma" + py_repr(a.gamma) +
-               "_dt" + py_repr(a.dt) + "_tau" + py_repr(a.tau) + "_" + cons;
+    std::string name = a.dynamics + "_res" + std::to_string(a.initial_resolution) + "_epsmin" + py_repr(a.eps_min) +
+                       "_dmin" + py_exp(a.tolerance, 0) + "_gamma" + py_repr(a.gamma) + "_dt" + py_repr(a.dt);
+    if (a.tau != a.dt) name += "_tau" + py_repr(a.tau);
     if (a.two_abstractions) name += "_twoabs";
     if (!a.tag.empty()) name += "_" + a.tag;
     return a.results_root + "/" + a.mode_name + "/" + name;
@@ -259,17 +210,13 @@ inline std::string args_json(const Args& a, const std::string& indent) {
     auto b = [](bool v) { return v ? "true" : "false"; };
     std::string j = "{\n";
     j += in + "\"a_max\": " + py_repr(a.a_max) + ",\n";
-    j += in + "\"algorithm\": " + std::to_string(a.algorithm) + ",\n";
     j += in + "\"checkpoint_every\": " + std::to_string(a.checkpoint_every) + ",\n";
-    j += in + "\"conservative\": " + b(a.conservative) + ",\n";
-    j += in + "\"delta_max\": " + py_repr(a.delta_max) + ",\n";
     j += in + "\"dt\": " + py_repr(a.dt) + ",\n";
     j += in + "\"dump_csv\": " + b(a.dump_csv) + ",\n";
     j += in + "\"dynamics\": " + s(a.dynamics) + ",\n";
     j += in + "\"eps_min\": " + py_repr(a.eps_min) + ",\n";
     j += in + "\"gamma\": " + py_repr(a.gamma) + ",\n";
     j += in + "\"initial_resolution\": " + std::to_string(a.initial_resolution) + ",\n";
-    j += in + "\"iterations\": " + std::to_string(a.iterations) + ",\n";
     j += in + "\"keep_checkpoints\": " + std::to_string(a.keep_checkpoints) + ",\n";
     j += in + "\"mode\": " + s(a.mode_name) + ",\n";
     j += in + "\"no_plot\": " + b(a.no_plot) + ",\n";
@@ -280,7 +227,6 @@ inline std::string args_json(const Args& a, const std::string& indent) {
     j += in + "\"plot_freq\": " + std::to_string(a.plot_freq) + ",\n";
     j += in + "\"precompute\": " + b(a.precompute) + ",\n";
     j += in + "\"refinements\": " + std::to_string(a.refinements) + ",\n";
-    j += in + "\"resolution\": " + std::to_string(a.resolution) + ",\n";
     j += in + "\"results_root\": " + s(a.results_root) + ",\n";
     j += in + "\"resume\": " + (a.resume.empty() ? std::string("null") : s(a.resume)) + ",\n";
     j += in + "\"seq_queries\": " + b(a.seq_queries) + ",\n";

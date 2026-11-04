@@ -57,15 +57,6 @@ inline const char* mode_script(Mode m) {
 inline bool mode_discounted(Mode m) { return m == Mode::RADiscount; }
 inline bool mode_has_target(Mode m) { return m != Mode::AvoidNoDiscount; }
 
-// Default --iterations for Algorithm 1, per original script.
-inline int mode_default_iterations(Mode m) {
-    switch (m) {
-        case Mode::RANoDiscount: return 200;
-        case Mode::RADiscount: return 2000;
-        default: return 20000;
-    }
-}
-
 inline bool parse_mode(const std::string& s, Mode& out) {
     if (s == "ra_nodiscount") { out = Mode::RANoDiscount; return true; }
     if (s == "ra_discount") { out = Mode::RADiscount; return true; }

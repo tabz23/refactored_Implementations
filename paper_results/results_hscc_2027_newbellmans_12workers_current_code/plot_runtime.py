@@ -5,7 +5,9 @@ Reads phases.csv and run.log in a results directory. Iteration 1 is phase 0.
 The time is the wall time of that iteration, including its plot. The second
 figure adds the share of state-space volume classified safe or unsafe.
 
-  python plot_runtime.py --run-dir ../results_hscc_2027/ra_nodiscount/dubins_res20_..._std
+Fig. 2b of the paper (dubins20_discount), from this folder:
+
+  python plot_runtime.py --run-dir ra_discount/dubins_res20_eps0.05_dmin1e-08_dmax1e-08_gamma0.96_dt0.3_tau0.3_std
 """
 from __future__ import annotations
 

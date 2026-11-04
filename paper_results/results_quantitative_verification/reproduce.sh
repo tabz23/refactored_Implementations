@@ -27,20 +27,28 @@ OUT="$(cd "$OUT" && pwd)"
 # 1. Solver: Algorithm 1 only (--refinements 0), value tables dumped as CSV.
 "$HERE/run_alg1_res120.sh" all "$OUT" 2>&1 | tee "$OUT/solver.log"
 
+# The solver names each run folder after its options (dubins_res120_epsmin..._dt0.3); use the
+# newest one of each mode, i.e. the run just made.
+run_dir() {
+  local d
+  d="$(ls -td "$OUT/$1"/dubins_res120_epsmin*/ 2>/dev/null | head -1)"
+  [ -n "$d" ] || { echo "no solver run found in $OUT/$1" >&2; exit 1; }
+  echo "${d%/}"
+}
+RA_RUN="$(run_dir ra_discount)"
+AVOID_RUN="$(run_dir avoid_nodiscount)"
+
 # 2. Verification: seed 0, one random state per cell, 14 example paths.
-"$PY" -I "$HERE/verify_quantitative.py" \
-  "$OUT/ra_discount/dubins_res120_epsmin1e-06_dmin1e-08_dmax1e-08_gamma0.96_dt0.3_tau0.3_std" \
+"$PY" -I "$HERE/verify_quantitative.py" "$RA_RUN" \
   --out "$OUT/verification_ra" --seed 0 --points-per-cell 1 --paths 14 \
   2>&1 | tee "$OUT/verification_ra.log"
-"$PY" -I "$HERE/verify_quantitative.py" \
-  "$OUT/avoid_nodiscount/dubins_res120_epsmin1e-06_dmin1e-300_dmax1e-300_gamma1.0_dt0.3_tau0.3_std" \
+"$PY" -I "$HERE/verify_quantitative.py" "$AVOID_RUN" \
   --out "$OUT/verification_avoid" --seed 0 --points-per-cell 1 --paths 14 --horizon 1000 \
   2>&1 | tee "$OUT/verification_avoid.log"
 
 # Violation claim of Proposition 4: from one random state and the 8 vertices of every
 # cell with V_upper < 0, eight policies and an exhaustive search over all action sequences.
-"$PY" -I "$HERE/verify_violation.py" \
-  "$OUT/ra_discount/dubins_res120_epsmin1e-06_dmin1e-08_dmax1e-08_gamma0.96_dt0.3_tau0.3_std" \
+"$PY" -I "$HERE/verify_violation.py" "$RA_RUN" \
   --out "$OUT/verification_ra_violation" --seed 0 --corners --exhaustive -1 --random-seeds 3 \
   2>&1 | tee "$OUT/verification_ra_violation.log"
 

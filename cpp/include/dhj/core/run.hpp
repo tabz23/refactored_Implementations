@@ -1,4 +1,5 @@
-// run.hpp - Algorithm 1 / Algorithm 2 drivers for a concrete dynamics object.
+// run.hpp - Algorithm 2 driver for a concrete dynamics object. Algorithm 1 of the paper is
+// Algorithm 2 with --refinements 0 (value iteration on the initial grid only).
 #pragma once
 
 #include <cstdio>
@@ -36,35 +37,9 @@ inline std::string derived_json(const GronwallReachabilityAnalyzer& reach, int w
 }
 
 template <std::size_t N>
-void run_algorithm_1(const Args& args, const Dynamics<N>& dyn, const std::string& out_dir, ThreadPool& pool, Timers& timers) {
-    std::printf("%s\n", std::string(70, '=').c_str());
-    std::printf("ALGORITHM 1: Discretization Routine\n");
-    std::printf("%s\n", std::string(70, '=').c_str());
-    std::printf("Environment: %s\n", dyn.name());
-    std::printf("Initializing grid with resolution %d^%zu...\n", args.resolution, N);
-
-    const double grid0 = now_seconds();
-    CellTree<N> tree(dyn.state_bounds(), args.resolution, dyn.periodic_mask());
-    timers.grid_build += now_seconds() - grid0;
-    timers.spatial_index += tree.index_build_seconds();
-
-    GronwallReachabilityAnalyzer reach(dyn.L_f(), dyn.dt(), dyn.tau());
-    write_params(out_dir, args, dyn.describe_json("  "), derived_json(reach, args.workers, out_dir, "  "));
-    SafetyValueIterator<N> vi(args, dyn, tree, reach, out_dir, pool, timers);
-
-    const double t0 = now_seconds();
-    vi.value_iteration(args.iterations, args.tolerance, args.plot_freq, args.conservative, args.delta_max);
-    vi.print_statistics();
-    std::printf("\nALGORITHM 1 COMPLETE\n");
-    std::printf("Total time: %.2f seconds\n", now_seconds() - t0);
-    std::printf("Results saved to: %s/\n", out_dir.c_str());
-    timers.final_cells = tree.num_leaves();
-}
-
-template <std::size_t N>
 void run_algorithm_2(const Args& args, const Dynamics<N>& dyn, const std::string& out_dir, ThreadPool& pool, Timers& timers) {
     std::printf("%s\n", std::string(70, '=').c_str());
-    std::printf("ALGORITHM 2/3: Adaptive Refinement\n");
+    std::printf("ALGORITHM 2: Adaptive Refinement\n");
     std::printf("%s\n", std::string(70, '=').c_str());
     std::printf("Environment: %s\n", dyn.name());
 
@@ -119,8 +94,7 @@ int run_with_dynamics(const Args& args, const Dynamics<N>& dyn, const std::strin
     Timers timers;
     const double t0 = now_seconds();
     try {
-        if (args.algorithm == 1) run_algorithm_1<N>(args, dyn, out_dir, pool, timers);
-        else run_algorithm_2<N>(args, dyn, out_dir, pool, timers);
+        run_algorithm_2<N>(args, dyn, out_dir, pool, timers);
     } catch (const std::exception& e) {
         std::fprintf(stderr, "error: %s\n", e.what());
         return 1;

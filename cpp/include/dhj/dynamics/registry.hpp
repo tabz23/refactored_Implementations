@@ -18,7 +18,7 @@
 namespace dhj {
 
 inline std::vector<std::string> registered_dynamics() {
-    return {"dubins", "evasion", "double_integrator", "bicycle", "van_der_pol", "van_der_pol_avoid"};
+    return {"dubins", "evasion", "double_integrator", "bicycle", "van_der_pol"};
 }
 
 // Calls fn(dyn) with the dynamics selected by args.dynamics. Returns false if
@@ -49,11 +49,6 @@ bool with_dynamics(const Args& args, Fn&& fn) {
     }
     if (args.dynamics == "van_der_pol") {
         VanDerPol dyn(args.dt, args.tau);
-        fn(dyn);
-        return true;
-    }
-    if (args.dynamics == "van_der_pol_avoid") {
-        VanDerPolVelocityAvoid dyn(args.dt, args.tau);
         fn(dyn);
         return true;
     }

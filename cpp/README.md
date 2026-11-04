@@ -1,35 +1,38 @@
-# C++ implementation
+# C++ solver
 
-Header-only C++17 port of the Python package, same algorithm, same CLI, same
-output files; one binary for all modes and all dynamics. No dependencies
-beyond a C++17 compiler and pthreads.
+Header-only C++17 implementation of the paper's algorithms: value iteration on a grid
+abstraction for lower and upper bounds on the reach-avoid and avoid value functions
+(Algorithm 1), and adaptive refinement of the cells left unclassified (Algorithm 2). One
+binary covers all modes and all dynamics. It needs only a C++17 compiler, pthreads and zlib.
+All results in `../paper_results/` were computed with it.
 
 ```
 cpp/
 ├── Makefile / CMakeLists.txt
 ├── src/main.cpp                  parse args -> out dir -> run.log tee -> dispatch on --dynamics
-├── tools/compare_checkpoints.cpp cell-by-cell comparison of two checkpoints
 └── include/dhj/
     ├── core/
-    │   ├── types.hpp      State<N>, Bounds<N>, Mode, Python-style number formatting
-    │   ├── ode.hpp        Dormand-Prince 5(4), atol = rtol = 1e-12 (stands in for odeint)
-    │   ├── rtree.hpp      BoxIndex<N>: bulk-built BVH (stands in for libspatialindex)
+    │   ├── types.hpp      State<N>, Bounds<N>, Mode, number formatting
+    │   ├── ode.hpp        Dormand-Prince 5(4), atol = rtol = 1e-12
+    │   ├── rtree.hpp      BoxIndex<N>: bulk-built bounding-volume hierarchy
     │   ├── cell.hpp       Cell<N>, CellTree<N> (periodic wrap-around queries, bisection)
-    │   ├── reach.hpp      Gronwall growth factors
+    │   ├── reach.hpp      Gronwall growth factors (reach-box radius)
     │   ├── vi.hpp         SafetyValueIterator<N>: successor cache, parallel Bellman sweeps
-    │   ├── refine.hpp     AdaptiveRefinement<N>: phase loop, checkpoints, phases.csv
+    │   ├── refine.hpp     AdaptiveRefinement<N>: Algorithm 2's loop, checkpoints, phases.csv
     │   ├── checkpoint.hpp binary checkpoints, --resume auto
-    │   ├── svg.hpp        SlicePlotter<N> (SVG figure) + CSV dump
+    │   ├── svg.hpp        SlicePlotter<N> (figures) + CSV dump
     │   ├── params.hpp     params.json, phases.csv
     │   ├── log.hpp        RunLogger: tee stdout/stderr -> run.log
-    │   ├── args.hpp       CLI, output-directory naming (same scheme as run.py)
+    │   ├── args.hpp       command line, output-directory naming
     │   ├── pool.hpp       thread pool
-    │   └── run.hpp        algorithm 1 / 2 drivers
+    │   └── run.hpp        Algorithm 2 driver (Algorithm 1 = Algorithm 2 with --refinements 0)
     └── dynamics/
         ├── base.hpp              Dynamics<N> interface + Overlay/Slice + dynamics_multi_step
         ├── dubins.hpp            Dubins car (3-D, theta periodic)
-        ├── evasion.hpp           pursuit/evasion (3-D, theta periodic)
+        ├── evasion.hpp           3-D evasion (theta periodic)
         ├── double_integrator.hpp planar double integrator (4-D)
+        ├── bicycle.hpp           kinematic bicycle (5-D)
+        ├── van_der_pol.hpp       van der Pol oscillator (2-D)
         └── registry.hpp          --dynamics name -> class
 ```
 
@@ -37,47 +40,45 @@ cpp/
 
 ```bash
 make                      # -> build/dhj          (or: cmake -B build && cmake --build build)
-make tools                # -> build/dhj_compare_checkpoints
 ./build/dhj --help
 ```
 
+The run of Fig. 2 in the paper (Dubins car, γ = 0.96, 13 refinement iterations):
+
 ```bash
-./build/dhj --mode ra_nodiscount --dynamics dubins \
-    --dt 0.3 --gamma 0.9 --delta-min 1e-8 --delta-max 1e-8 \
-    --eps-min 0.0088 --initial-resolution 20 --conservative
+./build/dhj --mode ra_discount --dynamics dubins --dt 0.3 --gamma 0.96 \
+    --delta-min 1e-8 --eps-min 1e-6 --initial-resolution 20 --refinements 13
 ```
 
-Flags are identical to `python/run.py`, except that `--eps-min` (the threshold of Algorithm 2 on
-the cell radius) replaces `python/run.py`'s `--epsilon` (`--mode`, `--algorithm`, `--dynamics`,
-`--velocity`, `--a-max`, `--v-max`, `--dt`, `--tau`, `--gamma`, `--resolution`,
-`--iterations`, `--tolerance|--delta-min`, `--plot-freq`, `--eps-min`,
-`--initial-resolution`, `--refinements`, `--vi-iterations`, `--conservative`,
-`--delta-max`, `--phase0-tol`, `--workers`, `--precompute`, `--results-root`,
-`--out-dir`, `--tag`, `--no-plot`, `--dump-csv`, `--checkpoint-every`,
-`--keep-checkpoints`, `--resume`). Extra: `--seq-queries` (single-threaded
-spatial queries, the Python's structure; same results, slower).
+Main options (`--help` lists all of them):
 
-Output directory and files are as described in the top-level README. Figures are
-written as **SVG** (`value_function_phase_N_complete.svg`), one column per slice
-declared by the dynamics, three rows (upper bound, lower bound, classification),
-with colour bars and overlays. For publication-quality matplotlib figures
-identical to the Python ones, add `--dump-csv` and run
-`python ../python/plot_from_csv.py --dynamics <name> --mode <mode> value_function_phase_N.csv`.
+* `--mode`: `ra_discount` (discounted reach-avoid, γ = `--gamma`), `ra_nodiscount`
+  (reach-avoid with γ = 1, Proposition 3) or `avoid_nodiscount` (avoid with γ = 1, Section 8).
+  `--gamma` only affects `ra_discount`.
+* `--dynamics`: `dubins`, `evasion`, `double_integrator`, `bicycle`, `van_der_pol`.
+* `--dt`: the sampling time t_s. `--tau` (the time a control is held) defaults to it.
+* `--initial-resolution`: cells per dimension of the initial uniform grid.
+* `--refinements`: number of refinement iterations of Algorithm 2; 0 runs Algorithm 1 only.
+* `--eps-min`: Algorithm 2 splits a cell only while its radius (half its largest side)
+  exceeds ε_min.
+* `--delta-min` (alias `--tolerance`): value iteration stops when the sup-norm changes of
+  both bounds are below it, so it sets both stopping tolerances of Algorithm 1.
+  `--phase0-tol` sets it for the initial grid only. `--vi-iterations` caps the sweeps per
+  phase (default 100000).
+* `--two-abstractions`: upper-bound successors cover each control cell (Proposition 2);
+  the paper's experiments do not use it.
+
+Each run writes to `<--results-root>/<mode>/<dynamics>_res<R>_epsmin<ε_min>_dmin<δ>_gamma<γ>_dt<dt>`
+(plus `_tau<τ>` if `--tau` differs from `--dt`): `run.log`, `params.json`, `phases.csv`
+and one figure per phase. Figures are SVG at the default `--plot-dpi 800` and PNG at a
+smaller value (the paper's scripts use 300). `--dump-csv` also writes every cell's bounds and
+values to `value_function_phase_N.csv`.
 
 ### Checkpoints / resume
 
 `checkpoints/checkpoint_phase_NNNN.bin` is written after phase 0 and after every
 phase (`--checkpoint-every`, `--keep-checkpoints`). Resume with
-`--resume auto` or `--resume PATH` plus the same mode/dynamics/parameters. The
-format is the one used by the earlier `ComputingHJ/cpp` port, so those
-checkpoints can also be resumed and compared.
-
-```bash
-./build/dhj_compare_checkpoints A/checkpoints/checkpoint_phase_0005.bin B/checkpoints/checkpoint_phase_0005.bin
-```
-
-prints the maximum differences in bounds / V_lower / V_upper / l / r and the
-number of classification mismatches (exit 0 when within `--tol`, default 1e-12).
+`--resume auto` or `--resume PATH` plus the same mode/dynamics/parameters.
 
 ## Adding a new dynamics
 
@@ -162,10 +163,5 @@ Notes:
 * `validate()` (called at start-up) checks the periodic boxes, the plot
   dimensions and that the three Lipschitz constants were set.
 
-## Differences from the Python (all numerically negligible)
-
-* ODE: Dormand–Prince 5(4) with atol = rtol = 1e-12 instead of LSODA (`odeint`);
-  checkpoint states agree to ~1e-15, cell sets are identical in every validated run.
-* Spatial index: BVH with inclusive intersection instead of libspatialindex;
-  returns the same leaf sets.
-* Figures: SVG instead of matplotlib PNG (use `plot_from_csv.py` for the latter).
+A Python port of the original paper scripts, with which this solver was cross-checked
+during development, is kept in `../old_results/python_port/`; no result in the paper uses it.

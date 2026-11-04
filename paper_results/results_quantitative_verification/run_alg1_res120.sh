@@ -58,7 +58,7 @@ run() {
   echo "=== START ${mode} dubins $(date) ==="
   ./build/dhj_head --mode "$mode" --dynamics dubins \
     --dt 0.3 --initial-resolution 120 --eps-min 1e-6 \
-    --delta-min "$tol" --phase0-tol "$tol" --delta-max "$tol" --gamma "$gamma" \
+    --delta-min "$tol" --phase0-tol "$tol" --gamma "$gamma" \
     --refinements 0 \
     --checkpoint-every 0 --keep-checkpoints 0 --dump-csv \
     --plot-dpi 300 --workers 12 --results-root "$ROOT"

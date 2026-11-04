@@ -14,6 +14,3 @@ add_executable(dhj src/main.cpp)
 target_include_directories(dhj PRIVATE include)
 target_link_libraries(dhj PRIVATE Threads::Threads z)
 target_compile_options(dhj PRIVATE -Wall -Wextra)
-
-add_executable(dhj_compare_checkpoints tools/compare_checkpoints.cpp)
-target_include_directories(dhj_compare_checkpoints PRIVATE include)

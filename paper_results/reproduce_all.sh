@@ -6,7 +6,12 @@
 #   3. Appendix H                     results_bound_verification/ (reproduce.sh and
 #                                     unclassified_check.py)                                   about 7 minutes
 #
-#   ./reproduce_all.sh [--quick] [OUT]     OUT defaults to ./rerun_all (ignored by git)
+#   ./reproduce_all.sh [--quick] [OUT]   reruns everything into OUT (default ./rerun_all,
+#                                        ignored by git) and compares
+#   ./reproduce_all.sh --updated         reruns everything into <folder>_updated next to each
+#                                        of the three folders above and compares; used to
+#                                        refresh the stored results with the current code.
+#                                        It stops if one of these folders already exists.
 #
 # --quick is a smoke test of about 20 minutes. In step 1, vdp18, di14 and evasion12 stop
 # after 16, 10 and 9 refinements instead of 18, 14 and 12, and their phases are compared
@@ -21,25 +26,47 @@ set -euo pipefail
 
 HERE="$(cd "$(dirname "$0")" && pwd)"
 QUICK=0
-if [[ "${1:-}" == "--quick" ]]; then QUICK=1; shift; fi
-OUT="${1:-$HERE/rerun_all}"
-mkdir -p "$OUT"
-OUT="$(cd "$OUT" && pwd)"
-export PYTHON="${PYTHON:-$HOME/miniconda3/bin/python}"
-export CPP_DIR="${CPP_DIR:-$(cd "$HERE/../cpp" && pwd)}"
+UPDATED=0
+while [[ $# -gt 0 && "$1" == --* ]]; do
+  case "$1" in
+    --quick) QUICK=1 ;;
+    --updated) UPDATED=1 ;;
+    *) echo "unknown option $1; usage: $0 [--quick] [OUT]  or  $0 --updated" >&2; exit 2 ;;
+  esac
+  shift
+done
 FIGS=results_hscc_2027_newbellmans_12workers_current_code
 REGEN=regenerate_hscc_newbellmans_tol1e-15_current_code.sh
+if [ "$UPDATED" = 1 ]; then
+  if [ "$QUICK" = 1 ] || [ $# -gt 0 ]; then echo "--updated takes neither --quick nor OUT" >&2; exit 2; fi
+  FIGS_OUT="$HERE/${FIGS}_updated"
+  QV_OUT="$HERE/results_quantitative_verification_updated"
+  BV_OUT="$HERE/results_bound_verification_updated"
+  for d in "$FIGS_OUT" "$QV_OUT" "$BV_OUT"; do
+    [ ! -e "$d" ] || { echo "$d already exists; move or delete it first" >&2; exit 2; }
+  done
+else
+  OUT="${1:-$HERE/rerun_all}"
+  mkdir -p "$OUT"
+  OUT="$(cd "$OUT" && pwd)"
+  FIGS_OUT="$OUT/figs"
+  QV_OUT="$OUT/quantitative_verification"
+  BV_OUT="$OUT/bound_verification"
+fi
+export PYTHON="${PYTHON:-$HOME/miniconda3/bin/python}"
+export CPP_DIR="${CPP_DIR:-$(cd "$HERE/../cpp" && pwd)}"
 status=0
 start=$(date +%s)
-echo "reproduce_all: quick=$QUICK, output in $OUT, solver sources in $CPP_DIR"
+echo "reproduce_all: quick=$QUICK, updated=$UPDATED, solver sources in $CPP_DIR"
+echo "  outputs: $FIGS_OUT, $QV_OUT, $BV_OUT"
 
 # ---------------------------------------------------------------- 1. Figs. 2-5
 echo "=== 1. Figs. 2-5 ($(date)) ==="
-mkdir -p "$OUT/figs"
-cp "$HERE/$FIGS/$REGEN" "$OUT/figs/"
-QUICK=$QUICK "$OUT/figs/$REGEN" > "$OUT/figs/regenerate.log" 2>&1 || {
-  echo "the step-1 script failed; see $OUT/figs/regenerate.log"; exit 1; }
-"$PYTHON" -I - "$HERE/$FIGS" "$OUT/figs" > "$OUT/figs/comparison.txt" <<'EOF' || status=1
+mkdir -p "$FIGS_OUT"
+cp "$HERE/$FIGS/$REGEN" "$HERE/$FIGS/plot_runtime.py" "$FIGS_OUT/"
+QUICK=$QUICK "$FIGS_OUT/$REGEN" > "$FIGS_OUT/regenerate.log" 2>&1 || {
+  echo "the step-1 script failed; see $FIGS_OUT/regenerate.log"; exit 1; }
+"$PYTHON" -I - "$HERE/$FIGS" "$FIGS_OUT" > "$FIGS_OUT/comparison.txt" <<'EOF' || status=1
 """Compare each new run with the stored run of the same case, phase by phase."""
 import csv
 import re
@@ -51,8 +78,10 @@ MODES = ("ra_nodiscount", "ra_discount", "avoid_nodiscount")
 
 
 def key(name):
-    # Stored folders carry "_eps<--epsilon>", new ones "_epsmin<--eps-min>".
-    return re.sub(r"_eps(min)?[^_]*", "", name)
+    # Runs are paired on the options that affect the results. Stored folders also carry
+    # "_eps<--epsilon>", "_dmax<...>", "_tau<tau>" and "_std"; new ones carry "_epsmin<--eps-min>",
+    # and "_tau<tau>" only if it differs from --dt. None of these changes a result here.
+    return re.sub(r"_eps(min)?[^_]*|_dmax[^_]*|_tau[^_]*|_(std|cons)$", "", name)
 
 
 def blocks(log):
@@ -95,7 +124,7 @@ for m in MODES:
         cols = ("n_leaves", "boundary_cells", "refined_parents", "vi_iterations", "converged")
         ok_csv = (len(nr) <= len(rr) and all(a[c] == b[c] for a, b in zip(nr, rr) for c in cols)
                   and all(a["refinable_cells"] == b["refinable_cells"] for a, b in zip(nr[:-1], rr)))
-        pngs = sorted(new.glob("*.png"))
+        pngs = sorted(new.glob("value_function_phase_*.png"))
         bad_png = [p.name for p in pngs if not (ref / p.name).exists() or not same_png(p, ref / p.name)]
         t = re.search(r"Total time: ([\d.]+)", (new / "run.log").read_text())
         ok = ok_cls and ok_csv and not bad_png
@@ -111,27 +140,34 @@ for m in MODES:
             print("    phases.csv differs")
 sys.exit(1 if bad else 0)
 EOF
-cat "$OUT/figs/comparison.txt"
+cat "$FIGS_OUT/comparison.txt"
+if [ "$UPDATED" = 1 ]; then
+  # Fig. 2b (runtime per refinement iteration) from the new dubins20_discount run.
+  run="$(ls -d "$FIGS_OUT"/ra_discount/dubins_res20_*/ | head -1)"
+  "$PYTHON" -I "$FIGS_OUT/plot_runtime.py" --run-dir "$run" > "$FIGS_OUT/plot_runtime.log" 2>&1 &&
+    echo "Fig. 2b redrawn into ${run#"$HERE"/}" || echo "plot_runtime.py failed; see $FIGS_OUT/plot_runtime.log"
+fi
 
 # ---------------------------------------------------------------- 2. Section 9.2.5
 echo "=== 2. Section 9.2.5 ($(date)) ==="
-"$HERE/results_quantitative_verification/reproduce.sh" "$OUT/quantitative_verification" \
-  > "$OUT/quantitative_verification.log" 2>&1 || status=1
-grep -E "^verification_[a-z_]+: " "$OUT/quantitative_verification.log" || status=1
-[ "$(grep -c "identical to the reference results" "$OUT/quantitative_verification.log")" = 3 ] || status=1
+mkdir -p "$QV_OUT"
+# The value tables of the solver runs are hundreds of MB; keep them out of git as in the stored folder.
+cp "$HERE/results_quantitative_verification/.gitignore" "$QV_OUT/"
+"$HERE/results_quantitative_verification/reproduce.sh" "$QV_OUT" > "$QV_OUT/reproduce.log" 2>&1 || status=1
+grep -E "^verification_[a-z_]+: " "$QV_OUT/reproduce.log" || status=1
+[ "$(grep -c "identical to the reference results" "$QV_OUT/reproduce.log")" = 3 ] || status=1
 
 # ---------------------------------------------------------------- 3. Appendix H
 echo "=== 3. Appendix H ($(date)) ==="
-"$HERE/results_bound_verification/reproduce.sh" "$OUT/bound_verification" \
-  > "$OUT/bound_verification.log" 2>&1 || status=1
+mkdir -p "$BV_OUT"
+"$HERE/results_bound_verification/reproduce.sh" "$BV_OUT" > "$BV_OUT/reproduce.log" 2>&1 || status=1
 printf 'error bounds (Theorem 3): '
-tail -1 "$OUT/bound_verification.log"
-grep -q "^identical to the reference results" "$OUT/bound_verification.log" || status=1
+tail -1 "$BV_OUT/reproduce.log"
+grep -q "^identical to the reference results" "$BV_OUT/reproduce.log" || status=1
 "$PYTHON" -I "$HERE/results_bound_verification/unclassified_check.py" \
-  > "$OUT/bound_verification/unclassified_check.log" 2> "$OUT/bound_verification/unclassified_check.err" || status=1
+  > "$BV_OUT/unclassified_check.log" 2> "$BV_OUT/unclassified_check.err" || status=1
 printf 'unclassified cells (Theorem 3): '
-"$PYTHON" -I - "$HERE/results_bound_verification/unclassified_check.log" \
-  "$OUT/bound_verification/unclassified_check.log" <<'EOF' || status=1
+"$PYTHON" -I - "$HERE/results_bound_verification/unclassified_check.log" "$BV_OUT/unclassified_check.log" <<'EOF' || status=1
 import json
 import sys
 

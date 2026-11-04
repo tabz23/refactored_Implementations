@@ -35,9 +35,8 @@ int main(int argc, char** argv) {
         RunLogger logger(out_dir + "/run.log", argc, argv);
         std::printf("DISCRETE HJ REACH-AVOID SOLVER (C++)\n");
         std::printf("Mode: %s (%s.py semantics)\n", args.mode_name.c_str(), mode_script(args.mode));
-        std::printf("Algorithm: %d, Workers: %d\n", args.algorithm, args.workers);
+        std::printf("Workers: %d\n", args.workers);
         std::printf("Output directory: %s\n", out_dir.c_str());
-        std::printf("Conservative mode: %s\n", py_bool(args.conservative).c_str());
 
         bool found = false;
         try {

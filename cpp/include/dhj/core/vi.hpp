@@ -150,27 +150,19 @@ public:
 
     // ---------------------------------------------------------------- VI --
 
-    // Algorithm 1 / phase 0. The refinement loop passes the same residual
-    // tolerance as later phases (--delta-min), unless --phase0-tol is set.
-    VIResult value_iteration(int max_iterations, double convergence_tol, int plot_freq, bool conservative_mode,
-                             double delta_max) {
+    // Algorithm 1, i.e. phase 0 of Algorithm 2 on the initial grid. The refinement loop
+    // passes the same residual tolerance as later phases (--delta-min), unless --phase0-tol is set.
+    VIResult value_iteration(int max_iterations, double convergence_tol, int plot_freq) {
         initialize_cells();
         if (successor_cache_empty()) {
             std::printf("  Precomputing successor sets...\n");
             precompute_all_successors();
         }
         std::printf("\nStarting OPTIMIZED PARALLEL value iteration (max %d iterations)...\n", max_iterations);
-        conservative_mode = use_lower_correction(conservative_mode);
-        std::printf("Conservative mode: %s\n", py_bool(conservative_mode).c_str());
-        if (conservative_mode) {
-            std::printf("Conservative tolerance delta_max: %g\n", delta_max);
-            std::printf("Conservative margin will be: eps_cons = (gamma * delta_actual) / (1 - gamma)\n");
-        } else {
-            std::printf("Convergence tolerance: %g\n", convergence_tol);
-        }
+        std::printf("Convergence tolerance: %g\n", convergence_tol);
         std::printf("Number of cells: %zu\n", tree_.num_leaves());
 
-        VIResult res = run_sweeps(max_iterations, convergence_tol, conservative_mode, delta_max, plot_freq, false);
+        VIResult res = run_sweeps(max_iterations, convergence_tol, plot_freq, false);
         emit_output(output_dir_ + "/value_function_phase_0_complete.png", res.iterations, 0);
         std::printf("\nValue iteration completed in %d iterations\n", res.iterations);
         return res;
@@ -179,7 +171,7 @@ public:
     // Local VI after a refinement: reinitialise every leaf, refresh the
     // successor cache, sweep.
     VIResult local_value_iteration(const std::vector<std::uint32_t>& new_cells, int max_iterations,
-                                   double convergence_tol, bool conservative_mode, double delta_max) {
+                                   double convergence_tol) {
         const std::size_t n = tree_.num_leaves();
         const char* init_kind = mode_discounted(mode_) ? "V_lower = min(l, r), V_upper = l"
                                 : mode_ == Mode::AvoidNoDiscount ? "V = l"
@@ -189,11 +181,8 @@ public:
         initialize_cells();
         const double reinit = now_seconds() - t0;
         std::printf("   Reinitialized %zu cells in %.2fs (%.1f cells/s)\n", n, reinit, reinit > 0 ? n / reinit : 0.0);
-        conservative_mode = use_lower_correction(conservative_mode);
         std::printf("  Local VI: updating all %zu cells\n", n);
-        std::printf("    Conservative mode: %s\n", py_bool(conservative_mode).c_str());
-        if (conservative_mode) std::printf("    delta_max: %g\n", delta_max);
-        else std::printf("    Convergence tolerance: %g\n", convergence_tol);
+        std::printf("    Convergence tolerance: %g\n", convergence_tol);
         std::printf("    Max iterations: %d\n", max_iterations);
         if (n == 0) { std::printf("    No cells to update!\n"); return VIResult{}; }
         if (!new_cells.empty()) {
@@ -204,7 +193,7 @@ public:
             std::printf("    Successor cache empty - computing for all %zu cells...\n", n);
             compute_successors(tree_.leaves());
         }
-        VIResult res = run_sweeps(max_iterations, convergence_tol, conservative_mode, delta_max, 0, true);
+        VIResult res = run_sweeps(max_iterations, convergence_tol, 0, true);
         std::printf("    Local VI completed in %d iterations\n", res.iterations);
         if (!res.conv_upper.empty()) {
             std::printf("    Final convergence values:\n");
@@ -466,8 +455,7 @@ private:
         return g;
     }
 
-    VIResult run_sweeps(int max_iterations, double convergence_tol, bool conservative_mode, double delta_max,
-                        int plot_freq, bool local) {
+    VIResult run_sweeps(int max_iterations, double convergence_tol, int plot_freq, bool local) {
         const double t_start = now_seconds();
         const auto& leaves = tree_.leaves();
         const std::size_t n = leaves.size();
@@ -551,25 +539,16 @@ private:
             ++timers_.vi_iterations;
 
             const char* pad = local ? "    Local Iteration" : "Iteration";
-            if (conservative_mode) {
-                std::printf("%s %3d: ||V_upper^k - V_upper^k-1||_inf = %12.20f, ||V_lower^k - V_lower^k-1||_inf = %12.20f, delta^k = %12.20f\n",
-                            pad, iteration + 1, diff_upper, diff_lower, delta_k);
-                if (delta_k >= -delta_max && diff_upper < convergence_tol) {
-                    apply_conservative_correction(Vl, n, delta_k, convergence_tol, diff_upper);
-                    converged = true;
-                }
-            } else {
-                std::printf("%s %3d: ||V_upper^k - V_upper^k-1||_inf = %12.20f, ||V_lower^k - V_lower^k-1||_inf = %12.20f\n",
-                            pad, iteration + 1, diff_upper, diff_lower);
-                if (diff_upper < convergence_tol && diff_lower < convergence_tol) {
-                    std::printf("\n%s\n", std::string(50, '=').c_str());
-                    std::printf(" %s CONVERGENCE ACHIEVED\n", local ? "LOCAL" : "STANDARD");
-                    std::printf("%s\n", std::string(50, '=').c_str());
-                    std::printf("  ||V_upper^k - V_upper^k-1||_inf = %.20e < tolerance = %g\n", diff_upper, convergence_tol);
-                    std::printf("  ||V_lower^k - V_lower^k-1||_inf = %.20e < tolerance = %g\n", diff_lower, convergence_tol);
-                    std::printf("  Converged in %d iterations\n", iteration + 1);
-                    converged = true;
-                }
+            std::printf("%s %3d: ||V_upper^k - V_upper^k-1||_inf = %12.20f, ||V_lower^k - V_lower^k-1||_inf = %12.20f\n",
+                        pad, iteration + 1, diff_upper, diff_lower);
+            if (diff_upper < convergence_tol && diff_lower < convergence_tol) {
+                std::printf("\n%s\n", std::string(50, '=').c_str());
+                std::printf(" %s CONVERGENCE ACHIEVED\n", local ? "LOCAL" : "STANDARD");
+                std::printf("%s\n", std::string(50, '=').c_str());
+                std::printf("  ||V_upper^k - V_upper^k-1||_inf = %.20e < tolerance = %g\n", diff_upper, convergence_tol);
+                std::printf("  ||V_lower^k - V_lower^k-1||_inf = %.20e < tolerance = %g\n", diff_lower, convergence_tol);
+                std::printf("  Converged in %d iterations\n", iteration + 1);
+                converged = true;
             }
             if (converged) { ++iteration; break; }
 
@@ -587,14 +566,6 @@ private:
             std::printf("\n%s\n", std::string(50, '!').c_str());
             std::printf("  MAXIMUM ITERATIONS REACHED: %d\n", max_iterations);
             std::printf("%s\n", std::string(50, '!').c_str());
-            if (conservative_mode) {
-                std::printf("  Final delta^k = %.20e\n", delta_k);
-                const double eps_cons = (gamma * std::fabs(delta_k)) / (1.0 - gamma);
-                std::printf("  Using delta_actual = %.10e for correction\n", std::fabs(delta_k));
-                std::printf("  Applying conservative margin: eps_cons = %.10e\n", eps_cons);
-                for (std::size_t i = 0; i < n; ++i) Vl[i] -= eps_cons;
-                std::printf("   Conservative correction applied to %zu cells\n", n);
-            }
             std::printf("  Final ||V_upper^k - V_upper^k-1||_inf = %.20e\n", diff_upper);
             std::printf("  Final ||V_lower^k - V_lower^k-1||_inf = %.20e\n", diff_lower);
         }
@@ -607,43 +578,6 @@ private:
         res.converged = converged;
         timers_.value_iteration += now_seconds() - t_start;
         return res;
-    }
-
-    // Discounted lower iterates increase from min(l, r), which is already a
-    // lower bound of every Bellman image. Residual stopping is sound, so the
-    // Algorithm 3 margin is not subtracted from V_lower.
-    bool use_lower_correction(bool conservative_mode) const {
-        if (mode_discounted(mode_) && conservative_mode) {
-            std::printf("Discounted V_lower starts at min(l_lower, r_lower); residual stopping, no lower-bound correction.\n");
-            return false;
-        }
-        return conservative_mode;
-    }
-
-    // Algorithm 3: V_lower <- V_lower - eps_cons - eps_machine.
-    void apply_conservative_correction(std::vector<double>& Vl, std::size_t n, double delta_k, double convergence_tol,
-                                       double diff_upper) {
-        std::printf("\n%s\n", std::string(60, '=').c_str());
-        std::printf(" CONSERVATIVE STOPPING CONDITION MET (Algorithm 3)\n");
-        std::printf("%s\n", std::string(60, '=').c_str());
-        std::printf("  delta^k = %.10e >= -delta_max\n", delta_k);
-        std::printf("  ||V_upper^k - V_upper^k-1||_inf = %.10e < %g\n", diff_upper, convergence_tol);
-        const double delta_to_use = std::fabs(delta_k);
-        const double eps_cons = (gamma_ * delta_to_use) / (1.0 - gamma_);
-        std::printf("  eps_cons = (%g * %.10e) / %g = %.10e\n", gamma_, delta_to_use, 1.0 - gamma_, eps_cons);
-        std::printf("  Correcting V_lower for %zu cells: V_lower <- V_lower - eps_cons - eps_machine\n", n);
-        const double eps_machine = DBL_EPSILON;
-        std::size_t near_zero = 0, flipped = 0;
-        for (std::size_t i = 0; i < n; ++i) {
-            const double old = Vl[i];
-            Vl[i] = old - eps_cons - eps_machine;
-            if (std::fabs(old - eps_cons) < eps_machine) ++near_zero;
-            if (old - eps_cons > 0.0 && Vl[i] <= 0.0) ++flipped;
-        }
-        std::printf("   Conservative correction applied successfully\n");
-        std::printf("  Machine epsilon eps_machine = %.3e\n", eps_machine);
-        if (near_zero) std::printf("    %zu cells experienced near-cancellation\n", near_zero);
-        if (flipped) std::printf("    %zu cells changed from (+) to (<=0) due to eps_machine\n", flipped);
     }
 
     void write_back(const std::vector<double>& Vu, const std::vector<double>& Vl, std::size_t n) {

@@ -6,14 +6,15 @@ Nonlinear Control Systems*.
 This folder (`paper_results/`) holds every result in the paper that this code produces, in
 three subfolders. Each one has a script that regenerates it from scratch, and
 `reproduce_all.sh` runs all three and compares the new results with the stored ones. The solver
-source is in `../cpp/` and the plotting code in `../python/`. Earlier experiments that the paper
-does not use are in `../old_results/`. Result numbers below follow the paper as of 2026-11-03.
+source is in `../cpp/`. Earlier experiments and code that the paper does not use are in
+`../old_results/`. Result numbers below follow the paper as of 2026-11-03.
 LaTeX labels are given too, because numbering can change.
 
 ```bash
 cd paper_results
 ./reproduce_all.sh            # everything, about 1 h 10 min; writes ./rerun_all and compares
 ./reproduce_all.sh --quick    # smoke test, about 20 min (fewer refinements in three cases)
+./reproduce_all.sh --updated  # everything, into <folder>_updated next to the stored folders
 ```
 
 Each comparison prints "same" or "identical", and the last line says whether everything
@@ -75,9 +76,9 @@ machine.
 ```bash
 NEW=rerun_paper_results
 REF=results_hscc_2027_newbellmans_12workers_current_code
-# Stored folders carry "_eps<--epsilon>" (the option they were made with), new ones
-# "_epsmin<--eps-min>"; runs are paired on the rest of the folder name.
-key() { sed -E 's/_eps(min)?[^_]*//' <<< "$1"; }
+# Runs are paired on the options that affect the results. Stored folders also carry
+# "_eps<--epsilon>", "_dmax<...>", "_tau<tau>" and "_std"; new ones "_epsmin<--eps-min>".
+key() { sed -E 's/_eps(min)?[^_]*//; s/_dmax[^_]*//; s/_tau[^_]*//; s/_(std|cons)$//' <<< "$1"; }
 for d in "$NEW"/{ra_nodiscount,ra_discount,avoid_nodiscount}/*/; do
   run="${d#"$NEW"/}"; run="${run%/}"; ref=""
   for r in "$REF"/{ra_nodiscount,ra_discount,avoid_nodiscount}/*/; do
@@ -150,15 +151,18 @@ Notes on the arguments:
     State` shows `Still refinable: 0`, and the last row of `phases.csv` has `refinable_cells`
     0. With `--eps-min 1e-6` both show the full count. This changes no result.
   * Folder names contain `eps<--epsilon>` in the stored runs and `epsmin<--eps-min>` in new
-    ones.
+    ones. The stored names also end in `_dmax<…>_gamma<γ>_dt<dt>_tau<τ>_std`; new ones end in
+    `_gamma<γ>_dt<dt>` (see "Changes after the paper run").
 * **Stopping tolerances:**
-  * Discounted runs stop when both sup-norm changes are at most δ\* = 1e-8, as in the paper.
+  * Discounted runs stop when both sup-norm changes are below δ\* = 1e-8 (the paper says at
+    most δ\*; the two differ only if a change equals δ\* exactly).
   * The γ = 1 runs use 1e-15. The paper says they stop when the change is 0. The changes that
     remain at that point are rounding effects of about 1e-16.
   * Both bounds stop on `--delta-min`, so it plays the role of both δ̲\* and δ̄\* of the paper.
-  * `--delta-max` is used only by the "conservative" mode, which no case here uses
-    (`Conservative mode: False` in every `run.log`). The scripts set it equal to
-    `--delta-min`, and it appears only in the folder name.
+  * The stored runs were made by a solver that still had `--delta-max`, an option of the
+    "conservative" stopping mode of an earlier version of the paper. No case used that mode
+    (`Conservative mode: False` in every stored `run.log`), and `--delta-max` appears only in
+    the stored folder names. Both were removed on 2026-11-04.
   * Value iteration met the tolerance in every phase of every case, after at most 1,180 sweeps
     (`vdp18`). So the cap on sweeps per phase, `--vi-iterations` (default 100000; the scripts
     do not pass it), was never reached.
@@ -212,7 +216,8 @@ Values from the run used in the paper (2026-10-26, solver commit `8751e29`):
 | Fig. 3(d) | `bicycle8` | 63.74 s | 11.5% |
 
 **Fig. 2b caveat:** it plots per-iteration runtimes, cell counts and the classified volume. It
-was drawn with `../python/plot_runtime.py` from an earlier run of `dubins20_discount`.
+was drawn with `plot_runtime.py` (in the Figs. 2–5 folder) from an earlier run of
+`dubins20_discount`.
 * The cell counts and classified volumes are identical to this run's.
 * The per-iteration runtimes agree within about 10%. This run takes 0.52 s for iteration 1 and
   14.95 s for iteration 14 (`time_phase_s` in `phases.csv`).
@@ -436,13 +441,31 @@ None of these is stated in the paper.
 
 ### Changes after the paper run
 
+* **2026-11-04, unused code removed:** none of it was used by any result of the paper.
+  * The "conservative" stopping mode of an earlier version of the paper (stop on δ_max, then
+    subtract γ|δ|/(1−γ) from V_lower), with `--conservative`, `--no-conservative` and
+    `--delta-max`.
+  * The separate fixed-grid driver (`--algorithm 1`, `--resolution`, `--iterations`). The
+    paper's Algorithm 1 is Algorithm 2 with `--refinements 0`, as the scripts always ran it.
+  * The `van_der_pol_avoid` dynamics, which the paper does not use.
+  * The Python port of the original paper scripts and the checkpoint-comparison tool, used
+    only to cross-check the C++ solver during development, moved to
+    `../old_results/python_port/` and `../old_results/cpp_tools/`. `plot_runtime.py` (Fig. 2b)
+    moved into the Figs. 2–5 folder.
+  * New run folders are named `<dynamics>_res<R>_epsmin<ε_min>_dmin<δ>_gamma<γ>_dt<dt>`, plus
+    `_tau<τ>` only if `--tau` differs from `--dt`. The comparison in `reproduce_all.sh` pairs
+    them with the stored folders on these fields.
+  * Check: on Dubins runs of all three modes (12³ grid, 3 refinements), the solver before and
+    after the removal gives identical classifications and `phases.csv`, and byte-identical
+    PNGs.
+
 * **2026-11-04, folder layout and argument defaults:**
   * The three result folders moved into `paper_results/`, with this README (formerly
     `README_paper_results.md` at the top level) and the new `reproduce_all.sh`. Every other
     results folder moved to `../old_results/`. The scripts now find `cpp/` by searching upward
     from their own folder (or use `CPP_DIR`), so they work at this depth.
   * `--tau` now defaults to `--dt` (it was 1.0), and `--vi-iterations` to 100000 (it was
-    20000), in the C++ solver (`args.hpp`) and in `python/run.py`. The scripts no longer pass
+    20000), in the C++ solver (`args.hpp`) and in the Python port. The scripts no longer pass
     `--tau`, which always equalled `--dt`, or `--vi-iterations` (100033, 20000 or 1000033),
     which no phase reached. Results are unchanged; `params.json` of new runs records
     `vi_iterations` 100000.
