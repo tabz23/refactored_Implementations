@@ -40,8 +40,8 @@ Reproducing the paper's dubins run (parameters from `results_all/.../logs359053.
 
 ```bash
 python run.py --mode ra_nodiscount --dynamics dubins --algorithm 2 \
-    --dt 0.3 --tau 0.3 --gamma 0.9 --delta-min 1e-8 --delta-max 1e-8 \
-    --epsilon 0.05 --initial-resolution 20 --vi-iterations 100033 --conservative
+    --dt 0.3 --gamma 0.9 --delta-min 1e-8 --delta-max 1e-8 \
+    --epsilon 0.05 --initial-resolution 20 --conservative
 ```
 
 Other modes / systems: `--mode ra_discount --gamma 0.96`, `--mode avoid_nodiscount`,

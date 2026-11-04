@@ -9,8 +9,10 @@
 #          iteration stops only when nothing changes, as in the paper.
 #
 # Usage: run_alg1_res120.sh [ra|avoid|all] [ROOT]
-# Results go to ROOT/<mode>/<run>; ROOT defaults to ../results_quantitative_verification.
+# Results go to ROOT/<mode>/<run>; ROOT defaults to the folder of this script.
 #
+# The solver sources are the nearest cpp/ above this folder
+# (refactored_Implementations/cpp); set CPP_DIR to use another copy.
 # The solver is compiled from the current sources into build/dhj_head, so the
 # existing build/dhj is left untouched. ROOT/provenance.txt records the commit,
 # the compiler and the binary hash (the binary embeds its build time, so the hash
@@ -23,8 +25,17 @@ case "$PART" in
   ra|avoid|all) ;;
   *) echo "usage: $0 [ra|avoid|all] [ROOT]" >&2; exit 2 ;;
 esac
-REPO="$(cd "$(dirname "$0")/.." && pwd)"
-ROOT="${2:-$REPO/results_quantitative_verification}"
+HERE="$(cd "$(dirname "$0")" && pwd)"
+if [ -n "${CPP_DIR:-}" ]; then
+  REPO="$(cd "$CPP_DIR/.." && pwd)"
+else
+  REPO="$HERE"
+  while [ ! -f "$REPO/cpp/src/main.cpp" ]; do
+    [ "$REPO" = / ] && { echo "cpp/src/main.cpp not found above $HERE; set CPP_DIR" >&2; exit 1; }
+    REPO="$(dirname "$REPO")"
+  done
+fi
+ROOT="${2:-$HERE}"
 mkdir -p "$ROOT"
 
 cd "$REPO/cpp"
@@ -46,9 +57,9 @@ run() {
   local mode="$1" gamma="$2" tol="$3"
   echo "=== START ${mode} dubins $(date) ==="
   ./build/dhj_head --mode "$mode" --dynamics dubins \
-    --dt 0.3 --tau 0.3 --initial-resolution 120 --eps-min 1e-6 \
+    --dt 0.3 --initial-resolution 120 --eps-min 1e-6 \
     --delta-min "$tol" --phase0-tol "$tol" --delta-max "$tol" --gamma "$gamma" \
-    --refinements 0 --vi-iterations 100033 \
+    --refinements 0 \
     --checkpoint-every 0 --keep-checkpoints 0 --dump-csv \
     --plot-dpi 300 --workers 12 --results-root "$ROOT"
   echo "=== END ${mode} dubins $(date) ==="

@@ -16,14 +16,29 @@
 # --eps-min 1e-6 (Algorithm 2's threshold on the cell radius) is far below every
 # cell radius these runs refine, so it never stops a refinement; each case ends at
 # its --refinements limit. (The stored outputs were made with the earlier
-# --epsilon option, which also never stopped a refinement; see README_paper_results.md.)
+# --epsilon option, which also never stopped a refinement; see paper_results/README.md.)
+#
+# QUICK=1 runs a smoke test: the three slowest cases stop after fewer refinements
+# (vdp18 after 16, di14 after 10, evasion12 after 9), so every case takes at most a few
+# minutes. Their phases are the first phases of the full runs.
 set -euo pipefail
 
 WORKERS=12
-# Results go into the folder that holds this script; the solver sources are in
-# ../cpp, so keep the script in a folder directly inside refactored_Implementations/.
+QUICK="${QUICK:-0}"
+refinements() { if [ "$QUICK" = 1 ]; then echo "$2"; else echo "$1"; fi; }
+# Results go into the folder that holds this script. The solver sources are the
+# nearest cpp/ above it (refactored_Implementations/cpp); set CPP_DIR to use another copy.
 ROOT="$(cd "$(dirname "$0")" && pwd)"
-cd "$ROOT/../cpp"
+CPP="${CPP_DIR:-}"
+if [ -z "$CPP" ]; then
+  d="$ROOT"
+  while [ ! -f "$d/cpp/src/main.cpp" ]; do
+    [ "$d" = / ] && { echo "cpp/src/main.cpp not found above $ROOT; set CPP_DIR" >&2; exit 1; }
+    d="$(dirname "$d")"
+  done
+  CPP="$d/cpp"
+fi
+cd "$CPP"
 mkdir -p "$ROOT"
 
 # Rebuild the solver from the current source, so every run uses the latest code.
@@ -33,6 +48,7 @@ rm -f "$ROOT/solver_changes.diff"
 git diff --quiet -- . || git diff -- . > "$ROOT/solver_changes.diff"
 {
   echo "date: $(date)"
+  echo "quick: $QUICK"
   echo "git commit: $(git rev-parse HEAD)"
   echo "uncommitted solver changes: $(git status --short -- . | tr '\n' ' ')"
   echo "compiler: $(c++ --version | head -1)"
@@ -63,50 +79,50 @@ run() {
 
 run dubins120_std \
   --mode ra_nodiscount --dynamics dubins \
-  --dt 0.3 --tau 0.3 --initial-resolution 120 --eps-min 1e-6 \
+  --dt 0.3 --initial-resolution 120 --eps-min 1e-6 \
   --delta-min 1e-15 --delta-max 1e-15 --gamma 0.96 \
-  --refinements 0 --vi-iterations 100033
+  --refinements 0
 
 run dubins120_discount \
   --mode ra_discount --dynamics dubins \
-  --dt 0.3 --tau 0.3 --initial-resolution 120 --eps-min 1e-6 \
+  --dt 0.3 --initial-resolution 120 --eps-min 1e-6 \
   --delta-min 1e-8 --delta-max 1e-8 --gamma 0.96 \
-  --refinements 0 --vi-iterations 100033
+  --refinements 0
 
 run avoid80 \
   --mode avoid_nodiscount --dynamics dubins \
-  --dt 0.3 --tau 0.3 --initial-resolution 80 --eps-min 1e-6 \
+  --dt 0.3 --initial-resolution 80 --eps-min 1e-6 \
   --delta-min 1e-15 --delta-max 1e-15 --gamma 0.9 \
-  --refinements 6 --vi-iterations 20000
+  --refinements 6
 
 run dubins20_discount \
   --mode ra_discount --dynamics dubins \
-  --dt 0.3 --tau 0.3 --initial-resolution 20 --eps-min 1e-6 \
+  --dt 0.3 --initial-resolution 20 --eps-min 1e-6 \
   --delta-min 1e-8 --delta-max 1e-8 --gamma 0.96 \
-  --refinements 13 --vi-iterations 100033
+  --refinements 13
 
 run bicycle8 \
   --mode ra_nodiscount --dynamics bicycle --a-max 0.2 --v-max 1 \
-  --dt 0.3 --tau 0.3 --initial-resolution 5 --eps-min 1e-6 \
+  --dt 0.3 --initial-resolution 5 --eps-min 1e-6 \
   --delta-min 1e-15 --delta-max 1e-15 --gamma 0.9 \
-  --refinements 8 --vi-iterations 20000
+  --refinements 8
 
 run vdp18 \
   --mode ra_nodiscount --dynamics van_der_pol \
-  --dt 0.01 --tau 0.01 --initial-resolution 40 --eps-min 1e-6 \
+  --dt 0.01 --initial-resolution 40 --eps-min 1e-6 \
   --delta-min 1e-15 --delta-max 1e-15 --gamma 0.96 \
-  --refinements 18 --vi-iterations 20000
+  --refinements "$(refinements 18 16)"
 
 run di14 \
   --mode ra_nodiscount --dynamics double_integrator \
-  --dt 0.3 --tau 0.3 --initial-resolution 10 --eps-min 1e-6 \
+  --dt 0.3 --initial-resolution 10 --eps-min 1e-6 \
   --delta-min 1e-15 --delta-max 1e-15 --gamma 0.9 \
-  --refinements 14 --vi-iterations 20000
+  --refinements "$(refinements 14 10)"
 
 run evasion12 \
   --mode ra_nodiscount --dynamics evasion \
-  --dt 0.3 --tau 0.3 --initial-resolution 30 --eps-min 1e-6 \
+  --dt 0.3 --initial-resolution 30 --eps-min 1e-6 \
   --delta-min 1e-15 --delta-max 1e-15 --gamma 0.96 \
-  --refinements 12 --vi-iterations 1000033
+  --refinements "$(refinements 12 9)"
 
 echo "=== ALL DONE $(date) ==="

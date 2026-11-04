@@ -43,8 +43,8 @@ make tools                # -> build/dhj_compare_checkpoints
 
 ```bash
 ./build/dhj --mode ra_nodiscount --dynamics dubins \
-    --dt 0.3 --tau 0.3 --gamma 0.9 --delta-min 1e-8 --delta-max 1e-8 \
-    --eps-min 0.0088 --initial-resolution 20 --vi-iterations 100033 --conservative
+    --dt 0.3 --gamma 0.9 --delta-min 1e-8 --delta-max 1e-8 \
+    --eps-min 0.0088 --initial-resolution 20 --conservative
 ```
 
 Flags are identical to `python/run.py`, except that `--eps-min` (the threshold of Algorithm 2 on

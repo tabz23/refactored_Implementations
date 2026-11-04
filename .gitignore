@@ -4,12 +4,16 @@
 *.JPEG
 *.svg
 *.SVG
-!results_hscc_2027_newbellmans_12workers/ra_discount/dubins_res20_eps0.05_dmin1e-08_dmax1e-08_gamma0.96_dt0.3_tau0.3_cons_for_paper/*.svg
-!results_hscc_2027_newbellmans_12workers/ra_discount/dubins_res20_eps0.05_dmin1e-08_dmax1e-08_gamma0.96_dt0.3_tau0.3_cons_for_paper/*.SVG
+!old_results/results_hscc_2027_newbellmans_12workers/ra_discount/dubins_res20_eps0.05_dmin1e-08_dmax1e-08_gamma0.96_dt0.3_tau0.3_cons_for_paper/*.svg
+!old_results/results_hscc_2027_newbellmans_12workers/ra_discount/dubins_res20_eps0.05_dmin1e-08_dmax1e-08_gamma0.96_dt0.3_tau0.3_cons_for_paper/*.SVG
 __pycache__/
 *.pyc
 .DS_Store
 results/
 cpp/build/
-!results_hscc_2027_modified_init/ra_discount/dubins_res20_eps0.05_dmin1e-08_dmax1e-08_gamma0.96_dt0.3_tau0.3_std/*.svg
-!results_hscc_2027_modified_init/ra_discount/dubins_res20_eps0.05_dmin1e-08_dmax1e-08_gamma0.96_dt0.3_tau0.3_std/*.SVG
+!old_results/results_hscc_2027_modified_init/ra_discount/dubins_res20_eps0.05_dmin1e-08_dmax1e-08_gamma0.96_dt0.3_tau0.3_std/*.svg
+!old_results/results_hscc_2027_modified_init/ra_discount/dubins_res20_eps0.05_dmin1e-08_dmax1e-08_gamma0.96_dt0.3_tau0.3_std/*.SVG
+# reruns of the paper's results (paper_results/reproduce_all.sh and the per-folder scripts)
+paper_results/rerun_all/
+paper_results/rerun_paper_results/
+paper_results/*_rerun/

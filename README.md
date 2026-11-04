@@ -14,9 +14,15 @@ Both reproduce the paper scripts **exactly** (same cells, same values; see
   every results directory,
 * parallelism (multiprocessing pool in Python, thread pool in C++).
 
+**Paper results:** everything needed to reproduce the paper's results, including one script
+that reruns and compares all of them, is in [`paper_results/`](paper_results/README.md).
+Earlier experiments that the paper does not use are in `old_results/`.
+
 ```
 refactored_Implementations/
 ├── README.md               <- this file
+├── paper_results/          <- the paper's results, README.md and reproduce_all.sh
+├── old_results/            <- earlier experiments, not used in the paper
 ├── python/                 <- Python package (reference semantics, matplotlib figures)
 │   ├── run.py              <- CLI
 │   ├── plot_from_csv.py    <- render a CSV dump (e.g. from the C++) with matplotlib
@@ -37,15 +43,13 @@ Language-specific details: [python/README.md](python/README.md), [cpp/README.md]
 ```bash
 # Python
 cd python && pip install -r requirements.txt
-python run.py --mode ra_nodiscount --dynamics dubins --dt 0.3 --tau 0.3 --gamma 0.9 \
-    --delta-min 1e-8 --delta-max 1e-8 --epsilon 0.05 --initial-resolution 20 \
-    --vi-iterations 100033 --conservative
+python run.py --mode ra_nodiscount --dynamics dubins --dt 0.3 --gamma 0.9 \
+    --delta-min 1e-8 --delta-max 1e-8 --epsilon 0.05 --initial-resolution 20 --conservative
 
 # C++
 cd cpp && make
-./build/dhj --mode ra_nodiscount --dynamics dubins --dt 0.3 --tau 0.3 --gamma 0.9 \
-    --delta-min 1e-8 --delta-max 1e-8 --eps-min 0.0088 --initial-resolution 20 \
-    --vi-iterations 100033 --conservative
+./build/dhj --mode ra_nodiscount --dynamics dubins --dt 0.3 --gamma 0.9 \
+    --delta-min 1e-8 --delta-max 1e-8 --eps-min 0.0088 --initial-resolution 20 --conservative
 ```
 
 The C++ solver takes the threshold of Algorithm 2 on the cell radius directly, as `--eps-min`.
@@ -100,7 +104,7 @@ Van der Pol is autonomous, μ = 1. Its limit cycle (period ≈ 6.67) lies in
 state box is only slightly larger than that cycle. The obstacle is a disc of
 radius 0.7 at the origin (inside the cycle); the target is a disc of radius
 0.4 at (2, 0), which the cycle passes through. L_f = 20.75 is the maximum
-∞-norm of Df on this box. Use a short horizon, `--dt 0.02 --tau 0.02`,
+∞-norm of Df on this box. Use a short horizon, `--dt 0.02`,
 so the Gronwall tube stays thin enough for the positive set to grow along the
 orbit instead of filling the box in one step.
 

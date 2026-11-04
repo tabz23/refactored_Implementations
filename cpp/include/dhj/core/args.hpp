@@ -23,7 +23,8 @@ struct Args {
     double a_max = 1.0;      // double integrator
     double v_max = 1.0;      // double integrator
     double dt = 0.1;
-    double tau = 1.0;
+    double tau = 0.1;
+    bool tau_set = false;    // false => tau = dt (one reach checkpoint per step)
     double gamma = 0.96;
     // algorithm 1
     int resolution = 10;
@@ -34,7 +35,7 @@ struct Args {
     double eps_min = 0.01;   // threshold of Algorithm 2 on the cell radius
     int initial_resolution = 15;
     int refinements = 100;
-    int vi_iterations = 20000;
+    int vi_iterations = 100000;
     bool conservative = false;
     bool conservative_set = false;   // true if --conservative or --no-conservative was passed
     double delta_max = 1e-6;
@@ -74,8 +75,9 @@ struct Args {
         "  --velocity FLOAT              constant speed for dubins/evasion (default: 1.0)\n"
         "  --a-max FLOAT                 acceleration bound for double_integrator and bicycle (default: 1.0)\n"
         "  --v-max FLOAT                 speed bound for double_integrator and bicycle (default: 1.0)\n"
-        "  --dt FLOAT                    checkpoint interval (default: 0.1)\n"
-        "  --tau FLOAT                   control duration (default: 1.0)\n"
+        "  --dt FLOAT                    sampling time t_s (default: 0.1)\n"
+        "  --tau FLOAT                   control duration, if it differs from --dt; --dt is then\n"
+        "                                the spacing of the reach checkpoints (default: --dt)\n"
         "  --gamma FLOAT                 discount factor (default: 0.96)\n"
         "algorithm 1:\n"
         "  --resolution INT              grid resolution (default: 10)\n"
@@ -87,7 +89,7 @@ struct Args {
         "                                largest side) exceeds eps_min (default: 0.01)\n"
         "  --initial-resolution INT      initial coarse grid (default: 15)\n"
         "  --refinements INT             max refinement phases (default: 100)\n"
-        "  --vi-iterations INT           VI sweeps per phase (default: 20000)\n"
+        "  --vi-iterations INT           max VI sweeps per phase (default: 100000)\n"
         "  --conservative                conservative stopping (Algorithm 3);\n"
         "                                off for ra_discount, which starts V_lower\n"
         "                                at min(l, r) and uses residual stopping\n"
@@ -167,7 +169,7 @@ inline Args parse_args(int argc, char** argv) {
         else if (f == "--a-max") { a.a_max = parse_double(need(i), "--a-max"); ++i; }
         else if (f == "--v-max") { a.v_max = parse_double(need(i), "--v-max"); ++i; }
         else if (f == "--dt") { a.dt = parse_double(need(i), "--dt"); ++i; }
-        else if (f == "--tau") { a.tau = parse_double(need(i), "--tau"); ++i; }
+        else if (f == "--tau") { a.tau = parse_double(need(i), "--tau"); a.tau_set = true; ++i; }
         else if (f == "--gamma") { a.gamma = parse_double(need(i), "--gamma"); ++i; }
         else if (f == "--resolution") { a.resolution = static_cast<int>(parse_long(need(i), "--resolution")); ++i; }
         else if (f == "--iterations") { a.iterations = static_cast<int>(parse_long(need(i), "--iterations")); ++i; }
@@ -212,6 +214,7 @@ inline Args parse_args(int argc, char** argv) {
     if (!have_mode) { std::fprintf(stderr, "error: --mode is required\n"); usage_and_exit(argv[0], 2); }
     if (a.algorithm != 1 && a.algorithm != 2) { std::fprintf(stderr, "error: --algorithm must be 1 or 2\n"); std::exit(2); }
     if (!(a.eps_min > 0.0)) { std::fprintf(stderr, "error: --eps-min must be positive\n"); std::exit(2); }
+    if (!a.tau_set) a.tau = a.dt;
     if (a.iterations < 0) a.iterations = mode_default_iterations(a.mode);
     if (a.workers <= 0) {
         const unsigned hc = std::thread::hardware_concurrency();

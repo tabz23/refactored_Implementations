@@ -7,13 +7,13 @@ flags keep the names and defaults of the original scripts.
 
 Examples (parameters of the paper runs, see README.md):
 
-  python run.py --mode ra_nodiscount --dynamics dubins  --algorithm 2 --dt 0.3 --tau 0.3 \
+  python run.py --mode ra_nodiscount --dynamics dubins  --algorithm 2 --dt 0.3 \
       --gamma 0.9 --delta-min 1e-8 --delta-max 1e-8 --epsilon 0.05 --initial-resolution 20 --conservative
 
-  python run.py --mode ra_nodiscount --dynamics evasion --algorithm 2 --dt 0.3 --tau 0.3 \
+  python run.py --mode ra_nodiscount --dynamics evasion --algorithm 2 --dt 0.3 \
       --gamma 0.96 --delta-min 1e-8 --delta-max 1e-8 --epsilon 0.05 --initial-resolution 30 --conservative
 
-  python run.py --mode avoid_nodiscount --dynamics dubins --algorithm 2 --dt 0.3 --tau 0.3 \
+  python run.py --mode avoid_nodiscount --dynamics dubins --algorithm 2 --dt 0.3 \
       --gamma 0.9 --delta-min 1e-8 --delta-max 1e-8 --epsilon 0.05 --initial-resolution 80 --conservative
 
   python run.py --resume auto --out-dir results/ra_nodiscount/<run>      # continue a run
@@ -51,8 +51,10 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--velocity", type=float, default=1.0, help="constant speed (dubins, evasion)")
     p.add_argument("--a-max", type=float, default=1.0, help="acceleration bound (double_integrator)")
     p.add_argument("--v-max", type=float, default=1.0, help="velocity bound (double_integrator)")
-    p.add_argument("--dt", type=float, default=0.1, help="checkpoint interval for the reach sets")
-    p.add_argument("--tau", type=float, default=1.0, help="control duration (action hold time)")
+    p.add_argument("--dt", type=float, default=0.1, help="sampling time t_s")
+    p.add_argument("--tau", type=float, default=None,
+                   help="control duration, if it differs from --dt; --dt is then the spacing of the "
+                        "reach checkpoints (default: --dt)")
     p.add_argument("--gamma", type=float, default=0.96,
                    help="discount factor; also sets the conservative margin eps_cons = gamma*delta/(1-gamma)")
     # algorithm 1
@@ -66,7 +68,7 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--epsilon", type=float, default=0.1, help="error tolerance eps; eta_min = eps / (2 L_l)")
     p.add_argument("--initial-resolution", type=int, default=15, help="initial coarse grid per dimension")
     p.add_argument("--refinements", type=int, default=100, help="maximum number of refinement phases")
-    p.add_argument("--vi-iterations", type=int, default=20000, help="max VI sweeps per phase")
+    p.add_argument("--vi-iterations", type=int, default=100000, help="max VI sweeps per phase")
     p.add_argument("--conservative", action="store_true", default=False,
                    help="conservative stopping (Algorithm 3). Ignored for ra_discount, "
                         "which starts V_lower at min(l, r) and uses residual stopping")
@@ -136,6 +138,8 @@ def main(argv=None):
         parser.error("pass only one of --conservative and --no-conservative")
     if args.phase0_tol is None:
         args.phase0_tol = args.tolerance
+    if args.tau is None:
+        args.tau = args.dt
     mode = Mode(args.mode)
     if mode.discounted and args.conservative:
         print("warning: --conservative is ignored for ra_discount; "

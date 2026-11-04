@@ -3,9 +3,21 @@
 Paper: *A Quantitative Approach to Reach–Avoid Reachability Analysis for Discrete-Time
 Nonlinear Control Systems*.
 
-Three folders hold every result in the paper that this code produces. Each one has a script
-that regenerates it from scratch. Result numbers below follow the paper as of 2026-11-03.
+This folder (`paper_results/`) holds every result in the paper that this code produces, in
+three subfolders. Each one has a script that regenerates it from scratch, and
+`reproduce_all.sh` runs all three and compares the new results with the stored ones. The solver
+source is in `../cpp/` and the plotting code in `../python/`. Earlier experiments that the paper
+does not use are in `../old_results/`. Result numbers below follow the paper as of 2026-11-03.
 LaTeX labels are given too, because numbering can change.
+
+```bash
+cd paper_results
+./reproduce_all.sh            # everything, about 1 h 10 min; writes ./rerun_all and compares
+./reproduce_all.sh --quick    # smoke test, about 20 min (fewer refinements in three cases)
+```
+
+Each comparison prints "same" or "identical", and the last line says whether everything
+matches. Runtimes are printed but not compared, since they depend on the machine.
 
 | Folder | Paper results | Script | Time (Apple M3 Pro) |
 |---|---|---|---|
@@ -37,15 +49,18 @@ Folder: `results_hscc_2027_newbellmans_12workers_current_code/`
 ### Run
 
 The script writes its results into the folder that contains it, and it builds the solver
-from `../cpp`. Keep the script in a folder directly inside `refactored_Implementations/`. It
-can be started from any directory.
+from the nearest `cpp/` folder above it (`refactored_Implementations/cpp`); set `CPP_DIR` to
+use another copy. It can be started from any directory. With `QUICK=1` it runs the smoke test
+of `reproduce_all.sh --quick`: `vdp18`, `di14` and `evasion12` stop after 16, 10 and 9
+refinements instead of 18, 14 and 12, so every case takes at most a few minutes.
 
 **To reproduce the paper's results without touching the stored ones.** This is the
-recommended way, including for artifact evaluation. Run a copy of the script in a new folder
+recommended way, including for artifact evaluation. `reproduce_all.sh` does it for you (it
+also compares `phases.csv` and every PNG). By hand, run a copy of the script in a new folder
 next to the stored one:
 
 ```bash
-cd refactored_Implementations
+cd refactored_Implementations/paper_results
 mkdir rerun_paper_results
 cp results_hscc_2027_newbellmans_12workers_current_code/regenerate_hscc_newbellmans_tol1e-15_current_code.sh rerun_paper_results/
 cd rerun_paper_results
@@ -53,7 +68,7 @@ nohup ./regenerate_hscc_newbellmans_tol1e-15_current_code.sh > regenerate.log 2>
 tail -f regenerate.log          # each case prints START/END; the last line is "ALL DONE"
 ```
 
-Then compare the new results with the stored ones, from `refactored_Implementations/`. Every
+Then compare the new results with the stored ones, from `paper_results/`. Every
 case should print "same", because classifications are deterministic. Runtimes depend on the
 machine.
 
@@ -81,8 +96,8 @@ grep -H "Total time" "$NEW"/*/*/run.log
 
 The comparison is only meaningful with the same solver code. The new `provenance.txt` must
 show no uncommitted solver changes. `git diff 8751e29 <new commit> -- cpp` may show only the
-change to the refinement threshold described under "Changes after the paper run" at the end.
-That change does not alter any result.
+changes described under "Changes after the paper run" at the end (the refinement threshold
+and two argument defaults). They do not alter any result.
 
 **To regenerate the stored results in place,** run the script inside
 `results_hscc_2027_newbellmans_12workers_current_code/`. The outputs already there move to
@@ -144,16 +159,21 @@ Notes on the arguments:
   * `--delta-max` is used only by the "conservative" mode, which no case here uses
     (`Conservative mode: False` in every `run.log`). The scripts set it equal to
     `--delta-min`, and it appears only in the folder name.
-  * Value iteration met the tolerance in every phase of every case; `--vi-iterations` was
-    never reached.
-* **`--dt` and `--tau`:** `--tau` is the sampling time t_s, and `--dt` the spacing of the
-  intermediate reach checkpoints. Every case sets them equal, so each successor set is computed
-  only at time t_s, as in Section 4 of the paper.
+  * Value iteration met the tolerance in every phase of every case, after at most 1,180 sweeps
+    (`vdp18`). So the cap on sweeps per phase, `--vi-iterations` (default 100000; the scripts
+    do not pass it), was never reached.
+* **`--dt`:** the sampling time t_s of the paper. The solver also has `--tau`, the time a
+  control is held, for the case where it differs from `--dt` (then `--dt` is the spacing of the
+  intermediate reach checkpoints). `--tau` defaults to `--dt`, so the scripts pass only `--dt`,
+  and each successor set is computed only at time t_s, as in Section 4 of the paper. Folder
+  names still contain both (`_dt0.3_tau0.3_`).
 * **The bicycle:** it stops after 8 refinements, which is the output in Fig. 3(d). A run with
-  13 refinements (`../results_bicycle_oom_test/`, 2026-10-26, same flags otherwise) split to
-  1,435,125 cells in refinement 9 and exceeded the machine's 18 GB of RAM. Its log stops during
-  refinement 9, and `time.txt` reports a peak memory footprint of 57.3 GB. §9.2.2 of the paper
-  reports this.
+  13 refinements (2026-10-26, same flags otherwise) split to 1,435,125 cells in refinement 9
+  and exceeded the machine's 18 GB of RAM. Its log stops during refinement 9, and `time.txt`
+  reports a peak memory footprint of 57.3 GB. §9.2.2 of the paper reports this. The run is kept
+  in `results_hscc_2027_newbellmans_12workers_current_code/bicycle13_out_of_memory/`. Its
+  phases 0–8 are byte-identical to `bicycle8`'s (classifications, `phases.csv` counts and
+  PNGs), so only its `run.log`, `params.json` and `time.txt` are kept.
 
 ### Where the paper's numbers come from
 
@@ -191,7 +211,7 @@ Values from the run used in the paper (2026-10-26, solver commit `8751e29`):
 | Fig. 3(d) | `bicycle8` | 63.74 s | 11.5% |
 
 **Fig. 2b caveat:** it plots per-iteration runtimes, cell counts and the classified volume. It
-was drawn with `python/plot_runtime.py` from an earlier run of `dubins20_discount`.
+was drawn with `../python/plot_runtime.py` from an earlier run of `dubins20_discount`.
 * The cell counts and classified volumes are identical to this run's.
 * The per-iteration runtimes agree within about 10%. This run takes 0.52 s for iteration 1 and
   14.95 s for iteration 14 (`time_phase_s` in `phases.csv`).
@@ -199,7 +219,7 @@ was drawn with `python/plot_runtime.py` from an earlier run of `dubins20_discoun
   that folder. The paper's version labels the right axis "classified as in L/R" instead of
   "safe/unsafe".
 
-**Comparison with the previous run:** `../results_hscc_2027_newbellmans_12workers/` was made
+**Comparison with the previous run:** `../old_results/results_hscc_2027_newbellmans_12workers/` was made
 with older builds of the solver.
 * Classifications are identical in all 79 phases of the eight cases.
 * 78 of the 79 PNGs are pixel-identical. The remaining one, Fig. 4(b), differs only in its
@@ -414,6 +434,17 @@ None of these is stated in the paper.
      (eight).
 
 ### Changes after the paper run
+
+* **2026-11-04, folder layout and argument defaults:**
+  * The three result folders moved into `paper_results/`, with this README (formerly
+    `README_paper_results.md` at the top level) and the new `reproduce_all.sh`. Every other
+    results folder moved to `../old_results/`. The scripts now find `cpp/` by searching upward
+    from their own folder (or use `CPP_DIR`), so they work at this depth.
+  * `--tau` now defaults to `--dt` (it was 1.0), and `--vi-iterations` to 100000 (it was
+    20000), in the C++ solver (`args.hpp`) and in `python/run.py`. The scripts no longer pass
+    `--tau`, which always equalled `--dt`, or `--vi-iterations` (100033, 20000 or 1000033),
+    which no phase reached. Results are unchanged; `params.json` of new runs records
+    `vi_iterations` 100000.
 
 * **2026-10-26, refinement threshold (`args.hpp`, `refine.hpp`, `cell.hpp`, `run.hpp`,
   `params.hpp`, `checkpoint.hpp`):**
