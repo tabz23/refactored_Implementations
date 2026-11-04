@@ -77,11 +77,16 @@ ref_root, new_root = map(Path, sys.argv[1:3])
 MODES = ("ra_nodiscount", "ra_discount", "avoid_nodiscount")
 
 
-def key(name):
-    # Runs are paired on the options that affect the results. Stored folders also carry
-    # "_eps<--epsilon>", "_dmax<...>", "_tau<tau>" and "_std"; new ones carry "_epsmin<--eps-min>",
-    # and "_tau<tau>" only if it differs from --dt. None of these changes a result here.
-    return re.sub(r"_eps(min)?[^_]*|_dmax[^_]*|_tau[^_]*|_(std|cons)$", "", name)
+def key(mode, name):
+    # Runs are paired on the options that affect the results: dynamics, grid, stopping
+    # tolerances, gamma (ra_discount only) and dt. The stored folders were named
+    # <dyn>_res<R>_eps<..>_dmin<d>_dmax<..>_gamma<g>_dt<dt>_tau<tau>_std, with one tolerance d for
+    # both bounds; new ones <dyn>_res<R>[_epsmin<..>]_dlower<d>_dupper<d>[_gamma<g>]_dt<dt>.
+    name = re.sub(r"_dmin([^_]*)", r"_dlower\1_dupper\1", name)
+    name = re.sub(r"_eps(min)?[^_]*|_dmax[^_]*|_tau[^_]*|_(std|cons)$", "", name)
+    if mode != "ra_discount":
+        name = re.sub(r"_gamma[^_]*", "", name)   # gamma = 1 in these modes; the old names show an unused value
+    return name
 
 
 def blocks(log):
@@ -106,11 +111,11 @@ def same_png(a, b):
         return x.size == y.size and ImageChops.difference(x.convert("RGB"), y.convert("RGB")).getbbox() is None
 
 
-refs = {(m, key(d.name)): d for m in MODES for d in (ref_root / m).glob("*") if d.is_dir()}
+refs = {(m, key(m, d.name)): d for m in MODES for d in (ref_root / m).glob("*") if d.is_dir()}
 bad = 0
 for m in MODES:
     for new in sorted(d for d in (new_root / m).glob("*") if d.is_dir()):
-        ref = refs.get((m, key(new.name)))
+        ref = refs.get((m, key(m, new.name)))
         if ref is None:
             print(f"DIFFERENT: no stored run for {m}/{new.name}")
             bad += 1
@@ -130,7 +135,7 @@ for m in MODES:
         ok = ok_cls and ok_csv and not bad_png
         bad += not ok
         last = phases[-1] if phases else -1
-        print(f"{'same' if ok else 'DIFFERENT'}: {m}/{key(new.name)}: phases 0-{last} of 0-{max(rb)}, "
+        print(f"{'same' if ok else 'DIFFERENT'}: {m}/{new.name}: phases 0-{last} of 0-{max(rb)}, "
               f"{classified(nb[last]) if phases else float('nan'):.1f}% classified after phase {last}, "
               f"{len(pngs)} PNGs {'pixel-identical' if not bad_png else 'differ: ' + ', '.join(bad_png)}, "
               f"{t.group(1) if t else '?'} s")

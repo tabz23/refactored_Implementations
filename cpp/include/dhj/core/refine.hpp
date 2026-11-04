@@ -73,7 +73,8 @@ public:
             vi_.set_refinement_phase(0);
             const double phase0_start = now_seconds();
             const double succ0 = timers_.ode + timers_.queries, vi0 = timers_.value_iteration;
-            conv = vi_.value_iteration(vi_iterations_per_refinement, args_.phase0_tol, args_.plot_freq);
+            conv = vi_.value_iteration(vi_iterations_per_refinement, args_.delta_lower, args_.delta_upper,
+                                       args_.plot_freq);
             const double phase_time = now_seconds() - phase0_start;
             std::printf("total time for running value_iteration the first time (phase 0) on the initial grid including "
                         "grid initialization, setting up cpu parallelism, successor set computation and value iteration "
@@ -147,7 +148,8 @@ public:
             vi_.set_refinement_phase(refinement_iter + 1);
             std::printf("  Starting local value iteration...\n");
             const double local_start = now_seconds();
-            conv = vi_.local_value_iteration(new_cells, vi_iterations_per_refinement, args_.tolerance);
+            conv = vi_.local_value_iteration(new_cells, vi_iterations_per_refinement, args_.delta_lower,
+                                             args_.delta_upper);
             std::printf("  Local VI completed in %zu iterations, time: %.3fs\n", conv.conv_upper.size(),
                         now_seconds() - local_start);
             if (!conv.conv_upper.empty()) {

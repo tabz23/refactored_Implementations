@@ -479,7 +479,14 @@ def verify_avoid(run_dir, out_dir, rng, points_per_cell, n_paths, horizon):
     report = {"system": name, "run_dir": str(run_dir), "cells": int(grid.Vl.size), "grid": grid.n.tolist(),
               "gamma": 1.0, "tau": tau, "actions": actions, "L_f": dyn["L_f"], "L_l": dyn["L_l"]}
     p0 = phases[0]
-    report["solver"] = {"vi_iterations": int(p0["vi_iterations"]), "stop_tolerance": float(args["phase0_tol"]),
+    # Stopping tolerances of the lower and upper bound (runs made before 2026-11-04 had one,
+    # phase0_tol). Recorded as one number when they are equal, as in every run here.
+    if "delta_lower" in args:
+        tols = (float(args["delta_lower"]), float(args["delta_upper"]))
+    else:
+        tols = (float(args["phase0_tol"]),) * 2
+    report["solver"] = {"vi_iterations": int(p0["vi_iterations"]),
+                        "stop_tolerance": tols[0] if tols[0] == tols[1] else list(tols),
                         "time_vi_s": float(p0["time_vi_s"]), "time_successors_s": float(p0["time_successors_s"]),
                         "time_phase_s": float(p0["time_phase_s"])}
     green, red = grid.Vl > 0, grid.Vu < 0

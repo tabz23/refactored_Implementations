@@ -21,12 +21,12 @@ refactored_Implementations/
 
 ```bash
 cd cpp && make
-./build/dhj --mode ra_discount --dynamics dubins --dt 0.3 --gamma 0.96 \
-    --delta-min 1e-8 --eps-min 1e-6 --initial-resolution 20 --refinements 13
+./build/dhj --mode ra_discount --gamma 0.96 --dynamics dubins --dt 0.3 \
+    --initial-resolution 20 --refinements 13 --eps-min 1e-6 --delta-lower 1e-8 --delta-upper 1e-8
 ```
 
 This is the run of Fig. 2. It writes to
-`refactored_Implementations/results/<mode>/<dynamics>_res<R>_epsmin<ε_min>_dmin<δ>_gamma<γ>_dt<dt>/`
+`refactored_Implementations/results/<mode>/<dynamics>_res<R>_epsmin<ε_min>_dlower<δ̲*>_dupper<δ̄*>_gamma<γ>_dt<dt>/`
 (override with `--results-root`, `--out-dir` or `--tag`), which contains
 
 | file | content |
@@ -42,14 +42,15 @@ This is the run of Fig. 2. It writes to
 
 | `--mode` | value function | Bellman backup of the bounds |
 |---|---|---|
-| `ra_discount` | discounted reach-avoid, γ = `--gamma` (Algorithm 1) | V ← min(l, max(r, γ·best)) |
+| `ra_discount` | discounted reach-avoid, γ = `--gamma` ∈ (0, 1) (Algorithm 1) | V ← min(l, max(r, γ·best)) |
 | `ra_nodiscount` | reach-avoid with γ = 1 (Proposition 3) | V ← min(l, max(r, best)) |
 | `avoid_nodiscount` | avoid with γ = 1 (Section 8) | V ← min(l, best) |
 
 `best` is the maximum over actions of the minimum (lower bound) or maximum (upper bound)
 of V over the successor cells. Leaving a non-periodic state bound leads to an absorbing
-failure state with value −1. Value iteration stops when the sup-norm changes of both
-bounds are below `--delta-min`.
+failure state with value −1. Value iteration stops once a sweep changes the lower bound by
+less than `--delta-lower` (δ̲\*) and the upper bound by less than `--delta-upper` (δ̄\*). Only
+`ra_discount` takes `--gamma`; the other modes use γ = 1.
 
 ## Dynamics included
 

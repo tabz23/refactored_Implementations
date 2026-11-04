@@ -46,30 +46,31 @@ make                      # -> build/dhj          (or: cmake -B build && cmake -
 The run of Fig. 2 in the paper (Dubins car, γ = 0.96, 13 refinement iterations):
 
 ```bash
-./build/dhj --mode ra_discount --dynamics dubins --dt 0.3 --gamma 0.96 \
-    --delta-min 1e-8 --eps-min 1e-6 --initial-resolution 20 --refinements 13
+./build/dhj --mode ra_discount --gamma 0.96 --dynamics dubins --dt 0.3 \
+    --initial-resolution 20 --refinements 13 --eps-min 1e-6 --delta-lower 1e-8 --delta-upper 1e-8
 ```
 
 Main options (`--help` lists all of them):
 
-* `--mode`: `ra_discount` (discounted reach-avoid, γ = `--gamma`), `ra_nodiscount`
-  (reach-avoid with γ = 1, Proposition 3) or `avoid_nodiscount` (avoid with γ = 1, Section 8).
-  `--gamma` only affects `ra_discount`.
+* `--mode`: `ra_discount` (discounted reach-avoid with discount factor `--gamma` in (0, 1)),
+  `ra_nodiscount` (reach-avoid with γ = 1, Proposition 3) or `avoid_nodiscount` (avoid with
+  γ = 1, Section 8). Only `ra_discount` takes `--gamma`.
 * `--dynamics`: `dubins`, `evasion`, `double_integrator`, `bicycle`, `van_der_pol`.
 * `--dt`: the sampling time t_s. `--tau` (the time a control is held) defaults to it.
 * `--initial-resolution`: cells per dimension of the initial uniform grid.
 * `--refinements`: number of refinement iterations of Algorithm 2; 0 runs Algorithm 1 only.
 * `--eps-min`: Algorithm 2 splits a cell only while its radius (half its largest side)
   exceeds ε_min.
-* `--delta-min` (alias `--tolerance`): value iteration stops when the sup-norm changes of
-  both bounds are below it, so it sets both stopping tolerances of Algorithm 1.
-  `--phase0-tol` sets it for the initial grid only. `--vi-iterations` caps the sweeps per
-  phase (default 100000).
+* `--delta-lower`, `--delta-upper`: the stopping tolerances δ̲\* and δ̄\* of Algorithm 1.
+  Value iteration stops once a sweep changes the lower bound by less than δ̲\* and the upper
+  bound by less than δ̄\* (sup norm). `--vi-iterations` caps the sweeps per phase (default
+  100000).
 * `--two-abstractions`: upper-bound successors cover each control cell (Proposition 2);
   the paper's experiments do not use it.
 
-Each run writes to `<--results-root>/<mode>/<dynamics>_res<R>_epsmin<ε_min>_dmin<δ>_gamma<γ>_dt<dt>`
-(plus `_tau<τ>` if `--tau` differs from `--dt`): `run.log`, `params.json`, `phases.csv`
+Each run writes to `<--results-root>/<mode>/<dynamics>_res<R>[_epsmin<ε_min>]_dlower<δ̲*>_dupper<δ̄*>[_gamma<γ>]_dt<dt>`
+(`_epsmin` only if the run refines, `_gamma` only for `ra_discount`, plus `_tau<τ>` if `--tau`
+differs from `--dt`): `run.log`, `params.json`, `phases.csv`
 and one figure per phase. Figures are SVG at the default `--plot-dpi 800` and PNG at a
 smaller value (the paper's scripts use 300). `--dump-csv` also writes every cell's bounds and
 values to `value_function_phase_N.csv`.

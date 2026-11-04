@@ -76,14 +76,19 @@ machine.
 ```bash
 NEW=rerun_paper_results
 REF=results_hscc_2027_newbellmans_12workers_current_code
-# Runs are paired on the options that affect the results. Stored folders also carry
-# "_eps<--epsilon>", "_dmax<...>", "_tau<tau>" and "_std"; new ones "_epsmin<--eps-min>".
-key() { sed -E 's/_eps(min)?[^_]*//; s/_dmax[^_]*//; s/_tau[^_]*//; s/_(std|cons)$//' <<< "$1"; }
+# Runs are paired on the options that affect the results (see "Changes after the paper
+# run" for the two naming schemes): key MODE FOLDER.
+key() {
+  local k
+  k=$(sed -E 's/_dmin([^_]*)/_dlower\1_dupper\1/; s/_eps(min)?[^_]*//; s/_dmax[^_]*//; s/_tau[^_]*//; s/_(std|cons)$//' <<< "$2")
+  [ "$1" = ra_discount ] || k=$(sed -E 's/_gamma[^_]*//' <<< "$k")
+  echo "$k"
+}
 for d in "$NEW"/{ra_nodiscount,ra_discount,avoid_nodiscount}/*/; do
-  run="${d#"$NEW"/}"; run="${run%/}"; ref=""
-  for r in "$REF"/{ra_nodiscount,ra_discount,avoid_nodiscount}/*/; do
+  run="${d#"$NEW"/}"; run="${run%/}"; m="${run%%/*}"; ref=""
+  for r in "$REF/$m"/*/; do
     r="${r#"$REF"/}"; r="${r%/}"
-    [ "$(key "$r")" = "$(key "$run")" ] && ref="$r"
+    [ "$(key "$m" "${r#*/}")" = "$(key "$m" "${run#*/}")" ] && ref="$r"
   done
   if [ -n "$ref" ] && diff <(grep -A3 "Classification after phase" "$d/run.log") \
           <(grep -A3 "Classification after phase" "$REF/$ref/run.log") > /dev/null; then
@@ -135,13 +140,16 @@ position is in [−3, 3]², so an N³ grid has half-sides 3/N, 3/N and π/N, and
 
 Notes on the arguments:
 
-* **`--gamma`:** it only affects `ra_discount`. In `ra_nodiscount` and `avoid_nodiscount`
-  the solver uses γ = 1, and `--gamma` appears only in the folder name.
+* **`--gamma`:** given only for `ra_discount` (γ = 0.96). `ra_nodiscount` and
+  `avoid_nodiscount` always use γ = 1, and the solver rejects `--gamma` with them. The stored
+  folders of those runs still show the γ that the old scripts passed (0.9 or 0.96); it had no
+  effect.
 * **`--eps-min`:** the threshold ε_min of Algorithm 2. A boundary cell is refined only while
   its radius exceeds ε_min (`filter_refinable` in `refine.hpp`). The paper does not report it.
-  * The script uses 1e-6 for every case. That is far below the smallest radius any case
-    refines, 2.4e-4 in `vdp18`'s last iteration. So every case ends at its `--refinements`
-    limit.
+  * The script uses 1e-6 for every case that refines. That is far below the smallest radius
+    any case refines, 2.4e-4 in `vdp18`'s last iteration. So every case ends at its
+    `--refinements` limit. The two Algorithm 1 cases (Fig. 4(a,b), `--refinements 0`) do not
+    use it.
   * The stored outputs were made before this option existed, with `--epsilon` 0.05, 0.1 or
     0.001, which set ε_min = `--epsilon`/(4 L_l). In none of those runs was a cell skipped for
     being too small: `Below threshold` is 0 in every refinement phase. So they are exactly
@@ -151,14 +159,16 @@ Notes on the arguments:
     State` shows `Still refinable: 0`, and the last row of `phases.csv` has `refinable_cells`
     0. With `--eps-min 1e-6` both show the full count. This changes no result.
   * Folder names contain `eps<--epsilon>` in the stored runs and `epsmin<--eps-min>` in new
-    ones. The stored names also end in `_dmax<…>_gamma<γ>_dt<dt>_tau<τ>_std`; new ones end in
-    `_gamma<γ>_dt<dt>` (see "Changes after the paper run").
+    ones (see "Changes after the paper run" for both naming schemes).
 * **Stopping tolerances:**
   * Discounted runs stop when both sup-norm changes are below δ\* = 1e-8 (the paper says at
     most δ\*; the two differ only if a change equals δ\* exactly).
   * The γ = 1 runs use 1e-15. The paper says they stop when the change is 0. The changes that
     remain at that point are rounding effects of about 1e-16.
-  * Both bounds stop on `--delta-min`, so it plays the role of both δ̲\* and δ̄\* of the paper.
+  * `--delta-lower` and `--delta-upper` are δ̲\* and δ̄\* of the paper: value iteration stops
+    once a sweep changes the lower bound by less than δ̲\* and the upper bound by less than
+    δ̄\*. Every case sets them equal. The stored runs were made with one option,
+    `--delta-min`, that set both.
   * The stored runs were made by a solver that still had `--delta-max`, an option of the
     "conservative" stopping mode of an earlier version of the paper. No case used that mode
     (`Conservative mode: False` in every stored `run.log`), and `--delta-max` appears only in
@@ -452,12 +462,28 @@ None of these is stated in the paper.
     only to cross-check the C++ solver during development, moved to
     `../old_results/python_port/` and `../old_results/cpp_tools/`. `plot_runtime.py` (Fig. 2b)
     moved into the Figs. 2–5 folder.
-  * New run folders are named `<dynamics>_res<R>_epsmin<ε_min>_dmin<δ>_gamma<γ>_dt<dt>`, plus
-    `_tau<τ>` only if `--tau` differs from `--dt`. The comparison in `reproduce_all.sh` pairs
-    them with the stored folders on these fields.
   * Check: on Dubins runs of all three modes (12³ grid, 3 refinements), the solver before and
     after the removal gives identical classifications and `phases.csv`, and byte-identical
     PNGs.
+
+* **2026-11-04, arguments the scripts give:** each script now passes only options that affect
+  the run, and the paper's parameters by name.
+  * `--delta-min` became `--delta-lower` and `--delta-upper`, the paper's δ̲\* and δ̄\*. The
+    scripts set both to the value of the paper runs: 1e-8 (discounted), 1e-15 (γ = 1) and
+    1e-300 (the §9.2.5 avoid run).
+  * `--gamma` is accepted only with `--mode ra_discount`; the other two modes use γ = 1.
+  * `--phase0-tol` (a separate tolerance for the initial grid, which every script set equal
+    to `--delta-min`) was removed. The scripts no longer pass `--keep-checkpoints` (no
+    checkpoints are written) or `--eps-min` to runs without refinement.
+  * Run folders are now named
+    `<dynamics>_res<R>[_epsmin<ε_min>]_dlower<δ̲*>_dupper<δ̄*>[_gamma<γ>]_dt<dt>`, with
+    `_epsmin` only for runs that refine, `_gamma` only for `ra_discount`, and `_tau<τ>` added
+    only if `--tau` differs from `--dt`. The stored folders follow the old scheme
+    `<dynamics>_res<R>_eps<…>_dmin<δ>_dmax<…>_gamma<γ>_dt<dt>_tau<τ>_std`. `reproduce_all.sh`
+    pairs the two on dynamics, grid, tolerances, γ (`ra_discount` only) and `dt`.
+  * Check: Dubins runs of all three modes give identical classifications, `phases.csv` and
+    byte-identical PNGs before and after, and the §9.2.5 reproduction gives numbers identical
+    to the stored ones.
 
 * **2026-11-04, folder layout and argument defaults:**
   * The three result folders moved into `paper_results/`, with this README (formerly

@@ -3,7 +3,8 @@
 # grid and dumps the value tables, so that verify_quantitative.py can check the
 # guarantees of the paper:
 #   ra     reach-avoid with gamma = 0.96 (Proposition 4, label prop:greedy, and the classification).
-#          The value iteration stops when both sup-norm changes are below 1e-8.
+#          Value iteration stops when both bounds change by less than 1e-8 in a sweep
+#          (--delta-lower and --delta-upper, the paper's stopping tolerances).
 #   avoid  avoid value function with gamma = 1 (Proposition 6, label prop:avoid). The iterates take
 #          values in a finite set, so a nonzero change is far above 1e-300 and the
 #          iteration stops only when nothing changes, as in the paper.
@@ -53,22 +54,21 @@ git -C "$REPO" diff --quiet -- cpp || git -C "$REPO" diff -- cpp > "$ROOT/solver
   echo "date: $(date)"
 } > "$ROOT/provenance.txt"
 
+# Algorithm 1 (--refinements 0) on the 120^3 grid; --dump-csv writes every cell's bounds and
+# values for the verifier.
 run() {
-  local mode="$1" gamma="$2" tol="$3"
-  echo "=== START ${mode} dubins $(date) ==="
-  ./build/dhj_head --mode "$mode" --dynamics dubins \
-    --dt 0.3 --initial-resolution 120 --eps-min 1e-6 \
-    --delta-min "$tol" --phase0-tol "$tol" --gamma "$gamma" \
-    --refinements 0 \
-    --checkpoint-every 0 --keep-checkpoints 0 --dump-csv \
-    --plot-dpi 300 --workers 12 --results-root "$ROOT"
-  echo "=== END ${mode} dubins $(date) ==="
+  local name="$1"
+  shift
+  echo "=== START ${name} dubins $(date) ==="
+  ./build/dhj_head "$@" --dynamics dubins --dt 0.3 --initial-resolution 120 --refinements 0 \
+    --checkpoint-every 0 --dump-csv --plot-dpi 300 --workers 12 --results-root "$ROOT"
+  echo "=== END ${name} dubins $(date) ==="
 }
 
 if [[ "$PART" == ra || "$PART" == all ]]; then
-  run ra_discount 0.96 1e-8
+  run ra_discount --mode ra_discount --gamma 0.96 --delta-lower 1e-8 --delta-upper 1e-8
 fi
 if [[ "$PART" == avoid || "$PART" == all ]]; then
-  run avoid_nodiscount 1 1e-300
+  run avoid_nodiscount --mode avoid_nodiscount --delta-lower 1e-300 --delta-upper 1e-300
 fi
 echo "=== ALL DONE $(date) ==="

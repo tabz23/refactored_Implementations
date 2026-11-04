@@ -62,7 +62,7 @@ public:
         std::error_code ec;
         std::filesystem::create_directories(output_dir_, ec);
         std::printf("Initialized with gamma=%g, L_f=%g, L_l=%g,  L_r=%g\n", gamma_, dyn.L_f(), dyn.L_l(), dyn.L_r());
-        std::printf("Contraction factor: gamma*L_f = %.4f\n", gamma_ * dyn.L_f());
+        if (mode_discounted(mode_)) std::printf("Contraction factor: gamma*L_f = %.4f\n", gamma_ * dyn.L_f());
         std::printf("Using %zu parallel workers\n", pool_.size());
         if (args_.two_abstractions) {
             std::printf("Two abstractions: V_lower uses the discrete-action tube; "
@@ -150,19 +150,20 @@ public:
 
     // ---------------------------------------------------------------- VI --
 
-    // Algorithm 1, i.e. phase 0 of Algorithm 2 on the initial grid. The refinement loop
-    // passes the same residual tolerance as later phases (--delta-min), unless --phase0-tol is set.
-    VIResult value_iteration(int max_iterations, double convergence_tol, int plot_freq) {
+    // Algorithm 1, i.e. phase 0 of Algorithm 2 on the initial grid. It stops when the sup-norm
+    // change of the lower bound is below tol_lower and that of the upper bound below tol_upper
+    // (the paper's delta_lower* and delta_upper*, --delta-lower and --delta-upper).
+    VIResult value_iteration(int max_iterations, double tol_lower, double tol_upper, int plot_freq) {
         initialize_cells();
         if (successor_cache_empty()) {
             std::printf("  Precomputing successor sets...\n");
             precompute_all_successors();
         }
         std::printf("\nStarting OPTIMIZED PARALLEL value iteration (max %d iterations)...\n", max_iterations);
-        std::printf("Convergence tolerance: %g\n", convergence_tol);
+        std::printf("Convergence tolerances: lower %g, upper %g\n", tol_lower, tol_upper);
         std::printf("Number of cells: %zu\n", tree_.num_leaves());
 
-        VIResult res = run_sweeps(max_iterations, convergence_tol, plot_freq, false);
+        VIResult res = run_sweeps(max_iterations, tol_lower, tol_upper, plot_freq, false);
         emit_output(output_dir_ + "/value_function_phase_0_complete.png", res.iterations, 0);
         std::printf("\nValue iteration completed in %d iterations\n", res.iterations);
         return res;
@@ -171,7 +172,7 @@ public:
     // Local VI after a refinement: reinitialise every leaf, refresh the
     // successor cache, sweep.
     VIResult local_value_iteration(const std::vector<std::uint32_t>& new_cells, int max_iterations,
-                                   double convergence_tol) {
+                                   double tol_lower, double tol_upper) {
         const std::size_t n = tree_.num_leaves();
         const char* init_kind = mode_discounted(mode_) ? "V_lower = min(l, r), V_upper = l"
                                 : mode_ == Mode::AvoidNoDiscount ? "V = l"
@@ -182,7 +183,7 @@ public:
         const double reinit = now_seconds() - t0;
         std::printf("   Reinitialized %zu cells in %.2fs (%.1f cells/s)\n", n, reinit, reinit > 0 ? n / reinit : 0.0);
         std::printf("  Local VI: updating all %zu cells\n", n);
-        std::printf("    Convergence tolerance: %g\n", convergence_tol);
+        std::printf("    Convergence tolerances: lower %g, upper %g\n", tol_lower, tol_upper);
         std::printf("    Max iterations: %d\n", max_iterations);
         if (n == 0) { std::printf("    No cells to update!\n"); return VIResult{}; }
         if (!new_cells.empty()) {
@@ -193,7 +194,7 @@ public:
             std::printf("    Successor cache empty - computing for all %zu cells...\n", n);
             compute_successors(tree_.leaves());
         }
-        VIResult res = run_sweeps(max_iterations, convergence_tol, 0, true);
+        VIResult res = run_sweeps(max_iterations, tol_lower, tol_upper, 0, true);
         std::printf("    Local VI completed in %d iterations\n", res.iterations);
         if (!res.conv_upper.empty()) {
             std::printf("    Final convergence values:\n");
@@ -455,7 +456,7 @@ private:
         return g;
     }
 
-    VIResult run_sweeps(int max_iterations, double convergence_tol, int plot_freq, bool local) {
+    VIResult run_sweeps(int max_iterations, double tol_lower, double tol_upper, int plot_freq, bool local) {
         const double t_start = now_seconds();
         const auto& leaves = tree_.leaves();
         const std::size_t n = leaves.size();
@@ -541,12 +542,12 @@ private:
             const char* pad = local ? "    Local Iteration" : "Iteration";
             std::printf("%s %3d: ||V_upper^k - V_upper^k-1||_inf = %12.20f, ||V_lower^k - V_lower^k-1||_inf = %12.20f\n",
                         pad, iteration + 1, diff_upper, diff_lower);
-            if (diff_upper < convergence_tol && diff_lower < convergence_tol) {
+            if (diff_upper < tol_upper && diff_lower < tol_lower) {
                 std::printf("\n%s\n", std::string(50, '=').c_str());
                 std::printf(" %s CONVERGENCE ACHIEVED\n", local ? "LOCAL" : "STANDARD");
                 std::printf("%s\n", std::string(50, '=').c_str());
-                std::printf("  ||V_upper^k - V_upper^k-1||_inf = %.20e < tolerance = %g\n", diff_upper, convergence_tol);
-                std::printf("  ||V_lower^k - V_lower^k-1||_inf = %.20e < tolerance = %g\n", diff_lower, convergence_tol);
+                std::printf("  ||V_upper^k - V_upper^k-1||_inf = %.20e < tolerance = %g\n", diff_upper, tol_upper);
+                std::printf("  ||V_lower^k - V_lower^k-1||_inf = %.20e < tolerance = %g\n", diff_lower, tol_lower);
                 std::printf("  Converged in %d iterations\n", iteration + 1);
                 converged = true;
             }

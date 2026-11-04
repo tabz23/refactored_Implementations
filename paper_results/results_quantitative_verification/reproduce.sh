@@ -27,11 +27,11 @@ OUT="$(cd "$OUT" && pwd)"
 # 1. Solver: Algorithm 1 only (--refinements 0), value tables dumped as CSV.
 "$HERE/run_alg1_res120.sh" all "$OUT" 2>&1 | tee "$OUT/solver.log"
 
-# The solver names each run folder after its options (dubins_res120_epsmin..._dt0.3); use the
+# The solver names each run folder after its options (dubins_res120_..._dt0.3); use the
 # newest one of each mode, i.e. the run just made.
 run_dir() {
   local d
-  d="$(ls -td "$OUT/$1"/dubins_res120_epsmin*/ 2>/dev/null | head -1)"
+  d="$(ls -td "$OUT/$1"/dubins_res120_*/ 2>/dev/null | head -1)"
   [ -n "$d" ] || { echo "no solver run found in $OUT/$1" >&2; exit 1; }
   echo "${d%/}"
 }
