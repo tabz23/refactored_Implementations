@@ -67,6 +67,14 @@ Main options (`--help` lists all of them):
   100000).
 * `--two-abstractions`: upper-bound successors cover each control cell (Proposition 2);
   the paper's experiments do not use it.
+* `--restrict-reach-set-to-grid`: ignores the part of each reach box outside the state box
+  and adds no sink state, as if f mapped X into X. With `--if-leave-use-cellwise-bounds`, an
+  action whose reach box lies entirely outside the box (no successor) uses only the cell's
+  own bounds (min{l, r} in reach-avoid, l in the avoid case) instead of counting as -inf.
+  Run folders get `_restrictgrid` and `_cellbounds`. For comparison only: the results are not
+  sound for systems that can leave X, and the paper's experiments use neither flag (see
+  `../old_results/results_stay_in_grid*`). Every value iteration logs how many reach boxes
+  leave the state box.
 
 Each run writes to `<--results-root>/<mode>/<dynamics>_res<R>[_epsmin<ε_min>]_dlower<δ̲*>_dupper<δ̄*>[_gamma<γ>]_dt<dt>`
 (`_epsmin` only if the run refines, `_gamma` only for `ra_discount`, plus `_tau<τ>` if `--tau`

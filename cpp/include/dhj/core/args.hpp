@@ -36,6 +36,15 @@ struct Args {
     int vi_iterations = 100000;
     // Upper bound uses the control-cell tube; lower bound keeps the discrete action.
     bool two_abstractions = false;
+    // Drop the part of each reach box outside the state box instead of adding the
+    // out-of-bounds sink, as if f mapped X into X. For comparison only: not sound for
+    // systems that can leave X.
+    bool restrict_to_grid = false;
+    // With restrict_to_grid: an action whose reach box lies entirely outside the state box
+    // (no successor) contributes only the cell's own bounds, as if the trajectory ended
+    // there: min{l, r} in reach-avoid (the same as skipping the action) and l in the avoid
+    // case. Without this flag such an action is skipped (counts as -inf).
+    bool if_leave_use_cell_bounds = false;
     // execution
     int workers = 0;         // 0 => hardware threads - 1
     bool precompute = false;
@@ -85,6 +94,12 @@ struct Args {
         "  --plot-freq INT               also plot every N sweeps of a phase (default: 1000)\n"
         "  --two-abstractions            V_upper successors cover each control cell;\n"
         "                                V_lower successors keep the discrete action\n"
+        "  --restrict-reach-set-to-grid  ignore the part of each reach box outside the state\n"
+        "                                box (no sink state), as if f mapped X into X; for\n"
+        "                                comparison only, not sound if the system can leave X\n"
+        "  --if-leave-use-cellwise-bounds  with --restrict-reach-set-to-grid: an action with no\n"
+        "                                successor uses only the cell's own bounds (as if the\n"
+        "                                trajectory ended) instead of counting as -inf\n"
         "execution:\n"
         "  --workers INT                 worker threads (default: hardware threads - 1)\n"
         "  --precompute                  precompute successor sets up front\n"
@@ -165,6 +180,8 @@ inline Args parse_args(int argc, char** argv) {
         else if (f == "--refinements") { a.refinements = static_cast<int>(parse_long(need(i), "--refinements")); ++i; }
         else if (f == "--vi-iterations") { a.vi_iterations = static_cast<int>(parse_long(need(i), "--vi-iterations")); ++i; }
         else if (f == "--two-abstractions") { a.two_abstractions = true; }
+        else if (f == "--restrict-reach-set-to-grid") { a.restrict_to_grid = true; }
+        else if (f == "--if-leave-use-cellwise-bounds") { a.if_leave_use_cell_bounds = true; }
         else if (f == "--workers") { a.workers = static_cast<int>(parse_long(need(i), "--workers")); ++i; }
         else if (f == "--precompute") { a.precompute = true; }
         else if (f == "--seq-queries") { a.seq_queries = true; }
@@ -192,6 +209,11 @@ inline Args parse_args(int argc, char** argv) {
         }
         a.gamma = 1.0;
     }
+    if (a.if_leave_use_cell_bounds && !a.restrict_to_grid) {
+        std::fprintf(stderr, "error: --if-leave-use-cellwise-bounds needs --restrict-reach-set-to-grid "
+                             "(otherwise every action has a successor)\n");
+        std::exit(2);
+    }
     if (!a.tau_set) a.tau = a.dt;
     if (a.workers <= 0) {
         const unsigned hc = std::thread::hardware_concurrency();
@@ -214,6 +236,8 @@ inline std::string derive_out_dir(const Args& a) {
     name += "_dt" + py_repr(a.dt);
     if (a.tau != a.dt) name += "_tau" + py_repr(a.tau);
     if (a.two_abstractions) name += "_twoabs";
+    if (a.restrict_to_grid) name += "_restrictgrid";
+    if (a.if_leave_use_cell_bounds) name += "_cellbounds";
     if (!a.tag.empty()) name += "_" + a.tag;
     return a.results_root + "/" + a.mode_name + "/" + name;
 }
@@ -233,6 +257,7 @@ inline std::string args_json(const Args& a, const std::string& indent) {
     j += in + "\"dynamics\": " + s(a.dynamics) + ",\n";
     j += in + "\"eps_min\": " + py_repr(a.eps_min) + ",\n";
     j += in + "\"gamma\": " + py_repr(a.gamma) + ",\n";
+    j += in + "\"if_leave_use_cellwise_bounds\": " + b(a.if_leave_use_cell_bounds) + ",\n";
     j += in + "\"initial_resolution\": " + std::to_string(a.initial_resolution) + ",\n";
     j += in + "\"keep_checkpoints\": " + std::to_string(a.keep_checkpoints) + ",\n";
     j += in + "\"mode\": " + s(a.mode_name) + ",\n";
@@ -243,6 +268,7 @@ inline std::string args_json(const Args& a, const std::string& indent) {
     j += in + "\"plot_freq\": " + std::to_string(a.plot_freq) + ",\n";
     j += in + "\"precompute\": " + b(a.precompute) + ",\n";
     j += in + "\"refinements\": " + std::to_string(a.refinements) + ",\n";
+    j += in + "\"restrict_reach_set_to_grid\": " + b(a.restrict_to_grid) + ",\n";
     j += in + "\"results_root\": " + s(a.results_root) + ",\n";
     j += in + "\"resume\": " + (a.resume.empty() ? std::string("null") : s(a.resume)) + ",\n";
     j += in + "\"seq_queries\": " + b(a.seq_queries) + ",\n";

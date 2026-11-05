@@ -289,7 +289,7 @@ private:
 
     void ensure_cache_capacity() {
         const std::size_t need = tree_.num_cells() * n_actions_;
-        if (cache_.size() < need) { cache_.resize(need); cache_present_.resize(need, 0); }
+        if (cache_.size() < need) { cache_.resize(need); cache_present_.resize(need, 0); cache_left_.resize(need, 0); }
         if (args_.two_abstractions && cache_upper_.size() < need) {
             cache_upper_.resize(need);
             cache_upper_present_.resize(need, 0);
@@ -405,12 +405,14 @@ private:
                 }
             }
         }
-        if (oob) out.push_back(kOOB);
+        // --restrict-reach-set-to-grid: the part of the box outside the state box is ignored.
+        if (oob && !args_.restrict_to_grid) out.push_back(kOOB);
         const std::size_t key = static_cast<std::size_t>(cell_id) * n_actions_ + action_idx;
         cache_[key] = out;
         cache_present_[key] = 1;
+        cache_left_[key] = oob ? 1 : 0;
         if (args_.two_abstractions) {
-            if (oob_hi) out_hi.push_back(kOOB);
+            if (oob_hi && !args_.restrict_to_grid) out_hi.push_back(kOOB);
             cache_upper_[key] = std::move(out_hi);
             cache_upper_present_[key] = 1;
         }
@@ -468,6 +470,22 @@ private:
             g_hi_ptr = &g_hi_store;
         }
         const SuccGraph& g_hi = *g_hi_ptr;
+        {
+            // How often a reach box leaves the state box, and how many actions are left
+            // without any successor (possible only with --restrict-reach-set-to-grid).
+            std::size_t pairs = 0, left = 0, empty = 0;
+            for (std::size_t i = 0; i < n; ++i)
+                for (std::size_t a = 0; a < n_actions_; ++a) {
+                    const std::size_t key = static_cast<std::size_t>(leaves[i]) * n_actions_ + a;
+                    if (key >= cache_present_.size() || !cache_present_[key]) continue;
+                    ++pairs;
+                    if (cache_left_[key]) ++left;
+                    if (g_lo.off[i * n_actions_ + a + 1] == g_lo.off[i * n_actions_ + a]) ++empty;
+                }
+            std::printf("    Reach boxes leaving the state box: %zu of %zu cell-action pairs (%s); "
+                        "pairs with no successor: %zu\n",
+                        left, pairs, args_.restrict_to_grid ? "outside part ignored" : "sink added", empty);
+        }
 
         std::vector<double> Vu(n + 1), Vl(n + 1), lu(n + 1), ll(n + 1), ru(n + 1), rl(n + 1);
         for (std::size_t i = 0; i < n; ++i) {
@@ -484,6 +502,10 @@ private:
         const bool discount = mode_discounted(mode_);
         const bool avoid = (mode_ == Mode::AvoidNoDiscount);
         const double gamma = gamma_;
+        // Value of an action without successors (possible only with --restrict-reach-set-to-grid):
+        // -inf skips it. With --if-leave-use-cellwise-bounds, the avoid case uses +inf, so the
+        // update min{l, .} keeps the cell's own l; in reach-avoid -inf already gives min{l, r}.
+        const double no_successor = (args_.if_leave_use_cell_bounds && avoid) ? kInf : -kInf;
 
         int iteration = 0;
         bool converged = false;
@@ -503,12 +525,12 @@ private:
                     for (std::size_t a = 0; a < n_actions_; ++a) {
                         const std::uint32_t s_lo = g_lo.off[i * n_actions_ + a], t_lo = g_lo.off[i * n_actions_ + a + 1];
                         const std::uint32_t s_hi = g_hi.off[i * n_actions_ + a], t_hi = g_hi.off[i * n_actions_ + a + 1];
-                        if (s_lo == t_lo && s_hi == t_hi) continue;
+                        if (s_lo == t_lo && s_hi == t_hi && no_successor == -kInf) continue;
                         double lo = kInf, hi = -kInf;
                         for (std::uint32_t k = s_lo; k < t_lo; ++k) lo = std::min(lo, Vl[g_lo.idx[k]]);
                         for (std::uint32_t k = s_hi; k < t_hi; ++k) hi = std::max(hi, Vu[g_hi.idx[k]]);
-                        if (s_lo == t_lo) lo = -kInf;
-                        if (s_hi == t_hi) hi = -kInf;
+                        if (s_lo == t_lo) lo = no_successor;
+                        if (s_hi == t_hi) hi = no_successor;
                         if (discount) { lo *= gamma; hi *= gamma; }
                         best_min = std::max(best_min, lo);
                         best_max = std::max(best_max, hi);
@@ -606,6 +628,7 @@ private:
 
     std::vector<std::vector<std::int32_t>> cache_;
     std::vector<std::uint8_t> cache_present_;  // not vector<bool>: written concurrently
+    std::vector<std::uint8_t> cache_left_;     // 1 if the entry's reach box left the state box
     // Larger successor sets used only for V_upper when --two-abstractions is set.
     std::vector<std::vector<std::int32_t>> cache_upper_;
     std::vector<std::uint8_t> cache_upper_present_;
