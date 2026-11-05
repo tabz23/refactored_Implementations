@@ -2,12 +2,14 @@
 # Produces or replicates every result in this directory: two runs of Algorithm 1
 # for the Dubins car on a uniform 120^3 grid (reach-avoid with gamma = 0.96, and
 # the avoid value function with gamma = 1) and their verification with
-# verify_quantitative.py, including the tables and figures, and the check of the
-# violation claim of Proposition 4 with verify_violation.py.
+# verify_quantitative.py, including the tables and figures, the check of the
+# violation claim of Proposition 4 with verify_violation.py, and the check of the
+# failure-reaching time of Proposition 6(2) with verify_avoid_failure_time.py.
 #
 #   ./reproduce.sh          writes everything to ../results_quantitative_verification_rerun
-#                           and compares the numbers with verification_*/summary.json and
-#                           verification_ra_violation/report.json here
+#                           and compares the numbers with verification_*/summary.json,
+#                           verification_ra_violation/report.json and
+#                           verification_avoid_failure_time/report.json here
 #   ./reproduce.sh DIR      the same, into DIR
 #   ./reproduce.sh "$PWD"   regenerates the results in this directory (no comparison)
 #
@@ -52,6 +54,14 @@ AVOID_RUN="$(run_dir avoid_nodiscount)"
   --out "$OUT/verification_ra_violation" --seed 0 --corners --exhaustive -1 --random-seeds 3 \
   2>&1 | tee "$OUT/verification_ra_violation.log"
 
+# Failure-reaching time of Proposition 6(2): the solver's k(s) (first iteration with
+# V_upper^(k)(s) <= 0), its recomputation and a certificate on the verifier's abstraction,
+# and an exhaustive search over all action sequences from one random state and the
+# 8 vertices of every cell with V_upper <= 0.
+"$PY" -I "$HERE/verify_avoid_failure_time.py" "$AVOID_RUN" \
+  --out "$OUT/verification_avoid_failure_time" --seed 0 \
+  2>&1 | tee "$OUT/verification_avoid_failure_time.log"
+
 # 3. Compare everything except timings with the reference numbers in this directory.
 if [[ "$OUT" != "$HERE" ]]; then
   for v in verification_ra verification_avoid; do
@@ -78,8 +88,9 @@ if len(ref) != len(new):
 print("identical to the reference results" if not diffs else "\n".join(diffs))
 EOF
   done
-  printf 'verification_ra_violation: '
-  "$PY" -I - "$HERE/verification_ra_violation/report.json" "$OUT/verification_ra_violation/report.json" <<'EOF'
+  for v in verification_ra_violation verification_avoid_failure_time; do
+    printf '%s: ' "$v"
+    "$PY" -I - "$HERE/$v/report.json" "$OUT/$v/report.json" <<'EOF'
 import json
 import sys
 
@@ -94,4 +105,5 @@ ref, new = (numbers(json.load(open(p))) for p in sys.argv[1:3])
 diffs = [f"{k}: {ref[k]} -> {new.get(k)}" for k in ref if ref[k] != new.get(k)]
 print("identical to the reference results" if not diffs else "\n".join(diffs))
 EOF
+  done
 fi

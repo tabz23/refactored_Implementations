@@ -220,6 +220,16 @@ public:
             char buf[64];
             std::snprintf(buf, sizeof buf, "/value_function_phase_%d.csv", phase);
             SlicePlotter<N>::dump_csv(tree_, output_dir_ + buf);
+            // Avoid case: the first sweep with V_upper^(k) <= 0 of every leaf (see run_sweeps),
+            // in the leaf order of the value dump.
+            const auto& leaves = tree_.leaves();
+            if (!upper_nonpos_iter_.empty() && upper_nonpos_iter_.size() == leaves.size()) {
+                std::snprintf(buf, sizeof buf, "/upper_nonpos_iteration_phase_%d.csv", phase);
+                std::ofstream out(output_dir_ + buf);
+                out << "cell_id,k_upper_nonpos\n";
+                for (std::size_t i = 0; i < leaves.size(); ++i)
+                    out << tree_.cell(leaves[i]).cell_id << ',' << upper_nonpos_iter_[i] << '\n';
+            }
         }
         timers_.plotting += now_seconds() - t0;
     }
@@ -512,6 +522,17 @@ private:
         const bool discount = mode_discounted(mode_);
         const bool avoid = (mode_ == Mode::AvoidNoDiscount);
         const double gamma = gamma_;
+        // Avoid case: for every cell, the first sweep k with V_upper^(k) <= 0 (0 if the starting
+        // value l_upper is already <= 0, -1 if never). Every sweep starts from V_upper = l_upper
+        // (initialize_cells), so this is the k of Proposition 6(2): every trajectory from the cell
+        // reaches F within k steps. Only recorded and written out (--dump-csv); the values are
+        // computed exactly as before.
+        std::vector<std::int32_t> nonpos_iter;
+        if (avoid) {
+            nonpos_iter.assign(n, -1);
+            for (std::size_t i = 0; i < n; ++i)
+                if (Vu[i] <= 0.0) nonpos_iter[i] = 0;
+        }
         // Value of an action without successors (possible only with --restrict-reach-set-to-grid):
         // -inf skips it. With --if-leave-use-cellwise-bounds, the avoid case uses +inf, so the
         // update min{l, .} keeps the cell's own l; in reach-avoid -inf already gives min{l, r}.
@@ -549,6 +570,8 @@ private:
                     const double nu = avoid ? std::min(lu[i], best_max) : std::min(lu[i], std::max(ru[i], best_max));
                     newVl[i] = nl;
                     newVu[i] = nu;
+                    // Each i belongs to one worker, so this write needs no synchronization.
+                    if (avoid && nonpos_iter[i] < 0 && nu <= 0.0) nonpos_iter[i] = iteration + 1;
                     du = std::max(du, std::fabs(nu - Vu[i]));
                     dl = std::max(dl, std::fabs(nl - Vl[i]));
                     dk = std::min(dk, nl - Vl[i]);
@@ -606,6 +629,7 @@ private:
         if (discount && iteration > 0) {
             std::printf("  V_lower increased from min(l_lower, r_lower); smallest step %.3e\n", min_lower_step);
         }
+        upper_nonpos_iter_ = std::move(nonpos_iter);   // empty unless avoid
         write_back(Vu, Vl, n);
         res.iterations = iteration;
         res.converged = converged;
@@ -643,6 +667,8 @@ private:
     std::vector<std::vector<std::int32_t>> cache_upper_;
     std::vector<std::uint8_t> cache_upper_present_;
     std::size_t cache_entries_ = 0;
+    // Avoid case: first sweep with V_upper^(k) <= 0 per leaf of the last run_sweeps (-1: never).
+    std::vector<std::int32_t> upper_nonpos_iter_;
 };
 
 }  // namespace dhj
