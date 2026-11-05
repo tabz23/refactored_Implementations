@@ -1,0 +1,4 @@
+# Value tables and trajectory dumps are hundreds of MB; keep them out of git.
+*.csv
+*.npy
+*.npz

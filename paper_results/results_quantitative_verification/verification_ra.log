@@ -1,7 +1,7 @@
-verifying /Users/i.k.tabbara/Documents/python directory/HSCC_2027/refactored_Implementations/results_quantitative_verification/ra_discount/dubins_res120_eps0.05_dmin1e-08_dmax1e-08_gamma0.96_dt0.3_tau0.3_std
+verifying /Users/i.k.tabbara/Documents/python directory/HSCC_2027/refactored_Implementations/paper_results/results_quantitative_verification_updated/ra_discount/dubins_res120_dlower1e-08_dupper1e-08_gamma0.96_dt0.3
 {
   "system": "dubins",
-  "run_dir": "/Users/i.k.tabbara/Documents/python directory/HSCC_2027/refactored_Implementations/results_quantitative_verification/ra_discount/dubins_res120_eps0.05_dmin1e-08_dmax1e-08_gamma0.96_dt0.3_tau0.3_std",
+  "run_dir": "/Users/i.k.tabbara/Documents/python directory/HSCC_2027/refactored_Implementations/paper_results/results_quantitative_verification_updated/ra_discount/dubins_res120_dlower1e-08_dupper1e-08_gamma0.96_dt0.3",
   "cells": 1728000,
   "grid": [
     120,
@@ -20,9 +20,9 @@ verifying /Users/i.k.tabbara/Documents/python directory/HSCC_2027/refactored_Imp
   "L_r": 1.4142135623730951,
   "solver": {
     "vi_iterations": 71,
-    "time_vi_s": 0.987,
-    "time_successors_s": 1.144,
-    "time_phase_s": 8.305
+    "time_vi_s": 1.009,
+    "time_successors_s": 1.107,
+    "time_phase_s": 8.615
   },
   "classification_percent": {
     "R": 56.94375,
@@ -72,6 +72,6 @@ verifying /Users/i.k.tabbara/Documents/python directory/HSCC_2027/refactored_Imp
     "J_minus_Vupper_max": -0.001952376617341156,
     "J_above_Vupper": 0
   },
-  "verifier_seconds": 7.959270715713501
+  "verifier_seconds": 11.177422046661377
 }
-wrote verification_ra
+wrote /Users/i.k.tabbara/Documents/python directory/HSCC_2027/refactored_Implementations/paper_results/results_quantitative_verification_updated/verification_ra

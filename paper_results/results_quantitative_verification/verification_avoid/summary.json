@@ -1,7 +1,7 @@
 [
   {
     "system": "dubins",
-    "run_dir": "/Users/i.k.tabbara/Documents/python directory/HSCC_2027/refactored_Implementations/results_quantitative_verification/avoid_nodiscount/dubins_res120_eps0.05_dmin1e-300_dmax1e-300_gamma1.0_dt0.3_tau0.3_std",
+    "run_dir": "/Users/i.k.tabbara/Documents/python directory/HSCC_2027/refactored_Implementations/paper_results/results_quantitative_verification_updated/avoid_nodiscount/dubins_res120_dlower1e-300_dupper1e-300_dt0.3",
     "cells": 1728000,
     "grid": [
       120,
@@ -20,9 +20,9 @@
     "solver": {
       "vi_iterations": 89,
       "stop_tolerance": 1e-300,
-      "time_vi_s": 1.198,
-      "time_successors_s": 1.1,
-      "time_phase_s": 8.409
+      "time_vi_s": 1.149,
+      "time_successors_s": 1.229,
+      "time_phase_s": 8.757
     },
     "classification_percent": {
       "safe": 56.34351851851852,
@@ -109,6 +109,6 @@
       "bound_max": 10,
       "ratio_latest_hit_to_bound_max": 1.0
     },
-    "verifier_seconds": 96.6861162185669
+    "verifier_seconds": 99.72492098808289
   }
 ]

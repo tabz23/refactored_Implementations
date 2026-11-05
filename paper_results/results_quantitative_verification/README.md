@@ -23,9 +23,10 @@ scripts that produce and replicate all of it:
 
 This takes a little over three minutes and needs a C++17 compiler, Python with numpy, scipy
 and matplotlib, and optionally LaTeX for the figure text (`reproduce.sh` lists
-the recorded versions). `provenance.txt` records the commit (d8463b7, no
-uncommitted solver changes), the compiler and the solver binary hash; the binary
-embeds its build time, so the hash changes with every build.
+the recorded versions). `provenance.txt` records the commit (1572bab, no
+uncommitted solver changes; the original run in `../original_runs/` used d8463b7),
+the compiler and the solver binary hash; the binary embeds its build time, so the
+hash changes with every build.
 
 ## Contents
 

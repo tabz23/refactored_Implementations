@@ -1,5 +1,22 @@
-date: Mon Oct 26 01:42:48 CDT 2026
-git commit: 8751e29e4c4686311e5892a5076f2f9b14a20473
+date: Wed Nov  4 12:02:30 CST 2026
+quick: 0
+git commit: 9f6e912b7fff014f36b4ef4e6b55e70defc288f2
 uncommitted solver changes: 
 compiler: Apple clang version 16.0.0 (clang-1600.0.26.6)
-binary sha256: 0301e62552ee06265e2f7c9ac6c6bdfaa76a651b977f625b09f750e57106d635
+binary sha256: 0672b48bd2156d99eec05b0e0b0bf74f5e003210ad8f604a9eb1e78ea43678f9
+--- rerun of: di14 evasion12
+date: Wed Nov  4 13:00:52 CST 2026
+quick: 0
+cases: di14 evasion12
+git commit: 1572bab478ceeab655465ce8063b4b80c07d47f7
+uncommitted solver changes: 
+compiler: Apple clang version 16.0.0 (clang-1600.0.26.6)
+binary sha256: 6ead2372fcdb80bf9056ef87f43144abf3efe60aa606ed6c8549f464082b8f8e
+--- rerun of: di14 evasion12
+date: Wed Nov  4 13:04:14 CST 2026
+quick: 0
+cases: di14 evasion12
+git commit: 1572bab478ceeab655465ce8063b4b80c07d47f7
+uncommitted solver changes: 
+compiler: Apple clang version 16.0.0 (clang-1600.0.26.6)
+binary sha256: bb44a41910e01daff3f2f05c7d1668ceb747565066716a038b671b4f2d7c71f8

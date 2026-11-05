@@ -1,0 +1,16 @@
+wrote /Users/i.k.tabbara/Documents/python directory/HSCC_2027/refactored_Implementations/paper_results/results_hscc_2027_newbellmans_12workers_current_code_updated/ra_discount/dubins_res20_epsmin1e-06_dlower1e-08_dupper1e-08_gamma0.96_dt0.3/runtime_algorithm2.png
+wrote /Users/i.k.tabbara/Documents/python directory/HSCC_2027/refactored_Implementations/paper_results/results_hscc_2027_newbellmans_12workers_current_code_updated/ra_discount/dubins_res20_epsmin1e-06_dlower1e-08_dupper1e-08_gamma0.96_dt0.3/runtime_algorithm2_classified.png
+  iter  1  |G|=    8000  time=0.547s  state space classified=11.5%
+  iter  2  |G|=   15080  time=0.599s  state space classified=11.5%
+  iter  3  |G|=   29240  time=0.581s  state space classified=12.5%
+  iter  4  |G|=   57236  time=0.607s  state space classified=19.0%
+  iter  5  |G|=  109072  time=0.723s  state space classified=19.8%
+  iter  6  |G|=  211808  time=0.894s  state space classified=21.0%
+  iter  7  |G|=  414040  time=1.112s  state space classified=74.5%
+  iter  8  |G|=  544536  time=1.375s  state space classified=75.9%
+  iter  9  |G|=  792036  time=1.903s  state space classified=76.8%
+  iter 10  |G|= 1267360  time=2.750s  state space classified=88.2%
+  iter 11  |G|= 1752666  time=3.593s  state space classified=88.7%
+  iter 12  |G|= 2675022  time=6.393s  state space classified=89.3%
+  iter 13  |G|= 4432486  time=10.412s  state space classified=94.4%
+  iter 14  |G|= 6270898  time=14.852s  state space classified=94.5%

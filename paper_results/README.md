@@ -10,6 +10,11 @@ source is in `../cpp/`. Earlier experiments and code that the paper does not use
 `../old_results/`. Result numbers below follow the paper as of 2026-11-03.
 LaTeX labels are given too, because numbering can change.
 
+**Original runs.** The runs from which the submitted paper was made, with the runtimes it
+reports, are in `original_runs/` (see its `README.md`). On 2026-11-04 all three folders were
+regenerated with the current code (`reproduce_all.sh --updated`); every classification, PNG and
+verification output was identical, and the regenerated folders replaced the stored ones here.
+
 ```bash
 cd paper_results
 ./reproduce_all.sh            # everything, about 1 h 10 min; writes ./rerun_all and compares
@@ -108,9 +113,10 @@ grep -H "Total time" "$NEW"/*/*/run.log
 ```
 
 The comparison is only meaningful with the same solver code. The new `provenance.txt` must
-show no uncommitted solver changes. `git diff 8751e29 <new commit> -- cpp` may show only the
-changes described under "Changes after the paper run" at the end (the refinement threshold
-and two argument defaults). They do not alter any result.
+show no uncommitted solver changes, and `git diff 9f6e912 <new commit> -- cpp` should be empty:
+the stored runs used commit `9f6e912` (`di14` and `evasion12` were finished at `1572bab`, whose
+`cpp/` is the same). The original runs in `original_runs/` used `8751e29`; the changes since
+then are described under "Changes after the paper run" at the end, and none alters a result.
 
 **To regenerate the stored results in place,** run the script inside
 `results_hscc_2027_newbellmans_12workers_current_code/`. The outputs already there move to
@@ -148,8 +154,8 @@ position is in [−3, 3]², so an N³ grid has half-sides 3/N, 3/N and π/N, and
 Notes on the arguments:
 
 * **`--gamma`:** given only for `ra_discount` (γ = 0.96). `ra_nodiscount` and
-  `avoid_nodiscount` always use γ = 1, and the solver rejects `--gamma` with them. The stored
-  folders of those runs still show the γ that the old scripts passed (0.9 or 0.96); it had no
+  `avoid_nodiscount` always use γ = 1, and the solver rejects `--gamma` with them. The folders
+  of those runs in `original_runs/` still show the γ that the old scripts passed (0.9 or 0.96); it had no
   effect.
 * **`--eps-min`:** the threshold ε_min of Algorithm 2. A boundary cell is refined only while
   its radius exceeds ε_min (`filter_refinable` in `refine.hpp`). The paper does not report it.
@@ -157,16 +163,16 @@ Notes on the arguments:
     any case refines, 2.4e-4 in `vdp18`'s last iteration. So every case ends at its
     `--refinements` limit. The two Algorithm 1 cases (Fig. 4(a,b), `--refinements 0`) do not
     use it.
-  * The stored outputs were made before this option existed, with `--epsilon` 0.05, 0.1 or
+  * The original runs (`original_runs/`) were made before this option existed, with `--epsilon` 0.05, 0.1 or
     0.001, which set ε_min = `--epsilon`/(4 L_l). In none of those runs was a cell skipped for
     being too small: `Below threshold` is 0 in every refinement phase. So they are exactly
     what `--eps-min 1e-6` produces.
-  * The only visible difference is in the stored `vdp18` and `evasion12` runs. There, the cells
+  * The only visible difference is in the original `vdp18` and `evasion12` runs. There, the cells
     left unclassified after the last iteration are below the old threshold, so `Final Boundary
     State` shows `Still refinable: 0`, and the last row of `phases.csv` has `refinable_cells`
     0. With `--eps-min 1e-6` both show the full count. This changes no result.
-  * Folder names contain `eps<--epsilon>` in the stored runs and `epsmin<--eps-min>` in new
-    ones (see "Changes after the paper run" for both naming schemes).
+  * Folder names contain `eps<--epsilon>` in the original runs and `epsmin<--eps-min>` in the
+    current ones (see "Changes after the paper run" for both naming schemes).
 * **Stopping tolerances:**
   * Discounted runs stop when both sup-norm changes are below δ\* = 1e-8 (the paper says at
     most δ\*; the two differ only if a change equals δ\* exactly).
@@ -174,26 +180,26 @@ Notes on the arguments:
     remain at that point are rounding effects of about 1e-16.
   * `--delta-lower` and `--delta-upper` are δ̲\* and δ̄\* of the paper: value iteration stops
     once a sweep changes the lower bound by less than δ̲\* and the upper bound by less than
-    δ̄\*. Every case sets them equal. The stored runs were made with one option,
+    δ̄\*. Every case sets them equal. The original runs were made with one option,
     `--delta-min`, that set both.
-  * The stored runs were made by a solver that still had `--delta-max`, an option of the
+  * The original runs were made by a solver that still had `--delta-max`, an option of the
     "conservative" stopping mode of an earlier version of the paper. No case used that mode
-    (`Conservative mode: False` in every stored `run.log`), and `--delta-max` appears only in
-    the stored folder names. Both were removed on 2026-11-04.
+    (`Conservative mode: False` in every original `run.log`), and `--delta-max` appears only in
+    the original folder names. Both were removed on 2026-11-04.
   * Value iteration met the tolerance in every phase of every case, after at most 1,180 sweeps
     (`vdp18`). So the cap on sweeps per phase, `--vi-iterations` (default 100000; the scripts
     do not pass it), was never reached.
 * **`--dt`:** the sampling time t_s of the paper. The solver also has `--tau`, the time a
   control is held, for the case where it differs from `--dt` (then `--dt` is the spacing of the
   intermediate reach checkpoints). `--tau` defaults to `--dt`, so the scripts pass only `--dt`,
-  and each successor set is computed only at time t_s, as in Section 4 of the paper. Folder
-  names still contain both (`_dt0.3_tau0.3_`).
+  and each successor set is computed only at time t_s, as in Section 4 of the paper. The
+  original folder names contain both (`_dt0.3_tau0.3_`); the current ones only `_dt0.3`.
 * **The bicycle:** it stops after 8 refinements, which is the output in Fig. 3(d). A run with
   13 refinements (2026-10-26, same flags otherwise) split to 1,435,125 cells in refinement 9
   and exceeded the machine's 18 GB of RAM. Its log stops during refinement 9, and `time.txt`
   reports a peak memory footprint of 57.3 GB. §9.2.2 of the paper reports this. The run is kept
   in the subfolder `bicycle13_out_of_memory/` of the `bicycle8` run folder
-  (`ra_nodiscount/bicycle_res5_…_std/`). Its phases 0–8 are byte-identical to `bicycle8`'s
+  (`ra_nodiscount/bicycle_res5_epsmin1e-06_dlower1e-15_dupper1e-15_dt0.3/`). Its phases 0–8 are byte-identical to `bicycle8`'s
   (classifications, `phases.csv` counts and PNGs), so only its `run.log`, `params.json` and
   `time.txt` are kept.
 
@@ -202,7 +208,8 @@ Notes on the arguments:
 Each case writes `<mode>/<case folder>/` containing these files:
 
 * **`run.log`:** the full log.
-  * The runtime the paper reports is its last `Total time: … seconds` line.
+  * The runtime the paper reports is the last `Total time: … seconds` line of the original
+    run in `original_runs/` (table below).
   * The classified percentage is in the last `Classification after phase N` block: Safe plus
     Unsafe, as "% of state space".
 * **`phases.csv`:** one row per phase, with cell counts, iterations and timings.
@@ -219,25 +226,30 @@ grep -H "Total time" */*/run.log
 grep -A3 "Classification after phase" ra_nodiscount/van_der_pol*/run.log | tail -4
 ```
 
-Values from the run used in the paper (2026-10-26, solver commit `8751e29`):
+Values from the original runs used in the paper (`original_runs/`, 2026-10-26, solver commit
+`8751e29`) and from the stored runs here (2026-11-04, commit `9f6e912`):
 
-| Paper | Case | Total time | Classified (safe + unsafe) |
-|---|---|---|---|
-| Fig. 4(a), §9.2.3 | `dubins120_std` | 2.69 s | 83.4% |
-| Fig. 4(b), §9.2.3 | `dubins120_discount` | 2.86 s | 83.4% |
-| Fig. 5 | `avoid80` | 22.13 s (22.1 s in the caption) | 94.4% |
-| Fig. 2 | `dubins20_discount` | 46.87 s | 94.5% |
-| Fig. 3(a) | `vdp18` | 291.75 s | 97.7% |
-| Fig. 3(b) | `evasion12` | 1301.23 s | 88.0% |
-| Fig. 3(c) | `di14` | 1910.33 s | 94.3% |
-| Fig. 3(d) | `bicycle8` | 63.74 s | 11.5% |
+| Paper | Case | Total time (paper) | Total time (2026-11-04) | Classified (safe + unsafe) |
+|---|---|---|---|---|
+| Fig. 4(a), §9.2.3 | `dubins120_std` | 2.69 s | 2.61 s | 83.4% |
+| Fig. 4(b), §9.2.3 | `dubins120_discount` | 2.86 s | 2.67 s | 83.4% |
+| Fig. 5 | `avoid80` | 22.13 s (22.1 s in the caption) | 23.86 s | 94.4% |
+| Fig. 2 | `dubins20_discount` | 46.87 s | 46.73 s | 94.5% |
+| Fig. 3(a) | `vdp18` | 291.75 s | 417.20 s | 97.7% |
+| Fig. 3(b) | `evasion12` | 1301.23 s | 1681.52 s | 88.0% |
+| Fig. 3(c) | `di14` | 1910.33 s | 4225.17 s | 94.3% |
+| Fig. 3(d) | `bicycle8` | 63.74 s | 79.45 s | 11.5% |
+
+The 2026-11-04 runs of `vdp18`, `evasion12`, `di14` and `bicycle8` were slower because the
+machine was swapping during the regeneration (up to 30 GB of swap); the paper keeps the
+original runtimes.
 
 **Fig. 2b caveat:** it plots per-iteration runtimes, cell counts and the classified volume. It
 was drawn with `plot_runtime.py` (in the Figs. 2–5 folder) from an earlier run of
 `dubins20_discount`.
 * The cell counts and classified volumes are identical to this run's.
-* The per-iteration runtimes agree within about 10%. This run takes 0.52 s for iteration 1 and
-  14.95 s for iteration 14 (`time_phase_s` in `phases.csv`).
+* The per-iteration runtimes agree within about 10% with the original run, which takes 0.52 s
+  for iteration 1 and 14.95 s for iteration 14 (`time_phase_s` in its `phases.csv`).
 * `python plot_runtime.py --run-dir <this run's folder>` redraws the figure from this run, into
   that folder. The paper's version labels the right axis "classified as in L/R" instead of
   "safe/unsafe".
@@ -414,8 +426,10 @@ The implementation follows the paper exactly:
 
 ### Which code produced which results
 
-* Section 1 used solver commit `8751e29`, and Section 2 used `d8463b7`.
-* `git diff d8463b7 8751e29 -- cpp` is empty, so both used the same solver code.
+* The stored results (2026-11-04) used solver commit `9f6e912` for Section 1 (`di14` and
+  `evasion12` were finished at `1572bab`, with the same `cpp/`) and `1572bab` for Section 2.
+* The original runs (`original_runs/`) used `8751e29` for Section 1 and `d8463b7` for
+  Section 2; `git diff d8463b7 8751e29 -- cpp` is empty, so both used the same solver code.
 * Each folder's `provenance.txt` records the commit. To check that a rerun uses the same code,
   compare it with `git rev-parse HEAD` and `git status --short -- cpp`.
 
@@ -458,6 +472,11 @@ None of these is stated in the paper.
 
 ### Changes after the paper run
 
+* **2026-11-04, regenerated results:** all three folders were regenerated with the current code
+  (`reproduce_all.sh --updated`) and replaced the stored ones, which moved to `original_runs/`
+  together with the comparison logs. Every classification, `phases.csv` count and PNG of
+  Figs. 2–5 and every output of §9.2.5 and Appendix H is identical.
+
 * **2026-11-04, unused code removed:** none of it was used by any result of the paper.
   * The "conservative" stopping mode of an earlier version of the paper (stop on δ_max, then
     subtract γ|δ|/(1−γ) from V_lower), with `--conservative`, `--no-conservative` and
@@ -485,7 +504,7 @@ None of these is stated in the paper.
   * Run folders are now named
     `<dynamics>_res<R>[_epsmin<ε_min>]_dlower<δ̲*>_dupper<δ̄*>[_gamma<γ>]_dt<dt>`, with
     `_epsmin` only for runs that refine, `_gamma` only for `ra_discount`, and `_tau<τ>` added
-    only if `--tau` differs from `--dt`. The stored folders follow the old scheme
+    only if `--tau` differs from `--dt`. The original runs in `original_runs/` follow the old scheme
     `<dynamics>_res<R>_eps<…>_dmin<δ>_dmax<…>_gamma<γ>_dt<dt>_tau<τ>_std`. `reproduce_all.sh`
     pairs the two on dynamics, grid, tolerances, γ (`ra_discount` only) and `dt`.
   * Check: Dubins runs of all three modes give identical classifications, `phases.csv` and
@@ -514,20 +533,20 @@ None of these is stated in the paper.
     * `params.json` records `eps_min`, and folder names contain `epsmin`.
     * The log prints `Refinable (radius > eps_min=…)`.
   * **Scripts:** they now pass `--eps-min 1e-6`, which never stops a refinement in these runs;
-    see the `--eps-min` note in Section 1. Results are unchanged because no cell in the stored
-    runs was ever skipped for size.
-  * **Check:** rerunning `vdp18` with the new code and `--eps-min 1e-6` reproduced the stored
+    see the `--eps-min` note in Section 1. Results are unchanged because no cell in the
+    original runs was ever skipped for size.
+  * **Check:** rerunning `vdp18` with the new code and `--eps-min 1e-6` reproduced the original
     run.
     * All 19 classification blocks are identical, and all 19 PNGs are byte-identical.
     * `phases.csv` is identical except `refinable_cells` in the last row, which is 9,539,610
       instead of 0, as explained in the `--eps-min` note.
-    * The runtime was 317.82 s, against 291.75 s stored.
+    * The runtime was 317.82 s, against 291.75 s in the original run.
   * **Smoke test of the other cases** (same flags as the script):
     * `dubins120_std`, `dubins120_discount`, `avoid80`, `dubins20_discount` and `bicycle8`
       ran in full. The first 10 refinements of `di14` and the first 9 of `evasion12` ran too.
     * Every compared phase has identical `phases.csv` counts and classifications, and
       byte-identical PNGs.
     * `results_quantitative_verification/reproduce.sh` reported both summaries identical to
-      the stored ones.
+      the original ones.
     * The logs differ only in the threshold lines, the radius statistics (half the old side
       statistics), output paths and timings.

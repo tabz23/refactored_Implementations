@@ -1,0 +1,4 @@
+reproduce_all: quick=0, updated=1, solver sources in /Users/i.k.tabbara/Documents/python directory/HSCC_2027/refactored_Implementations/cpp
+  outputs: /Users/i.k.tabbara/Documents/python directory/HSCC_2027/refactored_Implementations/paper_results/results_hscc_2027_newbellmans_12workers_current_code_updated, /Users/i.k.tabbara/Documents/python directory/HSCC_2027/refactored_Implementations/paper_results/results_quantitative_verification_updated, /Users/i.k.tabbara/Documents/python directory/HSCC_2027/refactored_Implementations/paper_results/results_bound_verification_updated
+=== 1. Figs. 2-5 (Wed Nov  4 12:02:25 CST 2026) ===
+the step-1 script failed; see /Users/i.k.tabbara/Documents/python directory/HSCC_2027/refactored_Implementations/paper_results/results_hscc_2027_newbellmans_12workers_current_code_updated/regenerate.log

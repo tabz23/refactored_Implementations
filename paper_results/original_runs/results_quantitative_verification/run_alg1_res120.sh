@@ -1,0 +1,74 @@
+#!/bin/bash
+# Runs Algorithm 1 once (no refinement) for the Dubins car on a uniform 120^3
+# grid and dumps the value tables, so that verify_quantitative.py can check the
+# guarantees of the paper:
+#   ra     reach-avoid with gamma = 0.96 (Proposition 4, label prop:greedy, and the classification).
+#          Value iteration stops when both bounds change by less than 1e-8 in a sweep
+#          (--delta-lower and --delta-upper, the paper's stopping tolerances).
+#   avoid  avoid value function with gamma = 1 (Proposition 6, label prop:avoid). The iterates take
+#          values in a finite set, so a nonzero change is far above 1e-300 and the
+#          iteration stops only when nothing changes, as in the paper.
+#
+# Usage: run_alg1_res120.sh [ra|avoid|all] [ROOT]
+# Results go to ROOT/<mode>/<run>; ROOT defaults to the folder of this script.
+#
+# The solver sources are the nearest cpp/ above this folder
+# (refactored_Implementations/cpp); set CPP_DIR to use another copy.
+# The solver is compiled from the current sources into build/dhj_head, so the
+# existing build/dhj is left untouched. ROOT/provenance.txt records the commit,
+# the compiler and the binary hash (the binary embeds its build time, so the hash
+# differs between builds); uncommitted solver changes are saved to
+# ROOT/solver_changes.diff.
+set -euo pipefail
+
+PART="${1:-all}"
+case "$PART" in
+  ra|avoid|all) ;;
+  *) echo "usage: $0 [ra|avoid|all] [ROOT]" >&2; exit 2 ;;
+esac
+HERE="$(cd "$(dirname "$0")" && pwd)"
+if [ -n "${CPP_DIR:-}" ]; then
+  REPO="$(cd "$CPP_DIR/.." && pwd)"
+else
+  REPO="$HERE"
+  while [ ! -f "$REPO/cpp/src/main.cpp" ]; do
+    [ "$REPO" = / ] && { echo "cpp/src/main.cpp not found above $HERE; set CPP_DIR" >&2; exit 1; }
+    REPO="$(dirname "$REPO")"
+  done
+fi
+ROOT="${2:-$HERE}"
+mkdir -p "$ROOT"
+
+cd "$REPO/cpp"
+c++ -std=c++17 -O3 -DNDEBUG -march=native -fno-math-errno -Iinclude -Wall -Wextra \
+    src/main.cpp -o build/dhj_head -pthread -lz
+
+rm -f "$ROOT/solver_changes.diff"
+git -C "$REPO" diff --quiet -- cpp || git -C "$REPO" diff -- cpp > "$ROOT/solver_changes.diff"
+{
+  echo "parts: ${PART}"
+  echo "git commit: $(git -C "$REPO" rev-parse HEAD)"
+  echo "uncommitted solver changes: $(git -C "$REPO" status --short -- cpp | tr '\n' ' ')"
+  echo "compiler: $(c++ --version | head -1)"
+  echo "binary sha256: $(shasum -a 256 build/dhj_head | cut -d' ' -f1)"
+  echo "date: $(date)"
+} > "$ROOT/provenance.txt"
+
+# Algorithm 1 (--refinements 0) on the 120^3 grid; --dump-csv writes every cell's bounds and
+# values for the verifier.
+run() {
+  local name="$1"
+  shift
+  echo "=== START ${name} dubins $(date) ==="
+  ./build/dhj_head "$@" --dynamics dubins --dt 0.3 --initial-resolution 120 --refinements 0 \
+    --checkpoint-every 0 --dump-csv --plot-dpi 300 --workers 12 --results-root "$ROOT"
+  echo "=== END ${name} dubins $(date) ==="
+}
+
+if [[ "$PART" == ra || "$PART" == all ]]; then
+  run ra_discount --mode ra_discount --gamma 0.96 --delta-lower 1e-8 --delta-upper 1e-8
+fi
+if [[ "$PART" == avoid || "$PART" == all ]]; then
+  run avoid_nodiscount --mode avoid_nodiscount --delta-lower 1e-300 --delta-upper 1e-300
+fi
+echo "=== ALL DONE $(date) ==="

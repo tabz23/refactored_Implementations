@@ -1,0 +1,21 @@
+reproduce_all: quick=0, updated=1, cases=di14 evasion12, solver sources in /Users/i.k.tabbara/Documents/python directory/HSCC_2027/refactored_Implementations/cpp
+  outputs: /Users/i.k.tabbara/Documents/python directory/HSCC_2027/refactored_Implementations/paper_results/results_hscc_2027_newbellmans_12workers_current_code_updated, /Users/i.k.tabbara/Documents/python directory/HSCC_2027/refactored_Implementations/paper_results/results_quantitative_verification_updated, /Users/i.k.tabbara/Documents/python directory/HSCC_2027/refactored_Implementations/paper_results/results_bound_verification_updated
+=== 1. Figs. 2-5 (Wed Nov  4 13:04:08 CST 2026) ===
+moved the incomplete run ra_nodiscount/double_integrator_res10_epsmin1e-06_dlower1e-15_dupper1e-15_dt0.3 to failed_20261104_130408/ra_nodiscount/
+same: ra_nodiscount/bicycle_res5_epsmin1e-06_dlower1e-15_dupper1e-15_dt0.3: phases 0-8 of 0-8, 11.5% classified after phase 8, 9 PNGs pixel-identical, 79.45 s
+same: ra_nodiscount/double_integrator_res10_epsmin1e-06_dlower1e-15_dupper1e-15_dt0.3: phases 0-14 of 0-14, 94.3% classified after phase 14, 15 PNGs pixel-identical, 4225.17 s
+same: ra_nodiscount/dubins_res120_dlower1e-15_dupper1e-15_dt0.3: phases 0-0 of 0-0, 83.4% classified after phase 0, 1 PNGs pixel-identical, 2.61 s
+same: ra_nodiscount/evasion_res30_epsmin1e-06_dlower1e-15_dupper1e-15_dt0.3: phases 0-12 of 0-12, 88.0% classified after phase 12, 13 PNGs pixel-identical, 1681.52 s
+same: ra_nodiscount/van_der_pol_res40_epsmin1e-06_dlower1e-15_dupper1e-15_dt0.01: phases 0-18 of 0-18, 97.7% classified after phase 18, 19 PNGs pixel-identical, 417.20 s
+same: ra_discount/dubins_res120_dlower1e-08_dupper1e-08_gamma0.96_dt0.3: phases 0-0 of 0-0, 83.4% classified after phase 0, 1 PNGs pixel-identical, 2.67 s
+same: ra_discount/dubins_res20_epsmin1e-06_dlower1e-08_dupper1e-08_gamma0.96_dt0.3: phases 0-13 of 0-13, 94.5% classified after phase 13, 14 PNGs pixel-identical, 46.73 s
+same: avoid_nodiscount/dubins_res80_epsmin1e-06_dlower1e-15_dupper1e-15_dt0.3: phases 0-6 of 0-6, 94.4% classified after phase 6, 7 PNGs pixel-identical, 23.86 s
+Fig. 2b redrawn into results_hscc_2027_newbellmans_12workers_current_code_updated/ra_discount/dubins_res20_epsmin1e-06_dlower1e-08_dupper1e-08_gamma0.96_dt0.3/
+=== 2. Section 9.2.5 (Wed Nov  4 14:45:52 CST 2026) ===
+verification_ra: identical to the reference results
+verification_avoid: identical to the reference results
+verification_ra_violation: identical to the reference results
+=== 3. Appendix H (Wed Nov  4 14:48:39 CST 2026) ===
+error bounds (Theorem 3): identical to the reference results
+unclassified cells (Theorem 3): identical to the reference results
+=== done in 111 min: everything matches the stored results ===
