@@ -1,0 +1,64 @@
+{
+  "run_dir": "/Users/i.k.tabbara/Documents/python directory/HSCC_2027/refactored_Implementations/paper_results/results_quantitative_verification/avoid_nodiscount/dubins_res120_dlower1e-300_dupper1e-300_dt0.3",
+  "tau": 0.3,
+  "actions": [
+    -1.0,
+    0.0,
+    1.0
+  ],
+  "seed": 0,
+  "solver_vi_iterations": 89,
+  "cells": 1728000,
+  "cells_V_upper_nonpositive": 464032,
+  "cells_V_upper_zero": 0,
+  "cells_with_k": 464032,
+  "cells_with_k_but_V_upper_positive_or_vice_versa": 0,
+  "k_histogram_over_cells": {
+    "0": 239040,
+    "1": 96384,
+    "2": 57848,
+    "3": 28040,
+    "4": 13688,
+    "5": 8928,
+    "6": 8360,
+    "7": 6456,
+    "8": 3864,
+    "9": 1336,
+    "10": 88
+  },
+  "flow_check_max_error": 8.881784197001252e-16,
+  "recomputation": {
+    "iterations": 89,
+    "fixed_point_equals_solver_V_upper": 1728000,
+    "k_equal_cells": 1728000,
+    "k_different_cells": 0
+  },
+  "certificate": {
+    "cells_k0": 239040,
+    "k0_with_l_upper_positive": 0,
+    "cells_k_positive": 224992,
+    "k_positive_with_l_upper_nonpositive": 0,
+    "k_positive_with_a_successor_not_below": 0,
+    "violations": 0
+  },
+  "exhaustive": {
+    "states": 4176288,
+    "uniform": 464032,
+    "vertices": 3712256,
+    "exhausted": 4176288,
+    "not_exhausted_(frontier_cap)": 0,
+    "violations": 0,
+    "no_hit_by_k": 0,
+    "action_prefixes_checked": 37922424,
+    "max_frontier": 555,
+    "states_in_F_at_time_0": 2198073,
+    "k_max": 10,
+    "k_median": 0.0,
+    "latest_hit_max": 8,
+    "latest_hit_equals_k_(k>=1)": 1280735,
+    "max_latest_hit_over_k_(k>=1)": 1.0,
+    "min_k_minus_latest_hit": 0,
+    "seconds": 2.2
+  },
+  "seconds": 31.6
+}

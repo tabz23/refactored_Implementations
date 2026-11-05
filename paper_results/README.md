@@ -35,7 +35,7 @@ matches. Runtimes are printed but not compared, since they depend on the machine
 | Folder | Paper results | Script | Time (Apple M3 Pro) |
 |---|---|---|---|
 | `results_hscc_2027_newbellmans_12workers_current_code/` | Figs. 2–5, the runtimes in the Fig. 3–5 captions and in §9.2.3 | `regenerate_hscc_newbellmans_tol1e-15_current_code.sh` | about 1 hour |
-| `results_quantitative_verification/` | §9.2.5, the validation of both claims of Proposition 4 (`prop:greedy`) and of Proposition 6 (`prop:avoid`) | `reproduce.sh` | about 3.5 minutes |
+| `results_quantitative_verification/` | §9.2.5, the validation of both claims of Proposition 4 (`prop:greedy`) and of Proposition 6 (`prop:avoid`) | `reproduce.sh` | about 4 minutes |
 | `results_bound_verification/` | Appendix H (`app:bound_verification`): the numerical check of Theorem 3 (`thm:convergence`), its figure, and the check of its last claim on unclassified cells (`app:bv_unclassified`) | `reproduce.sh` and `unclassified_check.py` | about 3.5 minutes each |
 
 The other paper results do not come from this code. Fig. 1 and Fig. 4(e) come from the
@@ -215,8 +215,8 @@ Each case writes `<mode>/<case folder>/` containing these files:
 * **`phases.csv`:** one row per phase, with cell counts, iterations and timings.
 * **`value_function_phase_<N>_complete.png`:** the classification map after phase N. Green
   means $\underline V > 0$, red means $\overline V \le 0$, and gray means unclassified. The
-  solver uses this test in every mode. For the avoid case, see known difference 4 at the
-  end.
+  solver uses this test in every mode, and in the avoid case it is the test of
+  Proposition 6(2).
 * **`params.json`:** the exact command and its arguments.
 
 Quick extraction:
@@ -271,9 +271,13 @@ Folder: `results_quantitative_verification/`. Its `README.md` has the details.
 cd results_quantitative_verification
 ./reproduce.sh            # writes ../results_quantitative_verification_rerun and compares
                           # every number except timings with the stored summary.json
-                          # files and verification_ra_violation/report.json
+                          # files, verification_ra_violation/report.json and
+                          # verification_avoid_failure_time/report.json
 ./reproduce.sh "$PWD"     # regenerates the results in this folder instead
 ```
+
+To reproduce only the failure-reaching time of Proposition 6(2) (two commands, about a
+minute), see "Only the failure-reaching time of Proposition 6(2)" in the folder's `README.md`.
 
 ### What it checks
 
@@ -319,6 +323,16 @@ cd results_quantitative_verification
      absorbing failure state outside the grid the fixed value −1 (its $l$ and $r$ bounds are
      −1 too), and the verifier models it as an absorbing state with $l = r = -1$. Hence
      $l_{\min} = -1.3$, at the obstacle center.
+6. **Failure-reaching time checks** (`verify_avoid_failure_time.py`, the second claim of
+   Proposition 6, on the avoid run):
+   * the solver records $k(s)$, the first iteration with $\overline V_1^{(k)}(s) \le 0$, and
+     writes it to `upper_nonpos_iteration_phase_0.csv`;
+   * the verifier recomputes $k(s)$ on its own abstraction and checks the induction of the
+     proof as a certificate: $k(s) = 0$ only if $\overline l(s) \le 0$, and otherwise every
+     successor of every action has a smaller $k$;
+   * from one uniformly random state and the 8 corners of every cell with
+     $\overline V_1^{\mathrm{cons}} \le 0$, an exhaustive search over every action sequence.
+     Each sequence must reach F ($l \le 0$, or leaving the grid) by time $k(s_0)$.
 
 ### Results (stored `summary.json` and `report.json`; §9.2.5 reports the ones marked)
 
@@ -348,6 +362,16 @@ cd results_quantitative_verification
     cells; $\gamma^t$ must be formed by repeated multiplication, as in the solver, or these
     ties show up as one-ulp misses. $\bar t_{\mathcal F}$ is computed by the same
     `time_bound` as $\bar t$.
+* **Failure-reaching time** (`verification_avoid_failure_time/report.json`): 464,032 cells
+  with $\overline V_1^{\mathrm{cons}} \le 0$ and 4,176,288 start states, with 0 violations in
+  the exhaustive search (37,922,424 action sequences). The cell and state counts and the
+  0 violations are in §9.2.5.
+  * The certificate has 0 violations, and the verifier's $k(s)$ and $\overline V_1$ equal the
+    solver's in all 1,728,000 cells (not in the paper).
+  * $k(s_0) \le 10$ with median 0, and the latest first time in F over all sequences is at
+    most 8 steps (not in the paper).
+  * The bound is attained: for 1,280,735 of the 2,024,928 start states with $k(s_0) \ge 1$
+    (63 %, in §9.2.5), some sequence first reaches F exactly at time $k(s_0)$.
 
 ### Alignment with the paper
 
@@ -427,7 +451,8 @@ The implementation follows the paper exactly:
 ### Which code produced which results
 
 * The stored results (2026-11-04) used solver commit `9f6e912` for Section 1 (`di14` and
-  `evasion12` were finished at `1572bab`, with the same `cpp/`) and `1572bab` for Section 2.
+  `evasion12` were finished at `1572bab`, with the same `cpp/`, and `avoid80` was
+  regenerated at `8252c4c`) and `4175b91` for Section 2.
 * The original runs (`original_runs/`) used `8751e29` for Section 1 and `d8463b7` for
   Section 2; `git diff d8463b7 8751e29 -- cpp` is empty, so both used the same solver code.
 * Each folder's `provenance.txt` records the commit. To check that a rerun uses the same code,
@@ -439,7 +464,7 @@ The implementation follows the paper exactly:
 |---|---|
 | Algorithm 1, discounted | `ra_discount`: $\underline V^{(0)} = \min\{\underline l, \underline r\}$, $\overline V^{(0)} = \overline l$; the operators of Proposition 1; stops when both sup-norm changes are at most δ\* (`vi.hpp`) |
 | Proposition 3 (γ = 1, reach–avoid) | `ra_nodiscount`: both bounds start at $\min\{l, r\}$; γ is not applied |
-| Section 8 (avoid) | `avoid_nodiscount`: both bounds start at $l$; the operators $\mathcal T^{\mathrm{av}}$ |
+| Section 8 (avoid) | `avoid_nodiscount`: both bounds start at $l$; the operators $\mathcal T^{\mathrm{av}}$; with `--dump-csv`, also writes $k(s)$, the first iteration with $\overline V^{(k)}(s) \le 0$ (Proposition 6(2)) |
 | Section 4 (abstraction) | reach box of radius $L_f$ × cell radius around the integrated image of the center, with $L_f = e^{\lambda t_s}$ (Grönwall); successors are the cells meeting the box; outside the grid is one absorbing sink (the paper's $s_\bot$) with values $\underline c = \overline c = -1$, except $\underline c = \min\{-1, \inf l\} = -1.3$ in the avoid case |
 | Section 5 (cell bounds) | $l(x_c) \pm L_l\,$radius and $r(x_c) \pm L_r\,$radius, with $L_l = L_r = \sqrt2$ |
 | Algorithm 2 | refines boundary cells ($\overline V > 0 \ge \underline V$) whose radius $\max_j \eta_{x,j}(s)$ exceeds ε_min (`--eps-min`), bisects them along the widest dimension, then re-initializes and recomputes every cell; stops when no cell qualifies or after `--refinements` iterations (`refine.hpp`) |
@@ -462,12 +487,7 @@ None of these is stated in the paper.
    (the heading row of the flow's Jacobian is at most 1 + ∫tan δ + ∫v sec²δ, with
    |v| ≤ 1.06 and δ ∈ [0.6, 0.9] in the worst case) against e^(2.152·0.3) = 1.907. So the
    reach boxes are valid.
-4. **Unsafe test in the avoid case:** the solver labels a cell unsafe when
-   $\overline V \le 0$. The paper's avoid certificate (Proposition 6(2), Fig. 5 caption) uses
-   $\overline V < 0$. The two agree unless a cell has $\overline V = 0$ exactly. Upper values
-   come only from the cell bounds $\overline l(s)$ and the sink value −1, so this does not
-   happen in practice; the §9.2.5 avoid run has no such cell (`cells_with_V_upper_zero` = 0).
-5. **Algorithm 2 stops at an iteration limit:** the paper's Algorithm 2 runs until its queue is
+4. **Algorithm 2 stops at an iteration limit:** the paper's Algorithm 2 runs until its queue is
    empty. With `--eps-min 1e-6`, every run stops after `--refinements` iterations while the
    queue is still nonempty, and the figures show that output.
    * Theorem 2 applies after every iteration, because each iteration ends with Algorithm 1 on
@@ -476,6 +496,18 @@ None of these is stated in the paper.
      (eight).
 
 ### Changes after the paper run
+
+* **2026-11-04, failure-reaching time of Proposition 6(2) (`4175b91`):** the revised paper
+  certifies a cell in the BRS when $\overline V_1^{(k)}(s) \le 0$ for some $k$, and then every
+  trajectory from the cell reaches F within $k$ steps under every control sequence. In avoid
+  runs with `--dump-csv`, the solver now also writes $k(s)$ to
+  `upper_nonpos_iteration_phase_0.csv`. The values are computed as before: the 120³ avoid value
+  dump is byte-identical. `verify_avoid_failure_time.py` checks the claim (Section 2 above).
+  `results_quantitative_verification/` was regenerated at this commit
+  (`./reproduce.sh "$PWD"`), and every number in `verification_ra`, `verification_avoid` and
+  `verification_ra_violation` is unchanged. With the non-strict test, the solver's avoid
+  classification ($\overline V \le 0$) now matches the paper (Proposition 6(2), Fig. 5
+  caption), so the former known difference "unsafe test in the avoid case" is gone.
 
 * **2026-11-04, lower value of the sink in the avoid case (`8252c4c`):** in
   `avoid_nodiscount` the sink's lower value is min(−1, inf l) = −1.3 for the Dubins car instead

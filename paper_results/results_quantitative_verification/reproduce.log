@@ -1,14 +1,14 @@
-=== START ra_discount dubins Wed Nov  4 14:46:03 CST 2026 ===
+=== START ra_discount dubins Wed Nov  4 22:01:59 CST 2026 ===
 
 ######################################################################
-# run started 2026-11-04T14:46:04
-# command: ./build/dhj_head --mode ra_discount --gamma 0.96 --delta-lower 1e-8 --delta-upper 1e-8 --dynamics dubins --dt 0.3 --initial-resolution 120 --refinements 0 --checkpoint-every 0 --dump-csv --plot-dpi 300 --workers 12 --results-root /Users/i.k.tabbara/Documents/python directory/HSCC_2027/refactored_Implementations/paper_results/results_quantitative_verification_updated
+# run started 2026-11-04T22:01:59
+# command: ./build/dhj_head --mode ra_discount --gamma 0.96 --delta-lower 1e-8 --delta-upper 1e-8 --dynamics dubins --dt 0.3 --initial-resolution 120 --refinements 0 --checkpoint-every 0 --dump-csv --plot-dpi 300 --workers 12 --results-root /Users/i.k.tabbara/Documents/python directory/HSCC_2027/refactored_Implementations/paper_results/results_quantitative_verification_rerun
 # cwd: /Users/i.k.tabbara/Documents/python directory/HSCC_2027/refactored_Implementations/cpp
 ######################################################################
 DISCRETE HJ REACH-AVOID SOLVER (C++)
 Mode: ra_discount (RA_discount.py semantics)
 Workers: 12
-Output directory: /Users/i.k.tabbara/Documents/python directory/HSCC_2027/refactored_Implementations/paper_results/results_quantitative_verification_updated/ra_discount/dubins_res120_dlower1e-08_dupper1e-08_gamma0.96_dt0.3
+Output directory: /Users/i.k.tabbara/Documents/python directory/HSCC_2027/refactored_Implementations/paper_results/results_quantitative_verification_rerun/ra_discount/dubins_res120_dlower1e-08_dupper1e-08_gamma0.96_dt0.3
 Dynamics: dubins (3-D)
   Time discretization: 1 steps of dt=0.3 s over tau=0.3 s
 ======================================================================
@@ -17,7 +17,7 @@ ALGORITHM 2: Adaptive Refinement
 Environment: dubins
 Initializing grid with resolution 120^3...
   Building spatial index for 1728000 cells...
-   Spatial index built in 0.62s
+   Spatial index built in 0.52s
 
 Gronwall Reachability Initialized:
   Lipschitz constant L = 1
@@ -45,12 +45,14 @@ Grid: 1728000 cells
 
 Precomputing successor sets with HYBRID approach...
   Step 1: Computing 5184000 trajectories in parallel...
-   Trajectories + spatial queries computed in 1.11s (4683907.4 tasks/s)
-    Breakdown: 47.2% ODE, 52.8% queries
+   Trajectories + spatial queries computed in 1.15s (4514129.0 tasks/s)
+    Breakdown: 48.6% ODE, 51.4% queries
 
 Starting OPTIMIZED PARALLEL value iteration (max 100000 iterations)...
 Convergence tolerances: lower 1e-08, upper 1e-08
 Number of cells: 1728000
+    Reach boxes leaving the state box: 389128 of 5184000 cell-action pairs (sink added); pairs with no successor: 0
+    Sink values: lower -1, upper -1
 Iteration   1: ||V_upper^k - V_upper^k-1||_inf = 3.90430937254461252195, ||V_lower^k - V_lower^k-1||_inf = 4.80809536094036804599
 Iteration   2: ||V_upper^k - V_upper^k-1||_inf = 3.69300749659039784234, ||V_lower^k - V_lower^k-1||_inf = 4.61577154650275289782
 Iteration   3: ||V_upper^k - V_upper^k-1||_inf = 3.50172487934746623495, ||V_lower^k - V_lower^k-1||_inf = 4.36335184832693290247
@@ -132,10 +134,10 @@ Iteration  71: ||V_upper^k - V_upper^k-1||_inf = 0.00000000000000000000, ||V_low
   V_lower increased from min(l_lower, r_lower); smallest step 0.000e+00
 
 Value iteration completed in 71 iterations
-total time for running value_iteration the first time (phase 0) on the initial grid including grid initialization, setting up cpu parallelism, successor set computation and value iteration is 8.61461 seconds
+total time for running value_iteration the first time (phase 0) on the initial grid including grid initialization, setting up cpu parallelism, successor set computation and value iteration is 8.65478 seconds
 Initial VI completed in 71 iterations
 Final convergence: ||V_upper||_inf = 0.00000000e+00, ||V_lower||_inf = 0.00000000e+00
-Saved initial visualization: /Users/i.k.tabbara/Documents/python directory/HSCC_2027/refactored_Implementations/paper_results/results_quantitative_verification_updated/ra_discount/dubins_res120_dlower1e-08_dupper1e-08_gamma0.96_dt0.3/value_function_phase_0_complete.png
+Saved initial visualization: /Users/i.k.tabbara/Documents/python directory/HSCC_2027/refactored_Implementations/paper_results/results_quantitative_verification_rerun/ra_discount/dubins_res120_dlower1e-08_dupper1e-08_gamma0.96_dt0.3/value_function_phase_0_complete.png
 
 Classification after phase 0:
   Safe:           983988 cells ( 56.9%),   56.9% of state space
@@ -167,39 +169,39 @@ Final Cell Classification:
   Unsafe:         458296 cells ( 26.5%),   26.5% of state space
   Unclassified:   285716 cells ( 16.5%),   16.5% of state space
 
- All results saved to: /Users/i.k.tabbara/Documents/python directory/HSCC_2027/refactored_Implementations/paper_results/results_quantitative_verification_updated/ra_discount/dubins_res120_dlower1e-08_dupper1e-08_gamma0.96_dt0.3/
+ All results saved to: /Users/i.k.tabbara/Documents/python directory/HSCC_2027/refactored_Implementations/paper_results/results_quantitative_verification_rerun/ra_discount/dubins_res120_dlower1e-08_dupper1e-08_gamma0.96_dt0.3/
 ALGORITHM 2 COMPLETE
-Total time: 8.66 seconds
+Total time: 8.72 seconds
 
 ======================================================================
 TIMING BREAKDOWN (RA_discount)
 ======================================================================
-  grid construction      :      0.654 s
-  spatial index builds   :      0.620 s
-  cell initialization    :      0.005 s
-  ODE integration        :      0.522 s  (5184000 solves)
-  successor set queries  :      0.585 s
-  value iteration        :      1.009 s  (71 sweeps)
+  grid construction      :      0.577 s
+  spatial index builds   :      0.517 s
+  cell initialization    :      0.004 s
+  ODE integration        :      0.558 s  (5184000 solves)
+  successor set queries  :      0.591 s
+  value iteration        :      1.075 s  (71 sweeps)
   cell splitting         :      0.000 s
-  plotting / output      :      6.480 s
+  plotting / output      :      6.405 s
   checkpoint writes      :      0.000 s
   ------------------------------------------------
-  TOTAL                  :      9.515 s
+  TOTAL                  :      9.496 s
   final leaf cells       :    1728000
-TOTAL WALL TIME: 9.51 seconds
-# run finished 2026-11-04T14:46:13
-=== END ra_discount dubins Wed Nov  4 14:46:13 CST 2026 ===
-=== START avoid_nodiscount dubins Wed Nov  4 14:46:13 CST 2026 ===
+TOTAL WALL TIME: 9.50 seconds
+# run finished 2026-11-04T22:02:09
+=== END ra_discount dubins Wed Nov  4 22:02:09 CST 2026 ===
+=== START avoid_nodiscount dubins Wed Nov  4 22:02:09 CST 2026 ===
 
 ######################################################################
-# run started 2026-11-04T14:46:13
-# command: ./build/dhj_head --mode avoid_nodiscount --delta-lower 1e-300 --delta-upper 1e-300 --dynamics dubins --dt 0.3 --initial-resolution 120 --refinements 0 --checkpoint-every 0 --dump-csv --plot-dpi 300 --workers 12 --results-root /Users/i.k.tabbara/Documents/python directory/HSCC_2027/refactored_Implementations/paper_results/results_quantitative_verification_updated
+# run started 2026-11-04T22:02:09
+# command: ./build/dhj_head --mode avoid_nodiscount --delta-lower 1e-300 --delta-upper 1e-300 --dynamics dubins --dt 0.3 --initial-resolution 120 --refinements 0 --checkpoint-every 0 --dump-csv --plot-dpi 300 --workers 12 --results-root /Users/i.k.tabbara/Documents/python directory/HSCC_2027/refactored_Implementations/paper_results/results_quantitative_verification_rerun
 # cwd: /Users/i.k.tabbara/Documents/python directory/HSCC_2027/refactored_Implementations/cpp
 ######################################################################
 DISCRETE HJ REACH-AVOID SOLVER (C++)
 Mode: avoid_nodiscount (avoid_nodiscount.py semantics)
 Workers: 12
-Output directory: /Users/i.k.tabbara/Documents/python directory/HSCC_2027/refactored_Implementations/paper_results/results_quantitative_verification_updated/avoid_nodiscount/dubins_res120_dlower1e-300_dupper1e-300_dt0.3
+Output directory: /Users/i.k.tabbara/Documents/python directory/HSCC_2027/refactored_Implementations/paper_results/results_quantitative_verification_rerun/avoid_nodiscount/dubins_res120_dlower1e-300_dupper1e-300_dt0.3
 Dynamics: dubins (3-D)
   Time discretization: 1 steps of dt=0.3 s over tau=0.3 s
 ======================================================================
@@ -208,7 +210,7 @@ ALGORITHM 2: Adaptive Refinement
 Environment: dubins
 Initializing grid with resolution 120^3...
   Building spatial index for 1728000 cells...
-   Spatial index built in 0.49s
+   Spatial index built in 0.48s
 
 Gronwall Reachability Initialized:
   Lipschitz constant L = 1
@@ -235,24 +237,26 @@ Grid: 1728000 cells
 
 Precomputing successor sets with HYBRID approach...
   Step 1: Computing 5184000 trajectories in parallel...
-   Trajectories + spatial queries computed in 1.23s (4217542.1 tasks/s)
-    Breakdown: 47.2% ODE, 52.8% queries
+   Trajectories + spatial queries computed in 1.04s (4994845.4 tasks/s)
+    Breakdown: 48.3% ODE, 51.7% queries
 
 Starting OPTIMIZED PARALLEL value iteration (max 100000 iterations)...
 Convergence tolerances: lower 1e-300, upper 1e-300
 Number of cells: 1728000
-Iteration   1: ||V_upper^k - V_upper^k-1||_inf = 3.94430937254461255748, ||V_lower^k - V_lower^k-1||_inf = 3.87026132357530583405
-Iteration   2: ||V_upper^k - V_upper^k-1||_inf = 3.80534677470986171244, ||V_lower^k - V_lower^k-1||_inf = 3.69487999223003082960
-Iteration   3: ||V_upper^k - V_upper^k-1||_inf = 3.70454844154877616091, ||V_lower^k - V_lower^k-1||_inf = 3.51735660020720519725
-Iteration   4: ||V_upper^k - V_upper^k-1||_inf = 3.57515508008971227838, ||V_lower^k - V_lower^k-1||_inf = 3.34825072782351140788
-Iteration   5: ||V_upper^k - V_upper^k-1||_inf = 3.42229877679281813130, ||V_lower^k - V_lower^k-1||_inf = 3.20645590349575071443
-Iteration   6: ||V_upper^k - V_upper^k-1||_inf = 3.23863079852425261862, ||V_lower^k - V_lower^k-1||_inf = 3.05285060446550948754
-Iteration   7: ||V_upper^k - V_upper^k-1||_inf = 3.04704668301737147118, ||V_lower^k - V_lower^k-1||_inf = 2.91816414211954544555
-Iteration   8: ||V_upper^k - V_upper^k-1||_inf = 2.79827376927843651799, ||V_lower^k - V_lower^k-1||_inf = 2.70374068196667005637
-Iteration   9: ||V_upper^k - V_upper^k-1||_inf = 2.53277973627350716512, ||V_lower^k - V_lower^k-1||_inf = 2.41456642469196847145
-Iteration  10: ||V_upper^k - V_upper^k-1||_inf = 2.32376908343422039493, ||V_lower^k - V_lower^k-1||_inf = 2.10659010217282727240
-Iteration  11: ||V_upper^k - V_upper^k-1||_inf = 0.11174883090397558227, ||V_lower^k - V_lower^k-1||_inf = 1.77158926391130222555
-Iteration  12: ||V_upper^k - V_upper^k-1||_inf = 0.10004145569675682026, ||V_lower^k - V_lower^k-1||_inf = 1.45915247018395288769
+    Reach boxes leaving the state box: 389128 of 5184000 cell-action pairs (sink added); pairs with no successor: 0
+    Sink values: lower -1.3, upper -1
+Iteration   1: ||V_upper^k - V_upper^k-1||_inf = 3.94430937254461255748, ||V_lower^k - V_lower^k-1||_inf = 4.17026132357530610051
+Iteration   2: ||V_upper^k - V_upper^k-1||_inf = 3.80534677470986171244, ||V_lower^k - V_lower^k-1||_inf = 3.99487999223003065197
+Iteration   3: ||V_upper^k - V_upper^k-1||_inf = 3.70454844154877616091, ||V_lower^k - V_lower^k-1||_inf = 3.81735660020720501961
+Iteration   4: ||V_upper^k - V_upper^k-1||_inf = 3.57515508008971227838, ||V_lower^k - V_lower^k-1||_inf = 3.64825072782351167433
+Iteration   5: ||V_upper^k - V_upper^k-1||_inf = 3.42229877679281813130, ||V_lower^k - V_lower^k-1||_inf = 3.50645590349575098088
+Iteration   6: ||V_upper^k - V_upper^k-1||_inf = 3.23863079852425261862, ||V_lower^k - V_lower^k-1||_inf = 3.35285060446550975399
+Iteration   7: ||V_upper^k - V_upper^k-1||_inf = 3.04704668301737147118, ||V_lower^k - V_lower^k-1||_inf = 3.21816414211954526792
+Iteration   8: ||V_upper^k - V_upper^k-1||_inf = 2.79827376927843651799, ||V_lower^k - V_lower^k-1||_inf = 3.00374068196667032282
+Iteration   9: ||V_upper^k - V_upper^k-1||_inf = 2.53277973627350716512, ||V_lower^k - V_lower^k-1||_inf = 2.71456642469196829381
+Iteration  10: ||V_upper^k - V_upper^k-1||_inf = 2.32376908343422039493, ||V_lower^k - V_lower^k-1||_inf = 2.40659010217282753885
+Iteration  11: ||V_upper^k - V_upper^k-1||_inf = 0.11174883090397558227, ||V_lower^k - V_lower^k-1||_inf = 2.07158926391130204792
+Iteration  12: ||V_upper^k - V_upper^k-1||_inf = 0.10004145569675682026, ||V_lower^k - V_lower^k-1||_inf = 1.75915247018395293210
 Iteration  13: ||V_upper^k - V_upper^k-1||_inf = 0.09115435364888169190, ||V_lower^k - V_lower^k-1||_inf = 0.07795159452740363371
 Iteration  14: ||V_upper^k - V_upper^k-1||_inf = 0.08314700437751554318, ||V_lower^k - V_lower^k-1||_inf = 0.05950777214957736483
 Iteration  15: ||V_upper^k - V_upper^k-1||_inf = 0.07836353831168585415, ||V_lower^k - V_lower^k-1||_inf = 0.05786547337276171099
@@ -339,10 +343,10 @@ Iteration  89: ||V_upper^k - V_upper^k-1||_inf = 0.00000000000000000000, ||V_low
   Converged in 89 iterations
 
 Value iteration completed in 89 iterations
-total time for running value_iteration the first time (phase 0) on the initial grid including grid initialization, setting up cpu parallelism, successor set computation and value iteration is 8.75747 seconds
+total time for running value_iteration the first time (phase 0) on the initial grid including grid initialization, setting up cpu parallelism, successor set computation and value iteration is 8.80776 seconds
 Initial VI completed in 89 iterations
 Final convergence: ||V_upper||_inf = 0.00000000e+00, ||V_lower||_inf = 0.00000000e+00
-Saved initial visualization: /Users/i.k.tabbara/Documents/python directory/HSCC_2027/refactored_Implementations/paper_results/results_quantitative_verification_updated/avoid_nodiscount/dubins_res120_dlower1e-300_dupper1e-300_dt0.3/value_function_phase_0_complete.png
+Saved initial visualization: /Users/i.k.tabbara/Documents/python directory/HSCC_2027/refactored_Implementations/paper_results/results_quantitative_verification_rerun/avoid_nodiscount/dubins_res120_dlower1e-300_dupper1e-300_dt0.3/value_function_phase_0_complete.png
 
 Classification after phase 0:
   Safe:           973616 cells ( 56.3%),   56.3% of state space
@@ -374,33 +378,33 @@ Final Cell Classification:
   Unsafe:         464032 cells ( 26.9%),   26.9% of state space
   Unclassified:   290352 cells ( 16.8%),   16.8% of state space
 
- All results saved to: /Users/i.k.tabbara/Documents/python directory/HSCC_2027/refactored_Implementations/paper_results/results_quantitative_verification_updated/avoid_nodiscount/dubins_res120_dlower1e-300_dupper1e-300_dt0.3/
+ All results saved to: /Users/i.k.tabbara/Documents/python directory/HSCC_2027/refactored_Implementations/paper_results/results_quantitative_verification_rerun/avoid_nodiscount/dubins_res120_dlower1e-300_dupper1e-300_dt0.3/
 ALGORITHM 2 COMPLETE
-Total time: 8.81 seconds
+Total time: 8.85 seconds
 
 ======================================================================
 TIMING BREAKDOWN (avoid_nodiscount)
 ======================================================================
-  grid construction      :      0.512 s
-  spatial index builds   :      0.490 s
-  cell initialization    :      0.005 s
-  ODE integration        :      0.580 s  (5184000 solves)
-  successor set queries  :      0.649 s
-  value iteration        :      1.149 s  (89 sweeps)
+  grid construction      :      0.496 s
+  spatial index builds   :      0.475 s
+  cell initialization    :      0.004 s
+  ODE integration        :      0.501 s  (5184000 solves)
+  successor set queries  :      0.537 s
+  value iteration        :      1.245 s  (89 sweeps)
   cell splitting         :      0.000 s
-  plotting / output      :      6.360 s
+  plotting / output      :      6.505 s
   checkpoint writes      :      0.000 s
   ------------------------------------------------
-  TOTAL                  :      9.512 s
+  TOTAL                  :      9.537 s
   final leaf cells       :    1728000
-TOTAL WALL TIME: 9.51 seconds
-# run finished 2026-11-04T14:46:23
-=== END avoid_nodiscount dubins Wed Nov  4 14:46:23 CST 2026 ===
-=== ALL DONE Wed Nov  4 14:46:23 CST 2026 ===
-verifying /Users/i.k.tabbara/Documents/python directory/HSCC_2027/refactored_Implementations/paper_results/results_quantitative_verification_updated/ra_discount/dubins_res120_dlower1e-08_dupper1e-08_gamma0.96_dt0.3
+TOTAL WALL TIME: 9.54 seconds
+# run finished 2026-11-04T22:02:18
+=== END avoid_nodiscount dubins Wed Nov  4 22:02:18 CST 2026 ===
+=== ALL DONE Wed Nov  4 22:02:18 CST 2026 ===
+verifying /Users/i.k.tabbara/Documents/python directory/HSCC_2027/refactored_Implementations/paper_results/results_quantitative_verification_rerun/ra_discount/dubins_res120_dlower1e-08_dupper1e-08_gamma0.96_dt0.3
 {
   "system": "dubins",
-  "run_dir": "/Users/i.k.tabbara/Documents/python directory/HSCC_2027/refactored_Implementations/paper_results/results_quantitative_verification_updated/ra_discount/dubins_res120_dlower1e-08_dupper1e-08_gamma0.96_dt0.3",
+  "run_dir": "/Users/i.k.tabbara/Documents/python directory/HSCC_2027/refactored_Implementations/paper_results/results_quantitative_verification_rerun/ra_discount/dubins_res120_dlower1e-08_dupper1e-08_gamma0.96_dt0.3",
   "cells": 1728000,
   "grid": [
     120,
@@ -419,9 +423,9 @@ verifying /Users/i.k.tabbara/Documents/python directory/HSCC_2027/refactored_Imp
   "L_r": 1.4142135623730951,
   "solver": {
     "vi_iterations": 71,
-    "time_vi_s": 1.009,
-    "time_successors_s": 1.107,
-    "time_phase_s": 8.615
+    "time_vi_s": 1.075,
+    "time_successors_s": 1.148,
+    "time_phase_s": 8.655
   },
   "classification_percent": {
     "R": 56.94375,
@@ -471,13 +475,13 @@ verifying /Users/i.k.tabbara/Documents/python directory/HSCC_2027/refactored_Imp
     "J_minus_Vupper_max": -0.001952376617341156,
     "J_above_Vupper": 0
   },
-  "verifier_seconds": 11.177422046661377
+  "verifier_seconds": 11.190319061279297
 }
-wrote /Users/i.k.tabbara/Documents/python directory/HSCC_2027/refactored_Implementations/paper_results/results_quantitative_verification_updated/verification_ra
-verifying /Users/i.k.tabbara/Documents/python directory/HSCC_2027/refactored_Implementations/paper_results/results_quantitative_verification_updated/avoid_nodiscount/dubins_res120_dlower1e-300_dupper1e-300_dt0.3
+wrote /Users/i.k.tabbara/Documents/python directory/HSCC_2027/refactored_Implementations/paper_results/results_quantitative_verification_rerun/verification_ra
+verifying /Users/i.k.tabbara/Documents/python directory/HSCC_2027/refactored_Implementations/paper_results/results_quantitative_verification_rerun/avoid_nodiscount/dubins_res120_dlower1e-300_dupper1e-300_dt0.3
 {
   "system": "dubins",
-  "run_dir": "/Users/i.k.tabbara/Documents/python directory/HSCC_2027/refactored_Implementations/paper_results/results_quantitative_verification_updated/avoid_nodiscount/dubins_res120_dlower1e-300_dupper1e-300_dt0.3",
+  "run_dir": "/Users/i.k.tabbara/Documents/python directory/HSCC_2027/refactored_Implementations/paper_results/results_quantitative_verification_rerun/avoid_nodiscount/dubins_res120_dlower1e-300_dupper1e-300_dt0.3",
   "cells": 1728000,
   "grid": [
     120,
@@ -496,9 +500,9 @@ verifying /Users/i.k.tabbara/Documents/python directory/HSCC_2027/refactored_Imp
   "solver": {
     "vi_iterations": 89,
     "stop_tolerance": 1e-300,
-    "time_vi_s": 1.149,
-    "time_successors_s": 1.229,
-    "time_phase_s": 8.757
+    "time_vi_s": 1.245,
+    "time_successors_s": 1.038,
+    "time_phase_s": 8.808
   },
   "classification_percent": {
     "safe": 56.34351851851852,
@@ -508,6 +512,10 @@ verifying /Users/i.k.tabbara/Documents/python directory/HSCC_2027/refactored_Imp
   "cells_with_V_upper_zero": 0,
   "flow_check_max_error": 8.881784197001252e-16,
   "cell_bound_max_error": 1.7763568394002505e-15,
+  "sink_values": {
+    "lower": -1.3,
+    "upper": -1.0
+  },
   "certificates": {
     "reach_box_radius": 0.035339220943868745,
     "max_successor_cells_per_axis": [
@@ -585,17 +593,17 @@ verifying /Users/i.k.tabbara/Documents/python directory/HSCC_2027/refactored_Imp
     "bound_max": 10,
     "ratio_latest_hit_to_bound_max": 1.0
   },
-  "verifier_seconds": 99.72492098808289
+  "verifier_seconds": 110.94329190254211
 }
-wrote /Users/i.k.tabbara/Documents/python directory/HSCC_2027/refactored_Implementations/paper_results/results_quantitative_verification_updated/verification_avoid
+wrote /Users/i.k.tabbara/Documents/python directory/HSCC_2027/refactored_Implementations/paper_results/results_quantitative_verification_rerun/verification_avoid
 certificates ...
 {"cells_V_upper_negative": 458296, "min_V_upper": -1.22762063645602, "tbar": {"median": 15.0, "max": 152, "min": 1, "quantiles_10_50_90_99": [7.0, 15.0, 60.0, 105.0]}, "upper_certificate": {"upper_cells_checked": 1728000, "upper_violations": 0, "upper_max_excess": 0.0}}
 constant u=-1 {"trajectories": 4124664, "satisfy_claim": 4124664, "violations": 0, "no_hit": 0, "hit_after_bound": 0, "r_condition_violated": 0, "visited_T_before_hit": 0, "hit_at_t0": 1580225, "hits_that_are_ties_(|slack|<=1e-12)": 0, "hit_in_obstacle": 2467080, "hit_by_leaving_grid": 1657584, "t_hit_median_(t_hit>0)": 1.0, "t_hit_max": 7, "tbar_median_(t_hit>0)": 10.0, "max_t_hit_over_tbar": 0.5, "min_tbar_minus_t_hit": 1, "min_hit_slack": 0.0, "min_r_slack": 0.0016686854253251115, "min_r_ratio_before_hit_(>=1_required)": 1.0057919398467436, "seconds": 0.7}
 constant u=0 {"trajectories": 4124664, "satisfy_claim": 4124664, "violations": 0, "no_hit": 0, "hit_after_bound": 0, "r_condition_violated": 0, "visited_T_before_hit": 0, "hit_at_t0": 1580225, "hits_that_are_ties_(|slack|<=1e-12)": 0, "hit_in_obstacle": 2467080, "hit_by_leaving_grid": 1657584, "t_hit_median_(t_hit>0)": 1.0, "t_hit_max": 7, "tbar_median_(t_hit>0)": 10.0, "max_t_hit_over_tbar": 0.4666666666666667, "min_tbar_minus_t_hit": 1, "min_hit_slack": 0.0, "min_r_slack": 0.0016686854253251115, "min_r_ratio_before_hit_(>=1_required)": 1.0057919398467436, "seconds": 0.6}
 constant u=1 {"trajectories": 4124664, "satisfy_claim": 4124664, "violations": 0, "no_hit": 0, "hit_after_bound": 0, "r_condition_violated": 0, "visited_T_before_hit": 0, "hit_at_t0": 1580225, "hits_that_are_ties_(|slack|<=1e-12)": 0, "hit_in_obstacle": 2467080, "hit_by_leaving_grid": 1657584, "t_hit_median_(t_hit>0)": 1.0, "t_hit_max": 7, "tbar_median_(t_hit>0)": 10.0, "max_t_hit_over_tbar": 0.5, "min_tbar_minus_t_hit": 1, "min_hit_slack": 0.0, "min_r_slack": 0.0016686854253251115, "min_r_ratio_before_hit_(>=1_required)": 1.0057919398467436, "seconds": 0.6}
 random actions (seed 1000) {"trajectories": 4124664, "satisfy_claim": 4124664, "violations": 0, "no_hit": 0, "hit_after_bound": 0, "r_condition_violated": 0, "visited_T_before_hit": 0, "hit_at_t0": 1580225, "hits_that_are_ties_(|slack|<=1e-12)": 0, "hit_in_obstacle": 2467080, "hit_by_leaving_grid": 1657584, "t_hit_median_(t_hit>0)": 1.0, "t_hit_max": 7, "tbar_median_(t_hit>0)": 10.0, "max_t_hit_over_tbar": 0.5, "min_tbar_minus_t_hit": 1, "min_hit_slack": 0.0, "min_r_slack": 0.0016686854253251115, "min_r_ratio_before_hit_(>=1_required)": 1.0057919398467436, "seconds": 0.6}
-random actions (seed 1001) {"trajectories": 4124664, "satisfy_claim": 4124664, "violations": 0, "no_hit": 0, "hit_after_bound": 0, "r_condition_violated": 0, "visited_T_before_hit": 0, "hit_at_t0": 1580225, "hits_that_are_ties_(|slack|<=1e-12)": 0, "hit_in_obstacle": 2467080, "hit_by_leaving_grid": 1657584, "t_hit_median_(t_hit>0)": 1.0, "t_hit_max": 7, "tbar_median_(t_hit>0)": 10.0, "max_t_hit_over_tbar": 0.5, "min_tbar_minus_t_hit": 1, "min_hit_slack": 0.0, "min_r_slack": 0.0016686854253251115, "min_r_ratio_before_hit_(>=1_required)": 1.0057919398467436, "seconds": 0.6}
-random actions (seed 1002) {"trajectories": 4124664, "satisfy_claim": 4124664, "violations": 0, "no_hit": 0, "hit_after_bound": 0, "r_condition_violated": 0, "visited_T_before_hit": 0, "hit_at_t0": 1580225, "hits_that_are_ties_(|slack|<=1e-12)": 0, "hit_in_obstacle": 2467080, "hit_by_leaving_grid": 1657584, "t_hit_median_(t_hit>0)": 1.0, "t_hit_max": 7, "tbar_median_(t_hit>0)": 10.0, "max_t_hit_over_tbar": 0.5, "min_tbar_minus_t_hit": 1, "min_hit_slack": 0.0, "min_r_slack": 0.0016686854253251115, "min_r_ratio_before_hit_(>=1_required)": 1.0057919398467436, "seconds": 0.6}
+random actions (seed 1001) {"trajectories": 4124664, "satisfy_claim": 4124664, "violations": 0, "no_hit": 0, "hit_after_bound": 0, "r_condition_violated": 0, "visited_T_before_hit": 0, "hit_at_t0": 1580225, "hits_that_are_ties_(|slack|<=1e-12)": 0, "hit_in_obstacle": 2467080, "hit_by_leaving_grid": 1657584, "t_hit_median_(t_hit>0)": 1.0, "t_hit_max": 7, "tbar_median_(t_hit>0)": 10.0, "max_t_hit_over_tbar": 0.5, "min_tbar_minus_t_hit": 1, "min_hit_slack": 0.0, "min_r_slack": 0.0016686854253251115, "min_r_ratio_before_hit_(>=1_required)": 1.0057919398467436, "seconds": 0.7}
+random actions (seed 1002) {"trajectories": 4124664, "satisfy_claim": 4124664, "violations": 0, "no_hit": 0, "hit_after_bound": 0, "r_condition_violated": 0, "visited_T_before_hit": 0, "hit_at_t0": 1580225, "hits_that_are_ties_(|slack|<=1e-12)": 0, "hit_in_obstacle": 2467080, "hit_by_leaving_grid": 1657584, "t_hit_median_(t_hit>0)": 1.0, "t_hit_max": 7, "tbar_median_(t_hit>0)": 10.0, "max_t_hit_over_tbar": 0.5, "min_tbar_minus_t_hit": 1, "min_hit_slack": 0.0, "min_r_slack": 0.0016686854253251115, "min_r_ratio_before_hit_(>=1_required)": 1.0057919398467436, "seconds": 0.7}
 Prop. 4 policy on V_lower {"trajectories": 4124664, "satisfy_claim": 4124664, "violations": 0, "no_hit": 0, "hit_after_bound": 0, "r_condition_violated": 0, "visited_T_before_hit": 0, "hit_at_t0": 1580225, "hits_that_are_ties_(|slack|<=1e-12)": 0, "hit_in_obstacle": 2467080, "hit_by_leaving_grid": 1657584, "t_hit_median_(t_hit>0)": 1.0, "t_hit_max": 7, "tbar_median_(t_hit>0)": 10.0, "max_t_hit_over_tbar": 0.5, "min_tbar_minus_t_hit": 1, "min_hit_slack": 0.0, "min_r_slack": 0.0016686854253251115, "min_r_ratio_before_hit_(>=1_required)": 1.0057919398467436, "seconds": 0.7}
 greedy on V_upper {"trajectories": 4124664, "satisfy_claim": 4124664, "violations": 0, "no_hit": 0, "hit_after_bound": 0, "r_condition_violated": 0, "visited_T_before_hit": 0, "hit_at_t0": 1580225, "hits_that_are_ties_(|slack|<=1e-12)": 0, "hit_in_obstacle": 2467080, "hit_by_leaving_grid": 1657584, "t_hit_median_(t_hit>0)": 1.0, "t_hit_max": 8, "tbar_median_(t_hit>0)": 10.0, "max_t_hit_over_tbar": 0.5, "min_tbar_minus_t_hit": 1, "min_hit_slack": 0.0, "min_r_slack": 0.0016686854253251115, "min_r_ratio_before_hit_(>=1_required)": 1.0057919398467436, "seconds": 1.3}
   exhaustive: 4096/4124664 states
@@ -649,8 +657,24 @@ greedy on V_upper {"trajectories": 4124664, "satisfy_claim": 4124664, "violation
   exhaustive: 3936256/4124664 states
   exhaustive: 4018176/4124664 states
   exhaustive: 4100096/4124664 states
-exhaustive {"states": 4124664, "exhausted": 4124664, "not_exhausted_(frontier_cap)": 0, "violations": 0, "no_hit_by_tbar": 0, "sink_without_hit": 0, "r_violation": 0, "visited_T_before_hit": 0, "action_prefixes_checked": 40024654, "max_frontier": 555, "latest_hit_max": 8, "latest_hit_median_(>0)": 1.0, "tbar_median_(latest_hit>0)": 10.0, "max_latest_hit_over_tbar": 0.5, "min_tbar_minus_latest_hit": 1, "min_hit_slack": 0.0, "states_with_a_tie_hit": 0, "min_r_slack": 0.0016686854253251115, "min_r_ratio_before_hit_(>=1_required)": 1.0057919398467436, "seconds": 3.0}
-wrote /Users/i.k.tabbara/Documents/python directory/HSCC_2027/refactored_Implementations/paper_results/results_quantitative_verification_updated/verification_ra_violation
+exhaustive {"states": 4124664, "exhausted": 4124664, "not_exhausted_(frontier_cap)": 0, "violations": 0, "no_hit_by_tbar": 0, "sink_without_hit": 0, "r_violation": 0, "visited_T_before_hit": 0, "action_prefixes_checked": 40024654, "max_frontier": 555, "latest_hit_max": 8, "latest_hit_median_(>0)": 1.0, "tbar_median_(latest_hit>0)": 10.0, "max_latest_hit_over_tbar": 0.5, "min_tbar_minus_latest_hit": 1, "min_hit_slack": 0.0, "states_with_a_tie_hit": 0, "min_r_slack": 0.0016686854253251115, "min_r_ratio_before_hit_(>=1_required)": 1.0057919398467436, "seconds": 2.9}
+wrote /Users/i.k.tabbara/Documents/python directory/HSCC_2027/refactored_Implementations/paper_results/results_quantitative_verification_rerun/verification_ra_violation
+abstraction ...
+{"cells_with_k": 464032, "k_histogram_over_cells": {"0": 239040, "1": 96384, "2": 57848, "3": 28040, "4": 13688, "5": 8928, "6": 8360, "7": 6456, "8": 3864, "9": 1336, "10": 88}, "recomputation": {"iterations": 89, "fixed_point_equals_solver_V_upper": 1728000, "k_equal_cells": 1728000, "k_different_cells": 0}, "certificate": {"cells_k0": 239040, "k0_with_l_upper_positive": 0, "cells_k_positive": 224992, "k_positive_with_l_upper_nonpositive": 0, "k_positive_with_a_successor_not_below": 0, "violations": 0}}
+  exhaustive: 4096/4176288 states
+  exhaustive: 413696/4176288 states
+  exhaustive: 823296/4176288 states
+  exhaustive: 1232896/4176288 states
+  exhaustive: 1642496/4176288 states
+  exhaustive: 2052096/4176288 states
+  exhaustive: 2461696/4176288 states
+  exhaustive: 2871296/4176288 states
+  exhaustive: 3280896/4176288 states
+  exhaustive: 3690496/4176288 states
+  exhaustive: 4100096/4176288 states
+exhaustive {"states": 4176288, "uniform": 464032, "vertices": 3712256, "exhausted": 4176288, "not_exhausted_(frontier_cap)": 0, "violations": 0, "no_hit_by_k": 0, "action_prefixes_checked": 37922424, "max_frontier": 555, "states_in_F_at_time_0": 2198073, "k_max": 10, "k_median": 0.0, "latest_hit_max": 8, "latest_hit_equals_k_(k>=1)": 1280735, "max_latest_hit_over_k_(k>=1)": 1.0, "min_k_minus_latest_hit": 0, "seconds": 2.0}
+wrote /Users/i.k.tabbara/Documents/python directory/HSCC_2027/refactored_Implementations/paper_results/results_quantitative_verification_rerun/verification_avoid_failure_time
 verification_ra: identical to the reference results
 verification_avoid: identical to the reference results
 verification_ra_violation: identical to the reference results
+verification_avoid_failure_time: identical to the reference results

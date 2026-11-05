@@ -113,6 +113,6 @@ verifying /Users/i.k.tabbara/Documents/python directory/HSCC_2027/refactored_Imp
     "bound_max": 10,
     "ratio_latest_hit_to_bound_max": 1.0
   },
-  "verifier_seconds": 99.3631181716919
+  "verifier_seconds": 106.48056197166443
 }
 wrote /Users/i.k.tabbara/Documents/python directory/HSCC_2027/refactored_Implementations/paper_results/results_quantitative_verification/verification_avoid

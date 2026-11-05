@@ -1,6 +1,6 @@
 {
   "command": "./build/dhj_head --mode avoid_nodiscount --delta-lower 1e-300 --delta-upper 1e-300 --dynamics dubins --dt 0.3 --initial-resolution 120 --refinements 0 --checkpoint-every 0 --dump-csv --plot-dpi 300 --workers 12 --results-root /Users/i.k.tabbara/Documents/python directory/HSCC_2027/refactored_Implementations/paper_results/results_quantitative_verification",
-  "started": "2026-11-04T18:33:26",
+  "started": "2026-11-04T21:53:49",
   "args": {
     "a_max": 1.0,
     "checkpoint_every": 0,
@@ -62,6 +62,6 @@
     "host": "1J000AL-FYYVJW7",
     "implementation": "cpp",
     "compiler": "clang 16.0",
-    "build": "Nov  4 2026 18:33:11"
+    "build": "Nov  4 2026 21:53:33"
   }
 }

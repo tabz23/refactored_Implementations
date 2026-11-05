@@ -1,6 +1,6 @@
 parts: all
-git commit: 8252c4c19ff08908b3254ddfed1062bf86ed92e4
+git commit: 4175b91f1bb1b932c36a18066ccb5001f4a772cf
 uncommitted solver changes: 
 compiler: Apple clang version 16.0.0 (clang-1600.0.26.6)
-binary sha256: 60da0bc1077fa5e6807081b5d209f071a47c8221a94a21363b2ab18051b7e6a7
-date: Wed Nov  4 18:33:16 CST 2026
+binary sha256: 50e2d4c68f884e366aca9dc12a6cd06f2488f22d836b122fb7f4a3032c5a07a6
+date: Wed Nov  4 21:53:39 CST 2026
