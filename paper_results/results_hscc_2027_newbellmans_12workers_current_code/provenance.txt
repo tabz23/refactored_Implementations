@@ -20,3 +20,11 @@ git commit: 1572bab478ceeab655465ce8063b4b80c07d47f7
 uncommitted solver changes: 
 compiler: Apple clang version 16.0.0 (clang-1600.0.26.6)
 binary sha256: bb44a41910e01daff3f2f05c7d1668ceb747565066716a038b671b4f2d7c71f8
+--- rerun of: avoid80
+date: Wed Nov  4 18:32:43 CST 2026
+quick: 0
+cases: avoid80
+git commit: 8252c4c19ff08908b3254ddfed1062bf86ed92e4
+uncommitted solver changes: 
+compiler: Apple clang version 16.0.0 (clang-1600.0.26.6)
+binary sha256: 610d914d396b0c89d01c615e39b920fb67ea42bf9f411dd4d3b31a83f71139b2

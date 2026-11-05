@@ -1,5 +1,5 @@
 {
-  "run_dir": "/Users/i.k.tabbara/Documents/python directory/HSCC_2027/refactored_Implementations/paper_results/results_quantitative_verification_updated/ra_discount/dubins_res120_dlower1e-08_dupper1e-08_gamma0.96_dt0.3",
+  "run_dir": "/Users/i.k.tabbara/Documents/python directory/HSCC_2027/refactored_Implementations/paper_results/results_quantitative_verification/ra_discount/dubins_res120_dlower1e-08_dupper1e-08_gamma0.96_dt0.3",
   "gamma": 0.96,
   "tau": 0.3,
   "actions": [
@@ -143,7 +143,7 @@
       "min_hit_slack": 0.0,
       "min_r_slack": 0.0016686854253251115,
       "min_r_ratio_before_hit_(>=1_required)": 1.0057919398467436,
-      "seconds": 0.6
+      "seconds": 0.7
     },
     "random actions (seed 1002)": {
       "trajectories": 4124664,
@@ -165,7 +165,7 @@
       "min_hit_slack": 0.0,
       "min_r_slack": 0.0016686854253251115,
       "min_r_ratio_before_hit_(>=1_required)": 1.0057919398467436,
-      "seconds": 0.6
+      "seconds": 0.7
     },
     "Prop. 4 policy on V_lower": {
       "trajectories": 4124664,
@@ -187,7 +187,7 @@
       "min_hit_slack": 0.0,
       "min_r_slack": 0.0016686854253251115,
       "min_r_ratio_before_hit_(>=1_required)": 1.0057919398467436,
-      "seconds": 0.7
+      "seconds": 0.8
     },
     "greedy on V_upper": {
       "trajectories": 4124664,
@@ -240,5 +240,5 @@
     "min_r_ratio_before_hit_(>=1_required)": 1.0057919398467436,
     "seconds": 3.0
   },
-  "seconds": 18.1
+  "seconds": 18.0
 }

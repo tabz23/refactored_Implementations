@@ -477,6 +477,15 @@ None of these is stated in the paper.
 
 ### Changes after the paper run
 
+* **2026-11-04, lower value of the sink in the avoid case (`8252c4c`):** in
+  `avoid_nodiscount` the sink's lower value is min(−1, inf l) = −1.3 for the Dubins car instead
+  of −1, as the revised paper requires (Section 8). `avoid80` (Fig. 5) and Section 9.2.5 were
+  regenerated with this code: the classifications, `phases.csv` counts and classification
+  panels of `avoid80` are identical in all 7 phases (only the plotted lower-bound values
+  change), and every number in `verification_ra`, `verification_avoid` (89 iterations,
+  973,616 cells with V_lower > 0, margin ratio 1.0021) and `verification_ra_violation` is
+  unchanged. `verification_avoid/summary.json` now also records the sink values.
+
 * **2026-11-04, regenerated results:** all three folders were regenerated with the current code
   (`reproduce_all.sh --updated`) and replaced the stored ones, which moved to `original_runs/`
   together with the comparison logs. Every classification, `phases.csv` count and PNG of
