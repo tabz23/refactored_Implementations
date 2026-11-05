@@ -485,6 +485,9 @@ private:
             std::printf("    Reach boxes leaving the state box: %zu of %zu cell-action pairs (%s); "
                         "pairs with no successor: %zu\n",
                         left, pairs, args_.restrict_to_grid ? "outside part ignored" : "sink added", empty);
+            if (!args_.restrict_to_grid)
+                std::printf("    Sink values: lower %g, upper %g\n",
+                            mode_ == Mode::AvoidNoDiscount ? std::min(-1.0, dyn_.failure_infimum()) : -1.0, -1.0);
         }
 
         std::vector<double> Vu(n + 1), Vl(n + 1), lu(n + 1), ll(n + 1), ru(n + 1), rl(n + 1);
@@ -492,9 +495,16 @@ private:
             const auto& c = tree_.cell(leaves[i]);
             Vu[i] = c.V_upper; Vl[i] = c.V_lower; lu[i] = c.l_upper; ll[i] = c.l_lower; ru[i] = c.r_upper; rl[i] = c.r_lower;
         }
-        Vu[n] = Vl[n] = lu[n] = ll[n] = ru[n] = rl[n] = -1.0;   // OOB sink
+        // The sink s_bot (paper, Sections 4-5): l = r = -1 outside the box, so its upper value is
+        // -1 and so is its lower value, except in the avoid case, where the lower value must
+        // bound l on all of R^n because a trajectory that leaves the box may come back
+        // (paper, Section 8). Both values stay constant during value iteration.
+        const double sink_lower = (mode_ == Mode::AvoidNoDiscount) ? std::min(-1.0, dyn_.failure_infimum()) : -1.0;
+        Vu[n] = lu[n] = ru[n] = -1.0;
+        Vl[n] = ll[n] = rl[n] = sink_lower;
         std::vector<double> newVu(n + 1), newVl(n + 1);
-        newVu[n] = newVl[n] = -1.0;
+        newVu[n] = -1.0;
+        newVl[n] = sink_lower;
 
         const std::size_t nw = pool_.size();
         std::vector<double> part_du(nw), part_dl(nw), part_delta(nw);

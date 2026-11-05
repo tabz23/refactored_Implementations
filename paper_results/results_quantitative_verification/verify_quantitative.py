@@ -57,7 +57,7 @@ from matplotlib.ticker import MaxNLocator  # noqa: E402
 
 TOL = 1e-12      # absolute tolerance for floating-point comparisons
 IDX_EPS = 1e-9   # index ranges are widened by this fraction of a cell (keeps the abstraction sound)
-SINK = -1.0      # value of the out-of-bounds sink, as in the solver
+SINK = -1.0      # value of the out-of-bounds sink, as in the solver (l = r = -1 outside the grid)
 PAPER_SLICE = {"dubins": 0.0, "evasion": math.pi}
 AVOID_PATH_STEPS = 60   # steps drawn of each example avoid trajectory (all steps are checked)
 
@@ -237,14 +237,15 @@ def successor_table(grid, dyn, u, tau):
     return {"idx": np.stack(rows), "oob": oob.ravel(), "e": e, "kmax": kmax}
 
 
-def reduce_successors(table, V, op):
+def reduce_successors(table, V, op, sink=SINK):
     """op (np.minimum or np.maximum) of V over the successors of every cell; the sink
-    (value -1) counts as a successor when the reach box leaves the state box."""
-    Vext = np.append(V.ravel(), SINK)
+    (value `sink`, -1 by default) counts as a successor when the reach box leaves the state
+    box."""
+    Vext = np.append(V.ravel(), sink)
     out = Vext[table["idx"][0]]
     for row in table["idx"][1:]:
         op(out, Vext[row], out=out)
-    return np.where(table["oob"], op(out, SINK), out).reshape(V.shape)
+    return np.where(table["oob"], op(out, sink), out).reshape(V.shape)
 
 
 def certificates(grid, dyn, actions, gamma, tau):
@@ -463,7 +464,8 @@ def verify_avoid(run_dir, out_dir, rng, points_per_cell, n_paths, horizon):
        control (each constant action, the greedy action on W, uniformly random
        actions) reaches l < 0 or leaves the grid within kbar(s0) steps, the first
        iteration at which W^(k)(s0) < 0.
-    Leaving the grid counts as failure, as in the solver (sink with value -1).
+    Leaving the grid counts as failure, as in the solver: the sink has upper value -1 and,
+    in this avoid case, lower value min(-1, -obstacle radius) = -1.3 for the Dubins car.
     """
     t_start = time.time()
     params, data, phases = load_run(run_dir)
@@ -501,9 +503,13 @@ def verify_avoid(run_dir, out_dir, rng, points_per_cell, n_paths, horizon):
     report["cell_bound_max_error"] = float(max(np.abs(grid.ll - (lc - dyn["L_l"] * grid.r_half)).max(),
                                                np.abs(grid.lu - (lc + dyn["L_l"] * grid.r_half)).max()))
 
-    # 2. lower certificate on the independently computed abstraction
+    # 2. lower certificate on the independently computed abstraction. In the avoid case the
+    # sink's lower value is min(-1, inf l) = min(-1, -obstacle radius), as in the solver
+    # (paper, Section 8), because a trajectory that leaves the grid may come back.
     tables = [successor_table(grid, dyn, u, tau) for u in actions]
-    m = np.stack([reduce_successors(t, grid.Vl, np.minimum) for t in tables])
+    sink_lower = min(SINK, -float(dyn["obstacle_radius"]))
+    report["sink_values"] = {"lower": sink_lower, "upper": SINK}
+    m = np.stack([reduce_successors(t, grid.Vl, np.minimum, sink_lower) for t in tables])
     pi = np.argmax(m, axis=0).astype(np.int8)
     deficit = np.maximum(grid.Vl - grid.ll, grid.Vl - m.max(axis=0))    # > 0: certificate violated
     del m

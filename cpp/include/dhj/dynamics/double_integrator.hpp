@@ -46,6 +46,8 @@ public:
 
     const char* name() const override { return "double_integrator"; }
     const Bounds& state_bounds() const override { return bounds_; }
+    // l is the signed distance to the obstacle disc, so its infimum is -radius (at the center).
+    double failure_infimum() const override { return -obstacle_radius_; }
     std::size_t num_actions() const override { return actions_.size(); }
     std::vector<double> action(std::size_t i) const override { return {actions_[i][0], actions_[i][1]}; }
     std::string state_name(std::size_t d) const override {

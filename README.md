@@ -48,7 +48,9 @@ This is the run of Fig. 2. It writes to
 
 `best` is the maximum over actions of the minimum (lower bound) or maximum (upper bound)
 of V over the successor cells. Leaving a non-periodic state bound leads to an absorbing
-failure state with value −1. Value iteration stops once a sweep changes the lower bound by
+failure state, the paper's s_⊥, with value −1 (l = r = −1 outside the box). In `avoid_nodiscount`
+its lower value is min(−1, inf l), −1.3 for the Dubins car, because a trajectory that leaves
+the box may come back (paper, Section 8). Value iteration stops once a sweep changes the lower bound by
 less than `--delta-lower` (δ̲\*) and the upper bound by less than `--delta-upper` (δ̄\*). Only
 `ra_discount` takes `--gamma`; the other modes use γ = 1.
 

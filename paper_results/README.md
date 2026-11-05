@@ -440,7 +440,7 @@ The implementation follows the paper exactly:
 | Algorithm 1, discounted | `ra_discount`: $\underline V^{(0)} = \min\{\underline l, \underline r\}$, $\overline V^{(0)} = \overline l$; the operators of Proposition 1; stops when both sup-norm changes are at most δ\* (`vi.hpp`) |
 | Proposition 3 (γ = 1, reach–avoid) | `ra_nodiscount`: both bounds start at $\min\{l, r\}$; γ is not applied |
 | Section 8 (avoid) | `avoid_nodiscount`: both bounds start at $l$; the operators $\mathcal T^{\mathrm{av}}$ |
-| Section 4 (abstraction) | reach box of radius $L_f$ × cell radius around the integrated image of the center, with $L_f = e^{\lambda t_s}$ (Grönwall); successors are the cells meeting the box; outside the grid is one absorbing sink with value −1 |
+| Section 4 (abstraction) | reach box of radius $L_f$ × cell radius around the integrated image of the center, with $L_f = e^{\lambda t_s}$ (Grönwall); successors are the cells meeting the box; outside the grid is one absorbing sink (the paper's $s_\bot$) with values $\underline c = \overline c = -1$, except $\underline c = \min\{-1, \inf l\} = -1.3$ in the avoid case |
 | Section 5 (cell bounds) | $l(x_c) \pm L_l\,$radius and $r(x_c) \pm L_r\,$radius, with $L_l = L_r = \sqrt2$ |
 | Algorithm 2 | refines boundary cells ($\overline V > 0 \ge \underline V$) whose radius $\max_j \eta_{x,j}(s)$ exceeds ε_min (`--eps-min`), bisects them along the widest dimension, then re-initializes and recomputes every cell; stops when no cell qualifies or after `--refinements` iterations (`refine.hpp`) |
 | §9.2 action sets | Dubins {−1, 0, 1}; evasion 5 evenly spaced values in [−1, 1]; double integrator {−1, 0, 1}²; bicycle {−0.2, 0, 0.2} × {−1, 0, 1} |
@@ -455,8 +455,13 @@ None of these is stated in the paper.
    tolerance (about 1e-12) to cover integration error. This makes the bounds slightly more
    conservative.
 3. **Lipschitz constants:** the vector-field constants of Van der Pol (λ = 20.75) and the
-   bicycle (λ = 2.152) hold on the state box. A trajectory from an edge cell can leave the
-   box within a step, where the valid constants are about 21.38 and 2.28.
+   bicycle (λ = 2.152) hold on the state box, and a trajectory from an edge cell can leave the
+   box within a step. Bounds on the one-step flow that account for this are still below the
+   L_f the solver uses: about 1.19 for Van der Pol (logarithmic norm of the Jacobian over the
+   region reached in one step) against e^(20.75·0.01) = 1.231, and about 1.89 for the bicycle
+   (the heading row of the flow's Jacobian is at most 1 + ∫tan δ + ∫v sec²δ, with
+   |v| ≤ 1.06 and δ ∈ [0.6, 0.9] in the worst case) against e^(2.152·0.3) = 1.907. So the
+   reach boxes are valid.
 4. **Unsafe test in the avoid case:** the solver labels a cell unsafe when
    $\overline V \le 0$. The paper's avoid certificate (Proposition 6(2), Fig. 5 caption) uses
    $\overline V < 0$. The two agree unless a cell has $\overline V = 0$ exactly. Upper values

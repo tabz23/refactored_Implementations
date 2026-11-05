@@ -52,8 +52,9 @@ into 120³ = 1,728,000 equal cells. For each cell, l_lower, l_upper, r_lower, r_
 are the center values ∓ √2·r, where r is the largest half-width of the cell
 (∞-norm). For each cell and action, the center is integrated over τ = 0.3 s; the
 successors are the cells meeting the box of ∞-norm radius r·exp(L_f τ) plus the
-integrator's error budget around the result, and a sink with value −1 is added if
-the box leaves the state box along x or y. The actions are {−1, 0, 1} = U, so A = U.
+integrator's error budget around the result, and a sink is added if the box leaves the
+state box along x or y. The sink has upper value −1 and lower value −1 (reach-avoid) or
+min(−1, −1.3) = −1.3 (avoid; paper, Section 8). The actions are {−1, 0, 1} = U, so A = U.
 
 * Reach-avoid: γ = 0.96, V_lower starts at min(l_lower, r_lower) and V_upper at
   l_upper. The iteration stops when both sup-norm changes are below 1e-8
@@ -131,7 +132,8 @@ policy and every x0 in [[s0]], the trajectory reaches F at some time
 t ≤ t̄_F(s0) = ⌊log(V_upper(s0)/l_min)/log γ⌋ with l(x_t) ≤ γ^(−t) V_upper(s0), and
 r(x_τ) ≤ γ^(−τ) V_upper(s0) < 0 (so x_τ ∉ T) for τ < t. The solver gives the sink
 outside the grid the fixed value −1, and its l and r bounds are −1 as well
-(`cpp/include/dhj/core/vi.hpp`). The verifier models it as an absorbing state with
+(`cpp/include/dhj/core/vi.hpp`); only in the avoid run is its lower value −1.3, which
+these reach-avoid checks do not use. The verifier models it as an absorbing state with
 l = r = −1, whose value is −1. Hence l_min = −1.3, at the obstacle center. For a
 trajectory, t_hit is the first time with γ^t l(x_t) ≤ V_upper(s0).
 

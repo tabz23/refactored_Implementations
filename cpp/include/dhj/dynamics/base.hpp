@@ -74,6 +74,10 @@ public:
     virtual std::vector<double> action(std::size_t i) const = 0;  // the i-th action, as numbers
     virtual State ode(const State& s, std::size_t action_idx) const = 0;  // f(x, u_i)
     virtual double failure_function(const State& s) const = 0;  // l(x)
+    // A lower bound on l over all of R^n (the infimum where it is known). The avoid case
+    // uses min(-1, failure_infimum()) as the lower value of the sink, because a trajectory
+    // that leaves the box may come back (paper, Section 8).
+    virtual double failure_infimum() const = 0;
     virtual double reward_function(const State& s) const = 0;   // r(x)
 
     // ---- optional overrides -------------------------------------------------
