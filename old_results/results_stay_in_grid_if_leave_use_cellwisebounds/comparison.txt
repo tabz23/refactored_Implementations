@@ -1,0 +1,113 @@
+paper runs: /Users/i.k.tabbara/Documents/python directory/HSCC_2027/refactored_Implementations/paper_results/results_hscc_2027_newbellmans_12workers_current_code
+
+Safe / Unsafe / Unclassified, % of the state space (paper run with sink -> run here)
+
+== Fig. 4(a) dubins120_std
+   phase  0:  56.9  26.5  16.5 ->  60.2  26.5  13.3   change +3.3 +0.0 -3.2
+   last phase: 389,128 of 5,184,000 cell-action reach boxes leave the state box (7.5%), 265,416 of them entirely (no successor)
+   phases run here: 0-0; paper: 0-0; time here: 3.0 s (paper run: 2.6 s)
+   vs ../results_stay_in_grid: identical in every phase
+
+== Fig. 4(b) dubins120_discount
+   phase  0:  56.9  26.5  16.5 ->  60.2  26.5  13.3   change +3.3 +0.0 -3.2
+   last phase: 389,128 of 5,184,000 cell-action reach boxes leave the state box (7.5%), 265,416 of them entirely (no successor)
+   phases run here: 0-0; paper: 0-0; time here: 2.9 s (paper run: 2.7 s)
+   vs ../results_stay_in_grid: identical in every phase
+
+== Fig. 5 avoid80
+   phase  0:  49.2  24.7  26.0 ->  77.1  15.2   7.7   change +27.9 -9.5 -18.3
+   phase  1:  50.5  24.9  24.7 ->  77.6  15.3   7.2   change +27.1 -9.6 -17.5
+   phase  2:  51.2  25.1  23.7 ->  77.9  15.4   6.7   change +26.7 -9.7 -17.0
+   phase  3:  59.6  28.3  12.0 ->  80.1  16.4   3.5   change +20.5 -11.9 -8.5
+   phase  4:  60.1  28.5  11.4 ->  80.2  16.5   3.3   change +20.1 -12.0 -8.1
+   phase  5:  60.5  28.6  10.9 ->  80.3  16.6   3.1   change +19.8 -12.0 -7.8
+   phase  6:  63.9  30.5   5.7 ->  81.1  17.1   1.7   change +17.2 -13.4 -4.0
+   last phase: 125,064 of 5,022,336 cell-action reach boxes leave the state box (2.5%), 69,872 of them entirely (no successor)
+   phases run here: 0-6; paper: 0-6; time here: 9.6 s (paper run: 23.9 s)
+   vs ../results_stay_in_grid: differs from phase 0 on
+
+== Fig. 2 dubins20_discount
+   phase  0:   0.5  11.0  88.5 ->   0.5  11.0  88.5   change +0.0 +0.0 +0.0
+   phase  1:   0.5  11.0  88.5 ->   0.5  11.0  88.5   change +0.0 +0.0 +0.0
+   phase  2:   0.8  11.7  87.5 ->   0.8  11.7  87.5   change +0.0 +0.0 +0.0
+   phase  3:   1.7  17.3  81.0 ->   1.7  17.3  81.0   change +0.0 +0.0 +0.0
+   phase  4:   2.0  17.8  80.3 ->   2.0  17.8  80.3   change +0.0 +0.0 +0.0
+   phase  5:   2.5  18.5  79.0 ->   2.5  18.5  79.0   change +0.0 +0.0 +0.0
+   phase  6:  50.1  24.4  25.5 ->  55.9  24.4  19.7   change +5.8 +0.0 -5.8
+   phase  7:  51.3  24.6  24.2 ->  56.5  24.5  19.0   change +5.2 -0.1 -5.2
+   phase  8:  52.0  24.8  23.2 ->  57.2  24.8  18.0   change +5.2 +0.0 -5.2
+   phase  9:  60.2  28.0  11.8 ->  64.2  27.1   8.7   change +4.0 -0.9 -3.1
+   phase 10:  60.6  28.1  11.3 ->  64.4  27.2   8.3   change +3.8 -0.9 -3.0
+   phase 11:  61.0  28.3  10.7 ->  64.7  27.4   7.9   change +3.7 -0.9 -2.8
+   phase 12:  64.3  30.1   5.6 ->  67.2  28.7   4.1   change +2.9 -1.4 -1.5
+   phase 13:  64.3  30.2   5.5 ->  67.3  28.7   4.0   change +3.0 -1.5 -1.5
+   last phase: 358,320 of 14,263,104 cell-action reach boxes leave the state box (2.5%), 204,310 of them entirely (no successor)
+   phases run here: 0-13; paper: 0-13; time here: 40.4 s (paper run: 46.7 s)
+   vs ../results_stay_in_grid: identical in every phase
+
+== Fig. 3(d) bicycle8
+   phase  0:   0.0   4.0  96.0 ->   0.0   4.0  96.0   change +0.0 +0.0 +0.0
+   phase  1:   0.0   4.0  96.0 ->   0.0   4.0  96.0   change +0.0 +0.0 +0.0
+   phase  2:   0.0   4.0  96.0 ->   0.0   4.0  96.0   change +0.0 +0.0 +0.0
+   phase  3:   0.0   4.0  96.0 ->   0.0   4.0  96.0   change +0.0 +0.0 +0.0
+   phase  4:   0.0   4.0  96.0 ->   0.0   4.0  96.0   change +0.0 +0.0 +0.0
+   phase  5:   0.0   6.0  94.0 ->   0.0   6.0  94.0   change +0.0 +0.0 +0.0
+   phase  6:   0.5   8.0  91.5 ->   0.5   8.0  91.5   change +0.0 +0.0 +0.0
+   phase  7:   0.5  11.0  88.5 ->   0.5  11.0  88.5   change +0.0 +0.0 +0.0
+   phase  8:   0.5  11.0  88.5 ->   0.5  11.0  88.5   change +0.0 +0.0 +0.0
+   last phase: 4,256,453 of 6,544,125 cell-action reach boxes leave the state box (65.0%), 0 of them entirely (no successor)
+   phases run here: 0-8; paper: 0-8; time here: 88.4 s (paper run: 79.5 s)
+   vs ../results_stay_in_grid: identical in every phase
+
+== Fig. 3(a) vdp18
+   phase  0:   1.0   4.0  95.0 ->   1.0   4.0  95.0   change +0.0 +0.0 +0.0
+   phase  1:   1.0   4.1  94.9 ->   1.0   4.1  94.9   change +0.0 +0.0 +0.0
+   phase  2:   1.4   4.6  94.1 ->   1.4   4.6  94.1   change +0.0 +0.0 +0.0
+   phase  3:   1.4   4.7  93.9 ->   1.4   4.7  93.9   change +0.0 +0.0 +0.0
+   phase  4:   1.5   5.0  93.5 ->   1.5   5.0  93.5   change +0.0 +0.0 +0.0
+   phase  5:   1.6   5.7  92.7 ->   1.6   5.7  92.7   change +0.0 +0.0 +0.0
+   phase  6:   2.0  10.2  87.8 ->   2.0  10.2  87.8   change +0.0 +0.0 +0.0
+   phase  7:   2.9  11.4  85.7 ->   2.9  11.4  85.7   change +0.0 +0.0 +0.0
+   phase  8:   5.5  14.6  79.9 ->   5.5  14.6  79.9   change +0.0 +0.0 +0.0
+   phase  9:   7.2  16.1  76.7 ->   7.3  16.1  76.6   change +0.1 +0.0 -0.1
+   phase 10:  11.0  20.2  68.8 ->  11.1  20.1  68.7   change +0.1 -0.1 -0.1
+   phase 11:  12.1  21.0  66.8 ->  12.4  21.0  66.7   change +0.3 +0.0 -0.1
+   phase 12:  16.6  23.9  59.5 ->  17.2  23.8  59.0   change +0.6 -0.1 -0.5
+   phase 13:  19.6  24.5  55.9 ->  20.6  24.4  55.0   change +1.0 -0.1 -0.9
+   phase 14:  63.2  26.6  10.2 ->  64.1  26.4   9.5   change +0.9 -0.2 -0.7
+   phase 15:  64.5  27.0   8.5 ->  65.3  26.8   7.9   change +0.8 -0.2 -0.6
+   phase 16:  67.2  28.2   4.6 ->  67.7  27.9   4.4   change +0.5 -0.3 -0.2
+   last phase: 3,321 of 22,345,673 cell-action reach boxes leave the state box (0.0%), 1,163 of them entirely (no successor)
+   phases run here: 0-16; paper: 0-18; time here: 155.9 s (paper run: 417.2 s)
+   vs ../results_stay_in_grid: identical in every phase
+
+== Fig. 3(c) di14
+   phase  0:   0.0   4.0  96.0 ->   0.0   4.0  96.0   change +0.0 +0.0 +0.0
+   phase  1:   0.0   6.0  94.0 ->   0.0   6.0  94.0   change +0.0 +0.0 +0.0
+   phase  2:   0.5  11.0  88.5 ->   0.5  11.0  88.5   change +0.0 +0.0 +0.0
+   phase  3:   0.7  11.5  87.8 ->   0.8  11.5  87.7   change +0.1 +0.0 -0.1
+   phase  4:   1.3  13.1  85.5 ->   1.4  13.1  85.5   change +0.1 +0.0 +0.0
+   phase  5:   1.4  13.1  85.5 ->   1.5  13.1  85.4   change +0.1 +0.0 -0.1
+   phase  6:   8.1  14.8  77.1 ->  74.4  14.8  10.8   change +66.3 +0.0 -66.3
+   phase  7:  61.4  14.9  23.7 ->  75.0  14.8  10.2   change +13.6 -0.1 -13.5
+   phase  8:  68.0  16.0  15.9 ->  77.4  15.3   7.3   change +9.4 -0.7 -8.6
+   phase  9:  68.9  16.1  15.0 ->  77.8  15.3   6.8   change +8.9 -0.8 -8.2
+   phase 10:  71.3  16.8  11.8 ->  79.0  15.8   5.2   change +7.7 -1.0 -6.6
+   last phase: 4,187,980 of 11,616,876 cell-action reach boxes leave the state box (36.1%), 2,253,310 of them entirely (no successor)
+   phases run here: 0-10; paper: 0-14; time here: 36.4 s (paper run: 4225.2 s)
+   vs ../results_stay_in_grid: identical in every phase
+
+== Fig. 3(b) evasion12
+   phase  0:   0.9   9.0  90.0 ->   0.9   9.0  90.0   change +0.0 +0.0 +0.0
+   phase  1:   1.0   9.4  89.6 ->   1.0   9.4  89.6   change +0.0 +0.0 +0.0
+   phase  2:   1.4  10.3  88.3 ->   1.4  10.3  88.3   change +0.0 +0.0 +0.0
+   phase  3:   4.1  20.7  75.2 ->   4.5  20.7  74.8   change +0.4 +0.0 -0.4
+   phase  4:   4.4  21.6  74.0 ->   4.8  21.6  73.6   change +0.4 +0.0 -0.4
+   phase  5:   5.0  22.1  73.0 ->   5.4  22.1  72.6   change +0.4 +0.0 -0.4
+   phase  6:  20.6  27.6  51.7 ->  21.0  27.6  51.4   change +0.4 +0.0 -0.3
+   phase  7:  22.5  28.4  49.2 ->  23.0  28.4  48.6   change +0.5 +0.0 -0.6
+   phase  8:  23.0  28.7  48.3 ->  23.6  28.7  47.8   change +0.6 +0.0 -0.5
+   phase  9:  49.1  32.3  18.6 ->  50.1  32.3  17.6   change +1.0 +0.0 -1.0
+   last phase: 2,831,300 of 35,856,210 cell-action reach boxes leave the state box (7.9%), 2,290,800 of them entirely (no successor)
+   phases run here: 0-9; paper: 0-12; time here: 105.1 s (paper run: 1681.5 s)
+   vs ../results_stay_in_grid: identical in every phase

@@ -1,0 +1,5 @@
+date: Wed Nov  4 15:07:55 CST 2026
+full: 0, time limit per case: 300 s
+git commit: 1572bab478ceeab655465ce8063b4b80c07d47f7
+uncommitted solver changes:  M include/dhj/core/args.hpp  M include/dhj/core/vi.hpp 
+binary sha256: be5b7c7f9dc69bf1c697515e8feab90f899f97bc77b1d2aef5cdc0935b9472ac
