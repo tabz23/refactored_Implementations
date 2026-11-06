@@ -36,20 +36,25 @@ CAPD_CONFIG=<CAPD>/build/bin/capd-config ./run_validated.sh bicycle8 evasion12 d
 python3 compare_validated.py
 ```
 
-**Open points raised by a review of the paper** (not checked yet):
-* L_f = exp(λ t_s) by Grönwall, with λ the infinity-norm Lipschitz constant of the vector field:
-  Dubins 1 (L_f = 1.35), evasion 2 (1.82), double integrator 1 (1.35), van der Pol 20.75
-  (1.23), bicycle 2.15 (1.91). For Dubins, evasion and the double integrator, λ holds on all of
-  R^n. For van der Pol and the bicycle it was computed on X only, while trajectories from cells
-  near the boundary can leave X during one step (over the region reachable in 0.01 s, van der
-  Pol's λ would be about 22.1, i.e. L_f ≈ 1.25). The flows stretch less than these bounds at
-  sampled points (1.09 vs 1.23, 1.81 vs 1.91), but this is not proven. CAPD can prove it by
-  enclosing the flow's derivative over a cover of X (C1 sets).
-* Value updates use round-to-nearest, without directed rounding (errors about 1e-14). In the
+**Points raised by a review of the paper:**
+* **Resolved (2026-11-06):** L_f = exp(λ t_s) by Grönwall, with λ the infinity-norm Lipschitz
+  constant of the vector field: Dubins 1 (L_f = 1.35), evasion 2 (1.82), double integrator 1
+  (1.35), van der Pol 20.75 (1.23), bicycle 2.15 (1.91). For Dubins, evasion and the double
+  integrator, λ holds on all of R^n. For van der Pol and the bicycle it holds on X only, and
+  trajectories from cells near the boundary can leave X during one step. Bounds that cover the
+  region one step can reach are still below these factors, so the reach boxes are valid:
+  1.12 for van der Pol (logarithmic norm of the Jacobian over that region, where plain row sums
+  would give about 1.25) and 1.894 for the bicycle (heading row of the flow's Jacobian, with
+  |v| ≤ 1.06 and |δ| ≤ 0.9). The flows' measured maxima are about 1.09 and 1.88. The bicycle's
+  bound needs the paper's `--a-max 0.2`. The derivations are in the header comments of
+  `van_der_pol.hpp` and `bicycle.hpp` on `main` (commit 34a84c7, after this branch) and in
+  `paper_results/README.md` ("Known differences", item 3). No CAPD check of the flow's
+  derivative is needed.
+* **Partly checked:** value updates use round-to-nearest, without directed rounding (errors about 1e-14). In the
   Section 9.2.4 runs, every certified cell's bound is at least 1.1e-3 from 0 and every
   unclassified cell's at least 4e-4 (no cell is within 1e-12 of 0), so rounding cannot change a
   classification there. The other runs were not checked for this.
-* Successor boxes: every budget is at least 1e-12 (each accepted step adds at least the absolute
+* **Checked:** successor boxes. Every budget is at least 1e-12 (each accepted step adds at least the absolute
   tolerance), the validated error is at most 5.3e-13, and the rounding when the box is formed is
   below about 1e-15, so the computed boxes contain the validated ones.
 
@@ -93,7 +98,8 @@ transition of the run, in every refinement phase:
 | same results as the paper run | `phases.csv` rows and the classification counts in `run.log`, and for Section 9.2.4 the per-cell values (`csv_check.txt`) | identical |
 
 Not covered (these are not integration errors): the Lipschitz constant behind the Grönwall
-factor L_f, and the rounding (about 1e-16) when the box edges are computed.
+factor L_f, which is checked separately (first point above), and the rounding (about 1e-16)
+when the box edges are computed.
 
 ## Results
 
