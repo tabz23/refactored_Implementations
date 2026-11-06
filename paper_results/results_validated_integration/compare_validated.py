@@ -69,7 +69,8 @@ def capd_stats(log):
                 oob_differ=int(g(r"out-of-domain flags that differ: (\d+)")),
                 max_cert=float(g(r"certified error: max ([0-9.e+-]+)")),
                 max_budget=float(g(r"budget: max ([0-9.e+-]+)")),
-                above=int(g(r"certified > budget at (\d+)")), ratio=float(g(r"ratio: ([0-9.e+-]+)")))
+                above=int(g(r"certified > budget at (\d+)")), ratio=float(g(r"ratio: ([0-9.e+-]+)")),
+                retries=int(m.group(1)) if (m := re.search(r"fixed-step retries: (\d+)", b)) else 0)
 
 
 def main():
@@ -100,7 +101,7 @@ def main():
         ok = (s["failures"] == 0 and s["sets_differ"] == 0 and s["oob_differ"] == 0 and s["above"] == 0
               and same_phases and same_class and all(f.endswith("identical") for f in files))
         ok_all &= ok
-        rows.append(f"| {name} | {paper} | {s['transitions']:,} | {s['failures']} | {s['above']} | "
+        rows.append(f"| {name} | {paper} | {s['transitions']:,} | {s['failures']} ({s['retries']:,} retried) | {s['above']} | "
                     f"{s['max_cert']:.1e} / {s['max_budget']:.1e} | {s['sets_differ']} + {s['oob_differ']} | "
                     f"{'yes' if same_phases and same_class else 'NO'} ({len(pv)} phases)"
                     + (f", {'; '.join(files)}" if files else "") + f" | {'PASS' if ok else 'FAIL'} |")
