@@ -2,6 +2,10 @@
 //
 // A trajectory started anywhere in a cell of half-width r (infinity norm)
 // stays within r * exp(L_f t) of the exact trajectory started at the centre.
+// This needs exp(L_f t) to be a Lipschitz constant of the time-t flow on the
+// state box, also for trajectories that leave the box before time t. If L_f
+// bounds the vector field only on the box, Gronwall alone does not give that,
+// and the dynamics header must justify it (see van_der_pol.hpp, bicycle.hpp).
 // The centre used here is numerical, so the reach box is inflated by that
 // amount plus the integrator tolerance budget returned with the trajectory.
 #pragma once

@@ -482,11 +482,15 @@ None of these is stated in the paper.
 3. **Lipschitz constants:** the vector-field constants of Van der Pol (λ = 20.75) and the
    bicycle (λ = 2.152) hold on the state box, and a trajectory from an edge cell can leave the
    box within a step. Bounds on the one-step flow that account for this are still below the
-   L_f the solver uses: about 1.19 for Van der Pol (logarithmic norm of the Jacobian over the
-   region reached in one step) against e^(20.75·0.01) = 1.231, and about 1.89 for the bicycle
-   (the heading row of the flow's Jacobian is at most 1 + ∫tan δ + ∫v sec²δ, with
-   |v| ≤ 1.06 and δ ∈ [0.6, 0.9] in the worst case) against e^(2.152·0.3) = 1.907. So the
-   reach boxes are valid.
+   L_f the solver uses: 1.12 for Van der Pol (logarithmic norm of the Jacobian over the
+   region reached in one step, which lies within 0.031 and 0.193 of the box) against
+   e^(20.75·0.01) = 1.231, and 1.894 for the bicycle (the heading row of the flow's Jacobian
+   is at most 1 + ∫tan δ + ∫v sec²δ, with |v| ≤ 1.06 and δ ∈ [0.6, 0.9] in the worst case)
+   against e^(2.152·0.3) = 1.907. So the reach boxes are valid. The derivations are in the
+   comments of `cpp/include/dhj/dynamics/van_der_pol.hpp` and `bicycle.hpp`. They hold for
+   the paper's parameters. The bicycle's needs `--a-max 0.2`, which the paper's scripts pass.
+   With the CLI default `--a-max 1.0`, the bicycle's one-step flow is about 1.95-Lipschitz,
+   above 1.907.
 4. **Algorithm 2 stops at an iteration limit:** the paper's Algorithm 2 runs until its queue is
    empty. With `--eps-min 1e-6`, every run stops after `--refinements` iterations while the
    queue is still nonempty, and the figures show that output.

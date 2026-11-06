@@ -10,6 +10,7 @@
 //
 // Lipschitz constants (infinity norm, as used by the Gronwall reach sets):
 //   L_f = v           |f(x)-f(y)|_inf = v max(|cos t1 - cos t2|, |sin t1 - sin t2|) <= v |t1 - t2|
+//                     on all of R^3, so exp(L_f t) also covers trajectories leaving the box.
 //   L_l = L_r = sqrt2  l, r are 1-Lipschitz in the Euclidean position; a cell of
 //                     half-width r (inf norm) has positions at most sqrt(2) r away.
 #pragma once

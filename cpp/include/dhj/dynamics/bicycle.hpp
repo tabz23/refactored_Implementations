@@ -12,6 +12,22 @@
 // Lipschitz constants (infinity norm) on this box:
 //   ||Df||_∞ = max( sqrt(v_max^2 + 1),  |tan δ_max| + v_max sec^2(δ_max) )
 //   L_l = L_r = √2    l and r depend on (x, y) only, exactly as for Dubins.
+//
+// The reach boxes use exp(L_f t_s) as the one-step flow's Lipschitz constant
+// on the box (reach.hpp), and a trajectory can leave the speed or steering box
+// within a step, where ||Df||_∞ exceeds L_f. The constant is still valid for
+// the paper's a_max = 0.2 (--a-max 0.2), ω_max = 1, v_max = 1, δ_max = 0.6,
+// L = 1 and t_s = 0.3 (L_f = 2.152, exp(L_f t_s) = 1.907). Redo this for other values:
+//   * v and δ change at the constant rates a and ω, so within a step
+//     |v| <= v_max + a_max t_s = 1.06 and |δ| <= δ_max + ω_max t_s = 0.9.
+//   * The one-step flow's Jacobian has unit rows for v and δ. Its heading row
+//     is (0, 0, 1, ∫ tan δ, ∫ v sec^2 δ), whose sum is at most
+//     1 + ln(cos 0.6 / cos 0.9) + 1.06 (tan 0.9 - tan 0.6) = 1.894 (worst
+//     window: δ from 0.6 to 0.9). The x and y rows sum to at most 1.75.
+//   * So the one-step flow is 1.894-Lipschitz on the box, below 1.907.
+// With the CLI default --a-max 1.0, the same bound is 2.03 and the flow's
+// actual constant is about 1.95, above 1.907. Pass --a-max 0.2, as the
+// paper's scripts do, or recheck.
 #pragma once
 
 #include <array>

@@ -18,9 +18,20 @@
 //   at the corners where x y > 0. l and r are Euclidean signed distances, so
 //   L_l = L_r = sqrt(2).
 //
-// L_f = 20.75 still makes exp(L_f * tau) large at the paper's
-// tau = 0.3. Use tau = dt = 0.02 or 0.05 if the cycle itself should stay
-// visible; the positive set then grows along the orbit one step per sweep.
+// The reach boxes use exp(L_f t_s) as the one-step flow's Lipschitz constant
+// on the box (reach.hpp), and a trajectory from an edge cell can leave the box
+// within a step, where ||Df||_inf exceeds 20.75. The constant is still valid
+// for mu = 1 and the paper's t_s = 0.01 (--dt 0.01). Redo this for other values:
+//   * On R = [-2.531, 2.531] x [-3.093, 3.093], |x'| <= 3.093 and
+//     |y'| <= (2.531^2 - 1) 3.093 + 2.531 = 19.26, so in 0.01 s a trajectory
+//     from the box moves less than 0.031 in x and 0.193 in y and stays in R.
+//   * On R the logarithmic norm of Df, max(1, mu (1 - x^2) + |1 + 2 mu x y|),
+//     is at most 11.26. It keeps the sign of mu (1 - x^2), which is negative
+//     near the corners. So the one-step flow is exp(0.1126) = 1.12-Lipschitz
+//     on the box, below exp(20.75 * 0.01) = 1.231.
+//   * Plain row sums on R reach 22.07, giving exp(0.2207) = 1.247, which would
+//     not suffice.
+// With t_s = 0.3, the other systems' value, exp(L_f t_s) would be about 505.
 #pragma once
 
 #include <cmath>

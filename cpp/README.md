@@ -171,6 +171,14 @@ Notes:
   `SlicePlotter<N>`.
 * `validate()` (called at start-up) checks the periodic boxes, the plot
   dimensions and that the three Lipschitz constants were set.
+* `L_f_` is the vector field's Lipschitz constant, and the reach boxes use
+  exp(`L_f_` t_s) as the Lipschitz constant of the one-step flow on the state box.
+  If the vector field's constant holds on all of ℝⁿ (Dubins, evasion, double
+  integrator), this is Grönwall's inequality. If it holds only on the box, a
+  trajectory that leaves the box during a step can spread faster, so check
+  exp(`L_f_` t_s) against a bound that covers everything a step can reach.
+  `van_der_pol.hpp` and `bicycle.hpp` do this. Their checks hold for the
+  parameters they state (for the bicycle, `--a-max 0.2`).
 
 A Python port of the original paper scripts, with which this solver was cross-checked
 during development, is kept in `../old_results/python_port/`; no result in the paper uses it.

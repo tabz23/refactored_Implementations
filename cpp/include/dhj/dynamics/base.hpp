@@ -7,6 +7,7 @@
 //   * the failure function l(x) (> 0 outside the obstacle) and, for
 //     reach-avoid, the reward function r(x) (> 0 inside the target),
 //   * the Lipschitz constants L_f (vector field, infinity norm), L_l, L_r,
+//     where exp(L_f t) must bound the time-t flow on the state box (reach.hpp),
 //   * which state dimensions are periodic (angles): these wrap instead of
 //     leaving the domain, in the successor queries and in the plots,
 //   * how to draw the result (which 2-D slices, which overlays).

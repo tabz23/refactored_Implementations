@@ -12,6 +12,7 @@
 //
 // Lipschitz constants (infinity norm):
 //   L_f = 1          |f(x)-f(y)|_inf = max(|dvx|, |dvy|, 0, 0) <= |x - y|_inf
+//                    on all of R^4, so exp(L_f t) also covers trajectories leaving the box.
 //   L_l = L_r = sqrt2  l and r depend on (x, y) only, exactly as for Dubins.
 #pragma once
 

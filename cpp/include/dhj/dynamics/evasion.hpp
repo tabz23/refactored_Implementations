@@ -9,6 +9,7 @@
 //
 // Lipschitz constants (infinity norm): L_f = 1 + v (|u| <= 1 contributes 1 via
 // the rotation terms, the cos/sin terms contribute v); L_l = L_r = sqrt(2).
+// L_f holds on all of R^3, so exp(L_f t) also covers trajectories leaving the box.
 #pragma once
 
 #include <array>
