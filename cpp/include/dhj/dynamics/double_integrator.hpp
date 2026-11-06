@@ -59,6 +59,12 @@ public:
         return {s[2], s[3], actions_[a][0], actions_[a][1]};
     }
 
+    bool capd_spec(std::size_t a, validated::Spec& spec) const override {
+        spec.formula = "par:u1,u2;var:x,y,vx,vy;fun:vx,vy,u1,u2;";
+        spec.params = {{"u1", actions_[a][0]}, {"u2", actions_[a][1]}};
+        return true;
+    }
+
     double failure_function(const State& s) const override {
         const double dx = s[0] - obstacle_position_[0], dy = s[1] - obstacle_position_[1];
         return std::sqrt(dx * dx + dy * dy) - obstacle_radius_;

@@ -60,6 +60,12 @@ public:
         return {y, mu_ * (1.0 - x * x) * y - x};
     }
 
+    bool capd_spec(std::size_t, validated::Spec& spec) const override {
+        spec.formula = "par:mu;var:x,y;fun:y,mu*(1-x*x)*y-x;";
+        spec.params = {{"mu", mu_}};
+        return true;
+    }
+
     double failure_function(const State& s) const override {
         const double dx = s[0] - obstacle_position_[0], dy = s[1] - obstacle_position_[1];
         return std::sqrt(dx * dx + dy * dy) - obstacle_radius_;

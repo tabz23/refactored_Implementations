@@ -24,12 +24,14 @@
 #include <array>
 #include <cmath>
 #include <cstddef>
+#include <limits>
 #include <stdexcept>
 #include <string>
 #include <vector>
 
 #include "../core/ode.hpp"
 #include "../core/types.hpp"
+#include "../core/validated.hpp"
 
 namespace dhj {
 
@@ -103,6 +105,8 @@ public:
     }
     // Extra "key": value pairs (already JSON-formatted) for params.json.
     virtual std::string describe_extra_json() const { return ""; }
+    // The vector field of action i in CAPD's formula syntax, for --validated (`make capd`).
+    virtual bool capd_spec(std::size_t /*action_idx*/, validated::Spec& /*spec*/) const { return false; }
 
     // ---- shared helpers -------------------------------------------------------
     double L_f() const { return L_f_; }
@@ -144,8 +148,12 @@ public:
     // coordinates wrapped. `ode_error[i]` is the infinity-norm tolerance budget
     // of the centre trajectory at that checkpoint (see integrate()).
     // Mirrors Dynamics.dynamics_multi_step in the Python.
+    // If `valid_error` is given (--validated), it receives a CAPD-validated bound on the
+    // infinity-norm distance between the exact solution from s0 and the numerical state at
+    // each checkpoint (infinity if CAPD fails, which validated_failures() counts).
     void dynamics_multi_step(const State& s0, std::size_t action_idx, double duration, double dt,
-                             std::vector<State>& out, std::vector<double>& ode_error) const {
+                             std::vector<State>& out, std::vector<double>& ode_error,
+                             std::vector<double>* valid_error = nullptr) const {
         const int n = static_cast<int>(std::ceil(duration / dt));
         out.clear();
         ode_error.clear();
@@ -155,14 +163,43 @@ public:
         double t_prev = 0.0;
         double error = 0.0;
         const auto f = [this, action_idx](const State& s) { return this->ode(s, action_idx); };
+        std::vector<State> raw;
+        std::vector<double> times;
         for (int i = 1; i <= n; ++i) {
             const double t = duration * static_cast<double>(i) / static_cast<double>(n);
             y = integrate<N>(f, y, t - t_prev, L_f_, &error);
+            if (valid_error != nullptr) { raw.push_back(y); times.push_back(t); }
             t_prev = t;
             State w = y;
             normalize(w);
             out.push_back(w);
             ode_error.push_back(error);
+        }
+        if (valid_error != nullptr) validated_errors(s0, action_idx, raw, times, *valid_error);
+    }
+
+    // CAPD encloses the exact solution from the cell centre at each checkpoint; the error bound
+    // is the distance from the numerical (unwrapped) state to the far edge of that enclosure,
+    // rounded up, so the exact solution lies within it in every coordinate.
+    void validated_errors(const State& s0, std::size_t action_idx, const std::vector<State>& raw,
+                          const std::vector<double>& times, std::vector<double>& out) const {
+        out.assign(raw.size(), std::numeric_limits<double>::infinity());
+        validated::Spec spec;
+        if (!capd_spec(action_idx, spec))
+            throw std::runtime_error(std::string(name()) + " has no CAPD vector field (capd_spec)");
+        std::vector<double> lo(N * raw.size()), hi(N * raw.size());
+        if (!validated::enclose(spec, s0.data(), N, times.data(), times.size(), lo.data(), hi.data())) {
+            validated::failures.fetch_add(1, std::memory_order_relaxed);
+            return;
+        }
+        const double inf = std::numeric_limits<double>::infinity();
+        for (std::size_t i = 0; i < raw.size(); ++i) {
+            double e = 0.0;
+            for (std::size_t d = 0; d < N; ++d) {
+                e = std::max(e, std::nextafter(hi[i * N + d] - raw[i][d], inf));
+                e = std::max(e, std::nextafter(raw[i][d] - lo[i * N + d], inf));
+            }
+            out[i] = e;
         }
     }
 

@@ -16,6 +16,7 @@
 #include <cstdint>
 #include <cstdio>
 #include <filesystem>
+#include <iterator>
 #include <string>
 #include <vector>
 
@@ -70,6 +71,14 @@ public:
             std::printf("  L_u=%g\n  control radii:", dyn.control_lipschitz());
             for (std::size_t a = 0; a < n_actions_; ++a) std::printf(" %g", dyn.control_cell_radius(a));
             std::printf("\n  control inflation at t=tau: %g\n", dyn.control_inflation(dyn.tau(), 0));
+        }
+        if (args_.validated) {
+            if (!validated::available()) {
+                std::fprintf(stderr, "error: --validated needs the CAPD build (make capd)\n");
+                std::exit(2);
+            }
+            std::printf("Validated integration (CAPD): each reach box uses a validated bound on the integration\n"
+                        "  error of the centre instead of the integrator's tolerance budget\n");
         }
         if (args_.precompute) precompute_all_successors();
     }
@@ -317,11 +326,13 @@ private:
             // Python structure: parallel ODE integration, then sequential queries.
             std::vector<std::vector<State>> trajectories(n_tasks);
             std::vector<std::vector<double>> ode_errors(n_tasks);
+            std::vector<std::vector<double>> valid_errors(args_.validated ? n_tasks : 0);
             pool_.parallel_for(n_tasks, [&](std::size_t b, std::size_t e) {
                 for (std::size_t t = b; t < e; ++t) {
                     const std::uint32_t cid = cell_ids[t / n_actions_];
                     dyn_.dynamics_multi_step(tree_.cell(cid).center, t % n_actions_, reach_.tau(), reach_.dt(),
-                                             trajectories[t], ode_errors[t]);
+                                             trajectories[t], ode_errors[t],
+                                             args_.validated ? &valid_errors[t] : nullptr);
                 }
             });
             const double ode_wall = now_seconds() - wall0;
@@ -333,7 +344,8 @@ private:
             std::uint32_t epoch = 0;
             std::vector<std::int32_t> out;
             for (std::size_t t = 0; t < n_tasks; ++t)
-                store_successors(cell_ids[t / n_actions_], t % n_actions_, trajectories[t], ode_errors[t], stamp, epoch, out);
+                store_successors(cell_ids[t / n_actions_], t % n_actions_, trajectories[t], ode_errors[t],
+                                 args_.validated ? &valid_errors[t] : nullptr, stamp, epoch, out);
             const double q_wall = now_seconds() - q0;
             timers_.queries += q_wall;
             std::printf("   Spatial queries completed in %.2fs\n", q_wall);
@@ -348,16 +360,18 @@ private:
             pool_.parallel_for(n_tasks, [&](std::size_t b, std::size_t e) {
                 const std::size_t w = next_worker.fetch_add(1) % nw;
                 std::vector<State> traj;
-                std::vector<double> ode_error;
+                std::vector<double> ode_error, valid_error;
                 std::vector<std::int32_t> out;
                 for (std::size_t t = b; t < e; ++t) {
                     const std::uint32_t cid = cell_ids[t / n_actions_];
                     const std::size_t ai = t % n_actions_;
                     double t0 = now_seconds();
-                    dyn_.dynamics_multi_step(tree_.cell(cid).center, ai, reach_.tau(), reach_.dt(), traj, ode_error);
+                    dyn_.dynamics_multi_step(tree_.cell(cid).center, ai, reach_.tau(), reach_.dt(), traj, ode_error,
+                                             args_.validated ? &valid_error : nullptr);
                     ode_cpu[w] += now_seconds() - t0;
                     t0 = now_seconds();
-                    store_successors(cid, ai, traj, ode_error, stamps[w], epochs[w], out);
+                    store_successors(cid, ai, traj, ode_error, args_.validated ? &valid_error : nullptr, stamps[w],
+                                     epochs[w], out);
                     query_cpu[w] += now_seconds() - t0;
                 }
             });
@@ -371,14 +385,37 @@ private:
             std::printf("    Breakdown: %.1f%% ODE, %.1f%% queries\n", 100.0 * ode_sum / denom, 100.0 * q_sum / denom);
         }
         recount_cache();
+        if (args_.validated) print_validated_stats();
+    }
+
+    // Cumulative comparison of the validated reach boxes with the budget boxes of the
+    // default build, over every transition computed so far in this run.
+    void print_validated_stats() const {
+        const auto& v = vstats_;
+        std::printf("  Validated integration (CAPD), all transitions so far:\n"
+                    "    transitions: %llu, checkpoints: %llu, CAPD failures: %zu\n"
+                    "    successor sets that differ from the budget boxes: %llu (cells dropped: %llu, added: %llu)\n"
+                    "    out-of-domain flags that differ: %llu\n"
+                    "    certified error: max %.3e;  budget: max %.3e;  certified > budget at %llu checkpoints\n"
+                    "    largest certified/budget ratio: %.3e\n",
+                    (unsigned long long)v.transitions.load(), (unsigned long long)v.checkpoints.load(),
+                    validated::failures.load(), (unsigned long long)v.sets_differ.load(),
+                    (unsigned long long)v.cells_dropped.load(), (unsigned long long)v.cells_added.load(),
+                    (unsigned long long)v.oob_differ.load(), v.max_cert.load(), v.max_budget.load(),
+                    (unsigned long long)v.cert_above_budget.load(), v.max_ratio.load());
+    }
+
+    static void atomic_max(std::atomic<double>& a, double x) {
+        double cur = a.load(std::memory_order_relaxed);
+        while (x > cur && !a.compare_exchange_weak(cur, x, std::memory_order_relaxed)) {}
     }
 
     // Leaves whose boxes meet the Gronwall-inflated reach boxes at every
     // checkpoint, plus the OOB sink if a reach box leaves the domain along a
     // non-periodic axis.
     void store_successors(std::uint32_t cell_id, std::size_t action_idx, const std::vector<State>& traj,
-                          const std::vector<double>& ode_error, std::vector<std::uint32_t>& stamp, std::uint32_t& epoch,
-                          std::vector<std::int32_t>& out) {
+                          const std::vector<double>& ode_error, const std::vector<double>* valid_error,
+                          std::vector<std::uint32_t>& stamp, std::uint32_t& epoch, std::vector<std::int32_t>& out) {
         const auto& c = tree_.cell(cell_id);
         double r;
         if (reach_.use_infinity_norm()) {
@@ -394,7 +431,9 @@ private:
         bool oob = false, oob_hi = false;
         ++epoch;
         for (std::size_t i = 0; i < traj.size(); ++i) {
-            const double expansion = r * reach_.growth_factors()[i] + ode_error[i];
+            // --validated: the CAPD bound on the centre's integration error replaces the budget.
+            const double expansion = valid_error != nullptr ? r * reach_.growth_factors()[i] + (*valid_error)[i]
+                                                            : r * reach_.growth_factors()[i] + ode_error[i];
             Bounds<N> rb{};
             for (std::size_t d = 0; d < N; ++d) rb[d] = {{traj[i][d] - expansion, traj[i][d] + expansion}};
             tree_.for_each_intersecting(rb, stamp, epoch, [&](std::uint32_t id) { out.push_back(static_cast<std::int32_t>(id)); });
@@ -415,6 +454,7 @@ private:
                 }
             }
         }
+        if (valid_error != nullptr) compare_with_budget_boxes(r, traj, ode_error, *valid_error, out, oob, stamp, epoch);
         // --restrict-reach-set-to-grid: the part of the box outside the state box is ignored.
         if (oob && !args_.restrict_to_grid) out.push_back(kOOB);
         const std::size_t key = static_cast<std::size_t>(cell_id) * n_actions_ + action_idx;
@@ -426,6 +466,46 @@ private:
             cache_upper_[key] = std::move(out_hi);
             cache_upper_present_[key] = 1;
         }
+    }
+
+    // The successors the default build would use (budget boxes), compared with the validated ones.
+    void compare_with_budget_boxes(double r, const std::vector<State>& traj, const std::vector<double>& ode_error,
+                                   const std::vector<double>& valid_error, const std::vector<std::int32_t>& out_valid,
+                                   bool oob_valid, std::vector<std::uint32_t>& stamp, std::uint32_t& epoch) {
+        const auto& gb = dyn_.state_bounds();
+        std::vector<std::int32_t> budget_set;
+        bool oob_budget = false;
+        ++epoch;
+        for (std::size_t i = 0; i < traj.size(); ++i) {
+            const double expansion = r * reach_.growth_factors()[i] + ode_error[i];
+            Bounds<N> rb{};
+            for (std::size_t d = 0; d < N; ++d) rb[d] = {{traj[i][d] - expansion, traj[i][d] + expansion}};
+            tree_.for_each_intersecting(rb, stamp, epoch, [&](std::uint32_t id) { budget_set.push_back(static_cast<std::int32_t>(id)); });
+            for (std::size_t d = 0; d < N; ++d) {
+                if (periodic_[d]) continue;
+                if (rb[d][0] < gb[d][0] || rb[d][1] > gb[d][1]) { oob_budget = true; break; }
+            }
+            vstats_.checkpoints.fetch_add(1, std::memory_order_relaxed);
+            atomic_max(vstats_.max_cert, valid_error[i]);
+            atomic_max(vstats_.max_budget, ode_error[i]);
+            if (ode_error[i] > 0.0) atomic_max(vstats_.max_ratio, valid_error[i] / ode_error[i]);
+            if (valid_error[i] > ode_error[i]) vstats_.cert_above_budget.fetch_add(1, std::memory_order_relaxed);
+        }
+        std::vector<std::int32_t> a(out_valid), b(budget_set);
+        std::sort(a.begin(), a.end());
+        a.erase(std::unique(a.begin(), a.end()), a.end());
+        std::sort(b.begin(), b.end());
+        b.erase(std::unique(b.begin(), b.end()), b.end());
+        vstats_.transitions.fetch_add(1, std::memory_order_relaxed);
+        if (a != b) {
+            vstats_.sets_differ.fetch_add(1, std::memory_order_relaxed);
+            std::vector<std::int32_t> only_a, only_b;
+            std::set_difference(a.begin(), a.end(), b.begin(), b.end(), std::back_inserter(only_a));
+            std::set_difference(b.begin(), b.end(), a.begin(), a.end(), std::back_inserter(only_b));
+            vstats_.cells_added.fetch_add(only_a.size(), std::memory_order_relaxed);
+            vstats_.cells_dropped.fetch_add(only_b.size(), std::memory_order_relaxed);
+        }
+        if (oob_valid != oob_budget) vstats_.oob_differ.fetch_add(1, std::memory_order_relaxed);
     }
 
     void recount_cache() {
@@ -669,6 +749,14 @@ private:
     std::size_t cache_entries_ = 0;
     // Avoid case: first sweep with V_upper^(k) <= 0 per leaf of the last run_sweeps (-1: never).
     std::vector<std::int32_t> upper_nonpos_iter_;
+
+    // --validated: validated boxes versus the budget boxes of the default build.
+    struct ValidatedStats {
+        std::atomic<std::uint64_t> transitions{0}, checkpoints{0}, sets_differ{0}, cells_dropped{0}, cells_added{0},
+            oob_differ{0}, cert_above_budget{0};
+        std::atomic<double> max_cert{0.0}, max_budget{0.0}, max_ratio{0.0};
+    };
+    ValidatedStats vstats_;
 };
 
 }  // namespace dhj

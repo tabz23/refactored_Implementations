@@ -1,0 +1,4 @@
+# Per-cell value dumps of the Section 9.2.4 runs (about 400 MB each). run_validated.sh
+# regenerates them, and csv_check.txt records their comparison with the stored paper runs.
+runs/**/value_function_phase_*.csv
+runs/**/upper_nonpos_iteration_phase_*.csv

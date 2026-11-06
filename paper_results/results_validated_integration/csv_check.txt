@@ -1,0 +1,4 @@
+Per-cell value files of the --validated Section 9.2.4 runs, compared byte for byte with the stored paper runs (Fri Nov  6 12:52:01 CST 2026).
+ra_discount/dubins_res120_dlower1e-08_dupper1e-08_gamma0.96_dt0.3/value_function_phase_0.csv: identical (sha256 3a0607931103b9b1..., stored 3a0607931103b9b1...)
+avoid_nodiscount/dubins_res120_dlower1e-300_dupper1e-300_dt0.3/value_function_phase_0.csv: identical (sha256 f59667b85099cc39..., stored f59667b85099cc39...)
+avoid_nodiscount/dubins_res120_dlower1e-300_dupper1e-300_dt0.3/upper_nonpos_iteration_phase_0.csv: identical (sha256 9881ba3468502a4f..., stored 9881ba3468502a4f...)

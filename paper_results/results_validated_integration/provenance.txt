@@ -1,0 +1,9 @@
+Runs qv_ra, qv_avoid, dubins120_std, avoid80, dubins20, bicycle8, vdp18 (2026-11-06, 12:10-13:xx CST) were made
+with a scratch copy of run_validated.sh (same arguments, same binary) before the code was committed.
+The solver source is that of the commit that added this folder (it was uncommitted while they ran).
+binary: cpp/build/dhj_capd, sha256 b0c10bfa4635ef7481c97d2f4fc1ab20459597b3016978ac20a58865370e76b5
+CAPD: 6.1.0, github.com/CAPDGroup/CAPD at commit 37057e5, cmake -DCMAKE_BUILD_TYPE=Release -DCAPD_INTERVAL_TYPE=NATIVE
+CAPD flags: -std=c++17 -O2 -frounding-math -D__USE_NATIVE__ 
+compiler: Apple clang version 16.0.0 (clang-1600.0.26.6)
+machine: Apple M3 Pro, 18 GB RAM, 12 workers
+

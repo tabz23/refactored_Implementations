@@ -75,6 +75,33 @@ Main options (`--help` lists all of them):
   sound for systems that can leave X, and the paper's experiments use neither flag (see
   `../old_results/results_stay_in_grid*`). Every value iteration logs how many reach boxes
   leave the state box.
+* `--validated` (experimental, needs `build/dhj_capd`, see below): each reach box uses a
+  CAPD-validated bound on the integration error of the cell centre instead of the
+  integrator's tolerance budget. The run also computes the successors the default build
+  would use from the same trajectories, and logs after every successor computation how many
+  successor sets and out-of-domain flags differ, the largest validated error and budget, and
+  how often the validated error exceeds the budget. Run folders get `_validated`.
+
+### Validated integration with CAPD (experimental)
+
+By default, each reach box is the cell radius times the Grönwall factor, plus the tolerance
+budget of the Dormand–Prince integrator (`include/dhj/core/ode.hpp`), which is an estimate of
+the integration error of the centre, not a bound. `--validated` replaces the budget with a
+rigorous bound computed by [CAPD](https://github.com/CAPDGroup/CAPD) (Taylor order 15,
+automatic step control): CAPD encloses the exact solution from the centre, and the bound is
+the distance from the numerical centre to the far edge of that enclosure, rounded up.
+Build CAPD with its native intervals (its default `filib` needs x86), then the solver:
+
+```bash
+git clone https://github.com/CAPDGroup/CAPD && cd CAPD && mkdir build && cd build
+cmake .. -DCMAKE_BUILD_TYPE=Release -DCAPD_INTERVAL_TYPE=NATIVE && make -j8
+cd <refactored_Implementations>/cpp
+make capd CAPD_CONFIG=<CAPD>/build/bin/capd-config   # -> build/dhj_capd
+```
+
+`src/capd_bridge.cpp` is compiled with CAPD's flags (`-frounding-math`) and `src/main.cpp`
+with the usual ones, so the numerical integrator is compiled exactly as in `build/dhj`.
+Without `--validated`, `build/dhj_capd` behaves exactly like `build/dhj`.
 
 Each run writes to `<--results-root>/<mode>/<dynamics>_res<R>[_epsmin<ε_min>]_dlower<δ̲*>_dupper<δ̄*>[_gamma<γ>]_dt<dt>`
 (`_epsmin` only if the run refines, `_gamma` only for `ra_discount`, plus `_tau<τ>` if `--tau`

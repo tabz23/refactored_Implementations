@@ -66,6 +66,13 @@ public:
         return {v * std::cos(th), v * std::sin(th), (v / wheelbase_) * std::tan(delta), actions_[a][0], actions_[a][1]};
     }
 
+    bool capd_spec(std::size_t a, validated::Spec& spec) const override {
+        // tan(d) as sin(d)/cos(d); |d| <= 0.6 keeps cos(d) away from zero.
+        spec.formula = "par:wb,u1,u2;var:x,y,th,v,d;fun:v*cos(th),v*sin(th),(v/wb)*(sin(d)/cos(d)),u1,u2;";
+        spec.params = {{"wb", wheelbase_}, {"u1", actions_[a][0]}, {"u2", actions_[a][1]}};
+        return true;
+    }
+
     double failure_function(const State& s) const override {
         const double dx = s[0] - obstacle_position_[0], dy = s[1] - obstacle_position_[1];
         return std::sqrt(dx * dx + dy * dy) - obstacle_radius_;

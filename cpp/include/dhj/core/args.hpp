@@ -45,6 +45,9 @@ struct Args {
     // there: min{l, r} in reach-avoid (the same as skipping the action) and l in the avoid
     // case. Without this flag such an action is skipped (counts as -inf).
     bool if_leave_use_cell_bounds = false;
+    // Experimental (binary built with `make capd`): replace the integrator's tolerance budget
+    // in each reach box with a CAPD-validated bound on the integration error of the centre.
+    bool validated = false;
     // execution
     int workers = 0;         // 0 => hardware threads - 1
     bool precompute = false;
@@ -182,6 +185,7 @@ inline Args parse_args(int argc, char** argv) {
         else if (f == "--two-abstractions") { a.two_abstractions = true; }
         else if (f == "--restrict-reach-set-to-grid") { a.restrict_to_grid = true; }
         else if (f == "--if-leave-use-cellwise-bounds") { a.if_leave_use_cell_bounds = true; }
+        else if (f == "--validated") { a.validated = true; }
         else if (f == "--workers") { a.workers = static_cast<int>(parse_long(need(i), "--workers")); ++i; }
         else if (f == "--precompute") { a.precompute = true; }
         else if (f == "--seq-queries") { a.seq_queries = true; }
@@ -238,6 +242,7 @@ inline std::string derive_out_dir(const Args& a) {
     if (a.two_abstractions) name += "_twoabs";
     if (a.restrict_to_grid) name += "_restrictgrid";
     if (a.if_leave_use_cell_bounds) name += "_cellbounds";
+    if (a.validated) name += "_validated";
     if (!a.tag.empty()) name += "_" + a.tag;
     return a.results_root + "/" + a.mode_name + "/" + name;
 }
@@ -275,6 +280,7 @@ inline std::string args_json(const Args& a, const std::string& indent) {
     j += in + "\"tag\": " + s(a.tag) + ",\n";
     j += in + "\"tau\": " + py_repr(a.tau) + ",\n";
     j += in + "\"two_abstractions\": " + b(a.two_abstractions) + ",\n";
+    j += in + "\"validated\": " + b(a.validated) + ",\n";
     j += in + "\"v_max\": " + py_repr(a.v_max) + ",\n";
     j += in + "\"velocity\": " + py_repr(a.velocity) + ",\n";
     j += in + "\"vi_iterations\": " + std::to_string(a.vi_iterations) + ",\n";
