@@ -1,6 +1,6 @@
 #!/bin/bash
 # Checks with CAPD that the integration-error budget bounds the true integration error in every
-# run of the paper's Section 9 (paper, Appendix I). Each case below repeats a paper run with
+# run of the paper's Section 9 (not reported in the paper, see README.md). Each case below repeats a paper run with
 # --validated: every reach box uses a CAPD-validated bound on the integration error of the cell
 # centre instead of the integrator's tolerance budget, and the solver also builds the box the
 # normal build uses and counts every transition whose successors differ (see README.md).
