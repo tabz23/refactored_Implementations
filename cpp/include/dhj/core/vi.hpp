@@ -393,13 +393,13 @@ private:
     void print_validated_stats() const {
         const auto& v = vstats_;
         std::printf("  Validated integration (CAPD), all transitions so far:\n"
-                    "    transitions: %llu, checkpoints: %llu, CAPD failures: %zu\n"
+                    "    transitions: %llu, checkpoints: %llu, CAPD failures: %zu, fixed-step retries: %zu\n"
                     "    successor sets that differ from the budget boxes: %llu (cells dropped: %llu, added: %llu)\n"
                     "    out-of-domain flags that differ: %llu\n"
                     "    certified error: max %.3e;  budget: max %.3e;  certified > budget at %llu checkpoints\n"
                     "    largest certified/budget ratio: %.3e\n",
                     (unsigned long long)v.transitions.load(), (unsigned long long)v.checkpoints.load(),
-                    validated::failures.load(), (unsigned long long)v.sets_differ.load(),
+                    validated::failures.load(), validated::retries.load(), (unsigned long long)v.sets_differ.load(),
                     (unsigned long long)v.cells_dropped.load(), (unsigned long long)v.cells_added.load(),
                     (unsigned long long)v.oob_differ.load(), v.max_cert.load(), v.max_budget.load(),
                     (unsigned long long)v.cert_above_budget.load(), v.max_ratio.load());

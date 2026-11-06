@@ -19,8 +19,11 @@
 
 namespace dhj::validated {
 
-// Number of CAPD calls that failed in this run (their reach boxes become unbounded).
+// Number of transitions for which CAPD failed in this run. Their reach boxes keep the
+// integrator's budget, so they are not validated (run_validated.sh requires 0).
 inline std::atomic<std::size_t> failures{0};
+// Number of CAPD calls that needed the fixed-step retry (see capd_bridge.cpp).
+inline std::atomic<std::size_t> retries{0};
 
 // A vector field in CAPD's formula syntax, e.g.
 //   "par:v,u;var:x,y,th;fun:v*cos(th),v*sin(th),u;"

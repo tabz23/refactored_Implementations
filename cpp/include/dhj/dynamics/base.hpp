@@ -150,7 +150,8 @@ public:
     // Mirrors Dynamics.dynamics_multi_step in the Python.
     // If `valid_error` is given (--validated), it receives a CAPD-validated bound on the
     // infinity-norm distance between the exact solution from s0 and the numerical state at
-    // each checkpoint (infinity if CAPD fails, which validated_failures() counts).
+    // each checkpoint. If CAPD fails, it receives the budget instead, and validated::failures
+    // counts the transition.
     void dynamics_multi_step(const State& s0, std::size_t action_idx, double duration, double dt,
                              std::vector<State>& out, std::vector<double>& ode_error,
                              std::vector<double>* valid_error = nullptr) const {
@@ -175,15 +176,16 @@ public:
             out.push_back(w);
             ode_error.push_back(error);
         }
-        if (valid_error != nullptr) validated_errors(s0, action_idx, raw, times, *valid_error);
+        if (valid_error != nullptr) validated_errors(s0, action_idx, raw, times, ode_error, *valid_error);
     }
 
     // CAPD encloses the exact solution from the cell centre at each checkpoint; the error bound
     // is the distance from the numerical (unwrapped) state to the far edge of that enclosure,
     // rounded up, so the exact solution lies within it in every coordinate.
     void validated_errors(const State& s0, std::size_t action_idx, const std::vector<State>& raw,
-                          const std::vector<double>& times, std::vector<double>& out) const {
-        out.assign(raw.size(), std::numeric_limits<double>::infinity());
+                          const std::vector<double>& times, const std::vector<double>& budget,
+                          std::vector<double>& out) const {
+        out = budget;
         validated::Spec spec;
         if (!capd_spec(action_idx, spec))
             throw std::runtime_error(std::string(name()) + " has no CAPD vector field (capd_spec)");
