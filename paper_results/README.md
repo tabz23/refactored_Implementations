@@ -34,12 +34,12 @@ matches. Runtimes are printed but not compared, since they depend on the machine
 
 | Folder | Paper results | Script | Time (Apple M3 Pro) |
 |---|---|---|---|
-| `results_hscc_2027_newbellmans_12workers_current_code/` | Figs. 2–5, the runtimes in the Fig. 3–5 captions and in §9.2.3 | `regenerate_hscc_newbellmans_tol1e-15_current_code.sh` | about 1 hour |
-| `results_quantitative_verification/` | §9.2.5, the validation of both claims of Proposition 4 (`prop:greedy`) and of Proposition 6 (`prop:avoid`) | `reproduce.sh` | about 4 minutes |
+| `results_hscc_2027_newbellmans_12workers_current_code/` | Figs. 1–4, the runtimes in the Fig. 2–4 captions and in §9.2.2 | `regenerate_hscc_newbellmans_tol1e-15_current_code.sh` | about 1 hour |
+| `results_quantitative_verification/` | §9.2.4, the validation of both claims of Proposition 4 (`prop:greedy`) and of Proposition 6 (`prop:avoid`) | `reproduce.sh` | about 4 minutes |
 | `results_bound_verification/` | Appendix H (`app:bound_verification`): the numerical check of Theorem 3 (`thm:convergence`), its figure, and the check of its last claim on unclassified cells (`app:bv_unclassified`) | `reproduce.sh` and `unclassified_check.py` | about 3.5 minutes each |
 
-The other paper results do not come from this code. Fig. 1 and Fig. 4(e) come from the
-MATLAB HJ reachability toolbox. Fig. 4(c,d) come from ROCS 2.0.
+The other paper results do not come from this code. Fig. 3(e) comes from the
+MATLAB HJ reachability toolbox. Fig. 3(c,d) come from ROCS 2.0.
 
 ## Requirements
 
@@ -55,7 +55,7 @@ MATLAB HJ reachability toolbox. Fig. 4(c,d) come from ROCS 2.0.
   * Runtimes vary by up to about ±20% between runs on the same machine.
   * Classifications are deterministic.
 
-## 1. Figures 2–5 and their runtimes
+## 1. Figures 1–4 and their runtimes
 
 Folder: `results_hscc_2027_newbellmans_12workers_current_code/`
 
@@ -138,14 +138,14 @@ The script does four things:
 
 | Script name | Mode | Setup | Paper |
 |---|---|---|---|
-| `dubins120_std` | `ra_nodiscount` (γ = 1, Algorithm 1 with the modifications of Proposition 3, `prop:gamma_1`) | Dubins car, 120³ grid (cell radius π/120 ≈ 0.026), t_s = 0.3, no refinement | Fig. 4(a), §9.2.3 |
-| `dubins120_discount` | `ra_discount` (γ = 0.96, δ\* = 1e-8) | the same grid | Fig. 4(b), §9.2.3 |
-| `avoid80` | `avoid_nodiscount` (γ = 1, Section 8) | Dubins car, 80³ grid (cell radius π/80 ≈ 0.039), Algorithm 2, 6 refinements | Fig. 5 |
-| `dubins20_discount` | `ra_discount` (γ = 0.96, δ\* = 1e-8) | Dubins car, 20³ grid (cell radius π/20 ≈ 0.157), Algorithm 2, 13 refinements | Fig. 2 |
-| `vdp18` | `ra_nodiscount` | Van der Pol, 40² grid (cell radius 0.0725), t_s = 0.01, 18 refinements | Fig. 3(a) |
-| `evasion12` | `ra_nodiscount` | 3D evasion, 30³ grid (cell radius π/30 ≈ 0.105), t_s = 0.3, 12 refinements | Fig. 3(b) |
-| `di14` | `ra_nodiscount` | planar double integrator, 10⁴ grid (cell radius 0.3), t_s = 0.3, 14 refinements | Fig. 3(c) |
-| `bicycle8` | `ra_nodiscount` | kinematic bicycle, 5⁵ grid (cell radius π/5 ≈ 0.628), t_s = 0.3, 8 refinements | Fig. 3(d) |
+| `dubins120_std` | `ra_nodiscount` (γ = 1, Algorithm 1 with the modifications of Proposition 3, `prop:gamma_1`) | Dubins car, 120³ grid (cell radius π/120 ≈ 0.026), t_s = 0.3, no refinement | Fig. 3(a), §9.2.2 |
+| `dubins120_discount` | `ra_discount` (γ = 0.96, δ\* = 1e-8) | the same grid | Fig. 3(b), §9.2.2 |
+| `avoid80` | `avoid_nodiscount` (γ = 1, Section 8) | Dubins car, 80³ grid (cell radius π/80 ≈ 0.039), Algorithm 2, 6 refinements | Fig. 4 |
+| `dubins20_discount` | `ra_discount` (γ = 0.96, δ\* = 1e-8) | Dubins car, 20³ grid (cell radius π/20 ≈ 0.157), Algorithm 2, 13 refinements | Fig. 1 |
+| `vdp18` | `ra_nodiscount` | Van der Pol, 40² grid (cell radius 0.0725), t_s = 0.01, 18 refinements | Fig. 2(a) |
+| `evasion12` | `ra_nodiscount` | 3D evasion, 30³ grid (cell radius π/30 ≈ 0.105), t_s = 0.3, 12 refinements | Fig. 2(b) |
+| `di14` | `ra_nodiscount` | planar double integrator, 10⁴ grid (cell radius 0.3), t_s = 0.3, 14 refinements | Fig. 2(c) |
+| `bicycle8` | `ra_nodiscount` | kinematic bicycle, 5⁵ grid (cell radius π/5 ≈ 0.628), t_s = 0.3, 8 refinements | Fig. 2(d) |
 
 The cell radius is the paper's ε (Section 4): half the largest side of a cell over all
 dimensions, so the heading θ ∈ [−π, π] counts. For the Dubins car and the evasion model, the
@@ -161,7 +161,7 @@ Notes on the arguments:
   its radius exceeds ε_min (`filter_refinable` in `refine.hpp`). The paper does not report it.
   * The script uses 1e-6 for every case that refines. That is far below the smallest radius
     any case refines, 2.4e-4 in `vdp18`'s last iteration. So every case ends at its
-    `--refinements` limit. The two Algorithm 1 cases (Fig. 4(a,b), `--refinements 0`) do not
+    `--refinements` limit. The two Algorithm 1 cases (Fig. 3(a,b), `--refinements 0`) do not
     use it.
   * The original runs (`original_runs/`) were made before this option existed, with `--epsilon` 0.05, 0.1 or
     0.001, which set ε_min = `--epsilon`/(4 L_l). In none of those runs was a cell skipped for
@@ -194,10 +194,10 @@ Notes on the arguments:
   intermediate reach checkpoints). `--tau` defaults to `--dt`, so the scripts pass only `--dt`,
   and each successor set is computed only at time t_s, as in Section 4 of the paper. The
   original folder names contain both (`_dt0.3_tau0.3_`); the current ones only `_dt0.3`.
-* **The bicycle:** it stops after 8 refinements, which is the output in Fig. 3(d). A run with
+* **The bicycle:** it stops after 8 refinements, which is the output in Fig. 2(d). A run with
   13 refinements (2026-10-26, same flags otherwise) split to 1,435,125 cells in refinement 9
   and exceeded the machine's 18 GB of RAM. Its log stops during refinement 9, and `time.txt`
-  reports a peak memory footprint of 57.3 GB. §9.2.2 of the paper reports this. The run is kept
+  reports a peak memory footprint of 57.3 GB. §9.2.1 of the paper reports this. The run is kept
   in the subfolder `bicycle13_out_of_memory/` of the `bicycle8` run folder
   (`ra_nodiscount/bicycle_res5_epsmin1e-06_dlower1e-15_dupper1e-15_dt0.3/`). Its phases 0–8 are byte-identical to `bicycle8`'s
   (classifications, `phases.csv` counts and PNGs), so only its `run.log`, `params.json` and
@@ -231,21 +231,21 @@ Values from the original runs used in the paper (`original_runs/`, 2026-10-26, s
 
 | Paper | Case | Total time (paper) | Total time (2026-11-04) | Classified (safe + unsafe) |
 |---|---|---|---|---|
-| Fig. 4(a), §9.2.3 | `dubins120_std` | 2.69 s | 2.61 s | 83.4% |
-| Fig. 4(b), §9.2.3 | `dubins120_discount` | 2.86 s | 2.67 s | 83.4% |
-| Fig. 5 | `avoid80` | 22.13 s (22.1 s in the caption) | 23.86 s | 94.4% |
-| Fig. 2 | `dubins20_discount` | 46.87 s | 46.73 s | 94.5% |
-| Fig. 3(a) | `vdp18` | 291.75 s | 417.20 s | 97.7% |
-| Fig. 3(b) | `evasion12` | 1301.23 s | 1681.52 s | 88.0% |
-| Fig. 3(c) | `di14` | 1910.33 s | 4225.17 s | 94.3% |
-| Fig. 3(d) | `bicycle8` | 63.74 s | 79.45 s | 11.5% |
+| Fig. 3(a), §9.2.2 | `dubins120_std` | 2.69 s | 2.61 s | 83.4% |
+| Fig. 3(b), §9.2.2 | `dubins120_discount` | 2.86 s | 2.67 s | 83.4% |
+| Fig. 4 | `avoid80` | 22.13 s (22.1 s in the caption) | 25.09 s (rerun at `8252c4c`) | 94.4% |
+| Fig. 1 | `dubins20_discount` | 46.87 s | 46.73 s | 94.5% |
+| Fig. 2(a) | `vdp18` | 291.75 s | 417.20 s | 97.7% |
+| Fig. 2(b) | `evasion12` | 1301.23 s | 1681.52 s | 88.0% |
+| Fig. 2(c) | `di14` | 1910.33 s | 4225.17 s | 94.3% |
+| Fig. 2(d) | `bicycle8` | 63.74 s | 79.45 s | 11.5% |
 
 The 2026-11-04 runs of `vdp18`, `evasion12`, `di14` and `bicycle8` were slower because the
 machine was swapping during the regeneration (up to 30 GB of swap); the paper keeps the
 original runtimes.
 
-**Fig. 2b caveat:** it plots per-iteration runtimes, cell counts and the classified volume. It
-was drawn with `plot_runtime.py` (in the Figs. 2–5 folder) from an earlier run of
+**Fig. 1b caveat:** it plots per-iteration runtimes, cell counts and the classified volume. It
+was drawn with `plot_runtime.py` (in the Figs. 1–4 folder) from an earlier run of
 `dubins20_discount`.
 * The cell counts and classified volumes are identical to this run's.
 * The per-iteration runtimes agree within about 10% with the original run, which takes 0.52 s
@@ -257,11 +257,11 @@ was drawn with `plot_runtime.py` (in the Figs. 2–5 folder) from an earlier run
 **Comparison with the previous run:** `../old_results/results_hscc_2027_newbellmans_12workers/` was made
 with older builds of the solver.
 * Classifications are identical in all 79 phases of the eight cases.
-* 78 of the 79 PNGs are pixel-identical. The remaining one, Fig. 4(b), differs only in its
+* 78 of the 79 PNGs are pixel-identical. The remaining one, Fig. 3(b), differs only in its
   title line, because the old run used the "conservative" stopping mode.
 * Only the runtimes differ.
 
-## 2. Quantitative guarantees (§9.2.5)
+## 2. Quantitative guarantees (§9.2.4)
 
 Folder: `results_quantitative_verification/`. Its `README.md` has the details.
 
@@ -334,12 +334,12 @@ minute), see "Only the failure-reaching time of Proposition 6(2)" in the folder'
      $\overline V_1^{\mathrm{cons}} \le 0$, an exhaustive search over every action sequence.
      Each sequence must reach F ($l \le 0$, or leaving the grid) by time $k(s_0)$.
 
-### Results (stored `summary.json` and `report.json`; §9.2.5 reports the ones marked)
+### Results (stored `summary.json` and `report.json`; §9.2.4 reports the ones marked)
 
-* **Reach–avoid:** 71 iterations and 983,988 trajectories, with 0 violations (in §9.2.5).
+* **Reach–avoid:** 71 iterations and 983,988 trajectories, with 0 violations (in §9.2.4).
   * The median arrival time is 19 steps against a median bound of 36 (not in the paper).
   * The arrival time $t$, the first time in T, satisfies $t \le 0.73\,\bar t$ for all
-    trajectories (maximum 40/55 = 0.727; in §9.2.5). There are 480 trajectories with
+    trajectories (maximum 40/55 = 0.727; not in the paper). There are 480 trajectories with
     $\bar t = 0$, and all of them start inside T.
   * The bound is attained: $t^* = \bar t$ for 576 trajectories (not in the paper). For 77
     of them, $\underline V(s_0) = \gamma^{\bar t} r^*$ exactly as the solver computed it. So
@@ -347,15 +347,15 @@ minute), see "Only the failure-reaching time of Proposition 6(2)" in the folder'
     the product formed by repeated multiplication, as in the solver (`time_bound` in
     `verify_quantitative.py`). On this run it equals `floor(log(...)/log γ)` for every
     trajectory.
-  * $\gamma^\tau l(x_\tau)/\underline V(s_0) \ge 1.02$ (minimum 1.021; in §9.2.5).
-* **Avoid:** 89 iterations and 973,616 trajectories, with 0 violations (in §9.2.5).
-  * $l(x_\tau)/\underline V_1(s_0) \ge 1.002$ over all 1000 steps (minimum 1.0021; in §9.2.5).
+  * $\gamma^\tau l(x_\tau)/\underline V(s_0) \ge 1.02$ (minimum 1.021; not in the paper).
+* **Avoid:** 89 iterations and 973,616 trajectories, with 0 violations (in §9.2.4).
+  * $l(x_\tau)/\underline V_1(s_0) \ge 1.002$ over all 1000 steps (minimum 1.0021; §9.2.4 reports the inequality $l(x_\tau) \ge \underline V_1(s_0)$, not the ratio).
 * **Violation** (`verification_ra_violation/report.json`): 458,296 cells with
   $\overline V^{\mathrm{cons}} < 0$ and 4,124,664 start states, with 0 violations under the
-  eight policies and in the exhaustive search (40,024,654 action sequences). The cell and
-  state counts and the 0 violations are in §9.2.5.
+  eight policies and in the exhaustive search (40,024,654 action sequences). The cell count
+  and the 0 violations are in §9.2.4, the state count is not.
   * Over all sequences, the latest time $t$ is at most 8 steps and at most
-    $0.5\,\bar t_{\mathcal F}$ (both in §9.2.5). Its median is 1 step, and $\bar t_{\mathcal F}$ has a
+    $0.5\,\bar t_{\mathcal F}$ (not in the paper). Its median is 1 step, and $\bar t_{\mathcal F}$ has a
     median of 15 steps (not in the paper).
   * Before $t$, $\gamma^\tau r(x_\tau)/\overline V(s_0) \ge 1.006$ (at least 1 is required).
   * The depth bound $l(x_t) \le \gamma^{-t}\overline V(s_0)$ is attained exactly in some
@@ -364,14 +364,14 @@ minute), see "Only the failure-reaching time of Proposition 6(2)" in the folder'
     `time_bound` as $\bar t$.
 * **Failure-reaching time** (`verification_avoid_failure_time/report.json`): 464,032 cells
   with $\overline V_1^{\mathrm{cons}} \le 0$ and 4,176,288 start states, with 0 violations in
-  the exhaustive search (37,922,424 action sequences). The cell and state counts and the
-  0 violations are in §9.2.5.
+  the exhaustive search (37,922,424 action sequences). The cell count and the 0 violations
+  are in §9.2.4, the state count is not.
   * The certificate has 0 violations, and the verifier's $k(s)$ and $\overline V_1$ equal the
     solver's in all 1,728,000 cells (not in the paper).
   * $k(s_0) \le 10$ with median 0, and the latest first time in F over all sequences is at
     most 8 steps (not in the paper).
   * The bound is attained: for 1,280,735 of the 2,024,928 start states with $k(s_0) \ge 1$
-    (63 %, in §9.2.5), some sequence first reaches F exactly at time $k(s_0)$.
+    (63 %, not in the paper), some sequence first reaches F exactly at time $k(s_0)$.
 
 ### Alignment with the paper
 
@@ -492,8 +492,8 @@ None of these is stated in the paper.
    queue is still nonempty, and the figures show that output.
    * Theorem 2 applies after every iteration, because each iteration ends with Algorithm 1 on
      the current grid.
-   * The captions and §9.2.2 give the iteration counts for Fig. 5 (six) and the bicycle
-     (eight).
+   * The Fig. 4 caption (six refinements) and §9.2.1 (the bicycle, eight) give the
+     refinement counts.
 
 ### Changes after the paper run
 
@@ -506,12 +506,12 @@ None of these is stated in the paper.
   `results_quantitative_verification/` was regenerated at this commit
   (`./reproduce.sh "$PWD"`), and every number in `verification_ra`, `verification_avoid` and
   `verification_ra_violation` is unchanged. With the non-strict test, the solver's avoid
-  classification ($\overline V \le 0$) now matches the paper (Proposition 6(2), Fig. 5
+  classification ($\overline V \le 0$) now matches the paper (Proposition 6(2), Fig. 4
   caption), so the former known difference "unsafe test in the avoid case" is gone.
 
 * **2026-11-04, lower value of the sink in the avoid case (`8252c4c`):** in
   `avoid_nodiscount` the sink's lower value is min(−1, inf l) = −1.3 for the Dubins car instead
-  of −1, as the revised paper requires (Section 8). `avoid80` (Fig. 5) and Section 9.2.5 were
+  of −1, as the revised paper requires (Section 8). `avoid80` (Fig. 4) and Section 9.2.4 were
   regenerated with this code: the classifications, `phases.csv` counts and classification
   panels of `avoid80` are identical in all 7 phases (only the plotted lower-bound values
   change), and every number in `verification_ra`, `verification_avoid` (89 iterations,
@@ -521,7 +521,7 @@ None of these is stated in the paper.
 * **2026-11-04, regenerated results:** all three folders were regenerated with the current code
   (`reproduce_all.sh --updated`) and replaced the stored ones, which moved to `original_runs/`
   together with the comparison logs. Every classification, `phases.csv` count and PNG of
-  Figs. 2–5 and every output of §9.2.5 and Appendix H is identical.
+  Figs. 1–4 and every output of §9.2.4 and Appendix H is identical.
 
 * **2026-11-04, unused code removed:** none of it was used by any result of the paper.
   * The "conservative" stopping mode of an earlier version of the paper (stop on δ_max, then
@@ -532,8 +532,8 @@ None of these is stated in the paper.
   * The `van_der_pol_avoid` dynamics, which the paper does not use.
   * The Python port of the original paper scripts and the checkpoint-comparison tool, used
     only to cross-check the C++ solver during development, moved to
-    `../old_results/python_port/` and `../old_results/cpp_tools/`. `plot_runtime.py` (Fig. 2b)
-    moved into the Figs. 2–5 folder.
+    `../old_results/python_port/` and `../old_results/cpp_tools/`. `plot_runtime.py` (Fig. 1b)
+    moved into the Figs. 1–4 folder.
   * Check: on Dubins runs of all three modes (12³ grid, 3 refinements), the solver before and
     after the removal gives identical classifications and `phases.csv`, and byte-identical
     PNGs.
@@ -542,7 +542,7 @@ None of these is stated in the paper.
   the run, and the paper's parameters by name.
   * `--delta-min` became `--delta-lower` and `--delta-upper`, the paper's δ̲\* and δ̄\*. The
     scripts set both to the value of the paper runs: 1e-8 (discounted), 1e-15 (γ = 1) and
-    1e-300 (the §9.2.5 avoid run).
+    1e-300 (the §9.2.4 avoid run).
   * `--gamma` is accepted only with `--mode ra_discount`; the other two modes use γ = 1.
   * `--phase0-tol` (a separate tolerance for the initial grid, which every script set equal
     to `--delta-min`) was removed. The scripts no longer pass `--keep-checkpoints` (no
@@ -554,7 +554,7 @@ None of these is stated in the paper.
     `<dynamics>_res<R>_eps<…>_dmin<δ>_dmax<…>_gamma<γ>_dt<dt>_tau<τ>_std`. `reproduce_all.sh`
     pairs the two on dynamics, grid, tolerances, γ (`ra_discount` only) and `dt`.
   * Check: Dubins runs of all three modes give identical classifications, `phases.csv` and
-    byte-identical PNGs before and after, and the §9.2.5 reproduction gives numbers identical
+    byte-identical PNGs before and after, and the §9.2.4 reproduction gives numbers identical
     to the stored ones.
 
 * **2026-11-04, folder layout and argument defaults:**

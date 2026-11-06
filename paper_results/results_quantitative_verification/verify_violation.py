@@ -7,7 +7,7 @@ policy the trajectory from any x0 in [[s0]] reaches F at some time
 At this time l(x_t) <= gamma^(-t) V_upper(s0) < 0, and before it the trajectory does not
 reach T: the proof gives r(x_tau) <= gamma^(-tau) V_upper(s0) < 0 for tau < t.
 
-Data: the saved reach-avoid run of Section 9.2.5 (Dubins car, 120^3 cells, gamma = 0.96,
+Data: the saved reach-avoid run of Section 9.2.4 (Dubins car, 120^3 cells, gamma = 0.96,
 U = A = {-1, 0, 1}). As in the solver and the paper's experiments, leaving the grid along
 x or y moves the state to an absorbing failure state. The solver gives this sink the fixed
 value -1 (its l and r bounds are -1 as well, cpp/include/dhj/core/vi.hpp); here it is an

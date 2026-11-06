@@ -25,7 +25,7 @@ cd cpp && make
     --initial-resolution 20 --refinements 13 --eps-min 1e-6 --delta-lower 1e-8 --delta-upper 1e-8
 ```
 
-This is the run of Fig. 2. It writes to
+This is the run of Fig. 1. It writes to
 `refactored_Implementations/results/<mode>/<dynamics>_res<R>_epsmin<ε_min>_dlower<δ̲*>_dupper<δ̄*>_gamma<γ>_dt<dt>/`
 (override with `--results-root`, `--out-dir` or `--tag`), which contains
 

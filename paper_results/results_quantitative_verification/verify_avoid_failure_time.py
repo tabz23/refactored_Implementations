@@ -7,7 +7,7 @@ tau <= k. The smallest such k is k(s0), the first iteration of Algorithm 1 with
 V_upper^(k)(s0) <= 0. The solver writes it, for every cell, to
 upper_nonpos_iteration_phase_0.csv (avoid runs with --dump-csv; -1 means never).
 
-Data: the avoid run of Section 9.2.5 (Dubins car, 120^3 cells, gamma = 1, U = A = {-1, 0, 1}).
+Data: the avoid run of Section 9.2.4 (Dubins car, 120^3 cells, gamma = 1, U = A = {-1, 0, 1}).
 As in the solver and the paper's experiments, l = -1 outside the state box, so leaving the
 box along x or y reaches F.
 

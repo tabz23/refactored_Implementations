@@ -43,7 +43,7 @@ make                      # -> build/dhj          (or: cmake -B build && cmake -
 ./build/dhj --help
 ```
 
-The run of Fig. 2 in the paper (Dubins car, γ = 0.96, 13 refinement iterations):
+The run of Fig. 1 in the paper (Dubins car, γ = 0.96, 13 refinement iterations):
 
 ```bash
 ./build/dhj --mode ra_discount --gamma 0.96 --dynamics dubins --dt 0.3 \

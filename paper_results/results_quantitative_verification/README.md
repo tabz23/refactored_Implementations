@@ -32,11 +32,13 @@ the compiler and the solver binary hash; the binary embeds its build time, so th
 hash changes with every build. `reproduce.log` is the output of the last replication,
 ending with the comparison of every report with the one here.
 
-**Only the failure-reaching time of Proposition 6(2)** (paper, Section 9.2.5, avoid case:
-"In the same run, V̄₁^cons ≤ 0 holds in 464,032 cells. From one random state and the
-eight corners of each of these cells, we simulate every action sequence until its
-trajectory reaches F. All 4,176,288 initial states satisfy the second claim of
-Proposition 6 …"), in about a minute:
+**Only the failure-reaching time of Proposition 6(2)** (paper, Section 9.2.4, avoid case:
+"for each cell s with V̄₁^cons(s) ≤ 0, we simulated the system starting from one random
+state in its interior and from its eight corners while following every possible action
+sequence until it reaches F. In every resulting trajectory, F was reached at some time
+τ ≤ k, where k is the first iteration index satisfying V̄₁^(k)(s) ≤ 0, as the second claim
+of Proposition 6 states."),
+in about a minute:
 
 ```bash
 ./run_alg1_res120.sh avoid DIR     # Algorithm 1, avoid case, 120^3 cells; also writes
@@ -46,10 +48,12 @@ python verify_avoid_failure_time.py \
     --out DIR/verification_avoid_failure_time --seed 0
 ```
 
-The numbers in the paper are, in `verification_avoid_failure_time/report.json`:
-`cells_V_upper_nonpositive` (464,032), `exhaustive.states` (4,176,288),
-`exhaustive.violations` (0), and the 63 % = `exhaustive.latest_hit_equals_k_(k>=1)` /
-(9 × `certificate.cells_k_positive`) = 1,280,735 / 2,024,928.
+The paper's numbers are, in `verification_avoid_failure_time/report.json`:
+`cells_V_upper_nonpositive` (464,032) and `exhaustive.violations` (0, "always happens").
+The report also gives `exhaustive.states` (4,176,288) and the share of start states with
+k(s0) ≥ 1 for which some sequence first reaches F exactly at k(s0): 63 % =
+`exhaustive.latest_hit_equals_k_(k>=1)` / (9 × `certificate.cells_k_positive`) =
+1,280,735 / 2,024,928. The paper does not report these two.
 
 ## Contents
 

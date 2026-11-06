@@ -1,8 +1,8 @@
 #!/bin/bash
 # Reproduces every result of the paper that this code produces and compares it with the
 # results stored in this folder (times on an Apple M3 Pro with 12 workers):
-#   1. Figs. 2-5 and their runtimes   results_hscc_2027_newbellmans_12workers_current_code/   about 1 hour
-#   2. Section 9.2.5                  results_quantitative_verification/                       about 3.5 minutes
+#   1. Figs. 1-4 and their runtimes   results_hscc_2027_newbellmans_12workers_current_code/   about 1 hour
+#   2. Section 9.2.4                  results_quantitative_verification/                       about 3.5 minutes
 #   3. Appendix H                     results_bound_verification/ (reproduce.sh and
 #                                     unclassified_check.py)                                   about 7 minutes
 #
@@ -76,8 +76,8 @@ start=$(date +%s)
 echo "reproduce_all: quick=$QUICK, updated=$UPDATED, cases=${CASES:-all}, solver sources in $CPP_DIR"
 echo "  outputs: $FIGS_OUT, $QV_OUT, $BV_OUT"
 
-# ---------------------------------------------------------------- 1. Figs. 2-5
-echo "=== 1. Figs. 2-5 ($(date)) ==="
+# ---------------------------------------------------------------- 1. Figs. 1-4
+echo "=== 1. Figs. 1-4 ($(date)) ==="
 mkdir -p "$FIGS_OUT"
 LOG1="$FIGS_OUT/regenerate.log"
 if [ -n "$CASES" ]; then
@@ -187,14 +187,14 @@ sys.exit(1 if bad else 0)
 EOF
 cat "$FIGS_OUT/comparison.txt"
 if [ "$UPDATED" = 1 ]; then
-  # Fig. 2b (runtime per refinement iteration) from the new dubins20_discount run.
+  # Fig. 1b (runtime per refinement iteration) from the new dubins20_discount run.
   run="$(ls -d "$FIGS_OUT"/ra_discount/dubins_res20_*/ | head -1)"
   "$PYTHON" -I "$FIGS_OUT/plot_runtime.py" --run-dir "$run" > "$FIGS_OUT/plot_runtime.log" 2>&1 &&
-    echo "Fig. 2b redrawn into ${run#"$HERE"/}" || echo "plot_runtime.py failed; see $FIGS_OUT/plot_runtime.log"
+    echo "Fig. 1b redrawn into ${run#"$HERE"/}" || echo "plot_runtime.py failed; see $FIGS_OUT/plot_runtime.log"
 fi
 
-# ---------------------------------------------------------------- 2. Section 9.2.5
-echo "=== 2. Section 9.2.5 ($(date)) ==="
+# ---------------------------------------------------------------- 2. Section 9.2.4
+echo "=== 2. Section 9.2.4 ($(date)) ==="
 if [ -n "$CASES" ] && [ -e "$QV_OUT" ]; then
   echo "kept from the earlier run (folder exists): $(basename "$QV_OUT")"
 else
