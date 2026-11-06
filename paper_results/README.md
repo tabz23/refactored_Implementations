@@ -37,7 +37,7 @@ matches. Runtimes are printed but not compared, since they depend on the machine
 | `results_hscc_2027_newbellmans_12workers_current_code/` | Figs. 1–4, the runtimes in the Fig. 2–4 captions and in §9.2.2 | `regenerate_hscc_newbellmans_tol1e-15_current_code.sh` | about 1 hour |
 | `results_quantitative_verification/` | §9.2.4, the validation of both claims of Proposition 4 (`prop:greedy`) and of Proposition 6 (`prop:avoid`) | `reproduce.sh` | about 4 minutes |
 | `results_bound_verification/` | Appendix H (`app:bound_verification`): the numerical check of Theorem 3 (`thm:convergence`), its figure, and the check of its last claim on unclassified cells (`app:bv_unclassified`) | `reproduce.sh` and `unclassified_check.py` | about 3.5 minutes each |
-| `results_validated_integration/` | Appendix I (`app:integration`): the check with CAPD that the integrator's error budget bounds the integration error in every run of Section 9. Not part of `reproduce_all.sh`: it needs CAPD and does not produce any figure or number of the main text | `run_validated.sh` and `compare_validated.py` | about 3–4 hours (see its `README.md`) |
+| `results_validated_integration/` | Appendix H.1 (`app:bv_setup`), last sentence on Section 9: the check with CAPD that the integrator's error budget bounds the integration error in every run of Section 9. Not part of `reproduce_all.sh`: it needs CAPD and does not produce any figure or number of the main text | `run_validated.sh` and `compare_validated.py` | about 3–4 hours (see its `README.md`) |
 
 `reproduce_all.sh` and the scripts above build `cpp/build/dhj` without CAPD and never pass
 `--validated`, so every result is reproduced with the Dormand–Prince integrator and its

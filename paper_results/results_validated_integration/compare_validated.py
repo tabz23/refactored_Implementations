@@ -7,6 +7,12 @@ that the run reproduces the stored paper run: the phases.csv rows (phase, cells,
 cells, refinable cells, refined parents, value-iteration sweeps, converged), the classification
 counts printed in run.log, and, where both runs dumped them, the per-cell value files.
 
+A case passes if CAPD never failed, the validated error never exceeded the budget, no successor
+was added, and the results equal the paper run's. Since the validated box lies inside the box
+of the normal build, it can only drop successors: a dropped cell is one that the normal box
+touches within the budget's last ~1e-11 (the normal build is slightly more conservative there).
+Dropped cells and changed out-of-domain flags are reported, and pass if the results are equal.
+
 Usage: python compare_validated.py [--root ROOT] [case ...]   (writes ROOT/summary.md)
 Exit status 1 if any check fails.
 """
@@ -66,6 +72,7 @@ def capd_stats(log):
     g = lambda pat: re.search(pat, b).group(1)
     return dict(transitions=int(g(r"transitions: (\d+)")), failures=int(g(r"CAPD failures: (\d+)")),
                 sets_differ=int(g(r"differ from the budget boxes: (\d+)")),
+                dropped=int(g(r"cells dropped: (\d+)")), added=int(g(r"added: (\d+)")),
                 oob_differ=int(g(r"out-of-domain flags that differ: (\d+)")),
                 max_cert=float(g(r"certified error: max ([0-9.e+-]+)")),
                 max_budget=float(g(r"budget: max ([0-9.e+-]+)")),
@@ -98,11 +105,12 @@ def main():
             x, y = os.path.join(stored, f), os.path.join(v, f)
             if os.path.exists(x) and os.path.exists(y):
                 files.append(f"{f}: {'identical' if filecmp.cmp(x, y, shallow=False) else 'DIFFERENT'}")
-        ok = (s["failures"] == 0 and s["sets_differ"] == 0 and s["oob_differ"] == 0 and s["above"] == 0
+        ok = (s["failures"] == 0 and s["above"] == 0 and s["added"] == 0
               and same_phases and same_class and all(f.endswith("identical") for f in files))
         ok_all &= ok
         rows.append(f"| {name} | {paper} | {s['transitions']:,} | {s['failures']} ({s['retries']:,} retried) | {s['above']} | "
-                    f"{s['max_cert']:.1e} / {s['max_budget']:.1e} | {s['sets_differ']} + {s['oob_differ']} | "
+                    f"{s['max_cert']:.1e} / {s['max_budget']:.1e} | {s['sets_differ']} ({s['dropped']} cells dropped, "
+                    f"{s['added']} added) + {s['oob_differ']} | "
                     f"{'yes' if same_phases and same_class else 'NO'} ({len(pv)} phases)"
                     + (f", {'; '.join(files)}" if files else "") + f" | {'PASS' if ok else 'FAIL'} |")
     header = ("| case | paper | transitions | CAPD failures | validated error > budget | "

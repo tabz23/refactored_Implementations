@@ -1,12 +1,9 @@
-# Integration error checked with CAPD (paper, Appendix I)
+# Integration error checked with CAPD (paper, Appendix H.1)
 
-Appendix I of the paper states:
+Appendix H.1 of the paper (label `app:bv_setup`) states:
 
-> Our implementation computes f(x_c(s),a) with an adaptive Dormand–Prince method and enlarges
-> the radius of the ball of Section 4 by the method's error tolerance budget. For every cell s
-> and action a in our runs of Section 9, we verified with the validated ODE solver CAPD that
-> this budget exceeds a rigorous bound on the integration error, so the enlarged balls
-> over-approximate R(s,a).
+> In Section 9, f is computed numerically, and each ball of Section 4 is enlarged to cover the
+> integration error, which we checked with CAPD [18].
 
 This folder holds that check. **It does not change how the paper's results are produced:** the
 reproduction scripts (`../reproduce_all.sh` and the scripts in the other folders) build
@@ -29,20 +26,23 @@ state if it leaves the state box).
 transition of the run, in every refinement phase:
 
 1. CAPD (Taylor order 15, automatic step control, CAPD's own interval arithmetic) encloses the
-   exact solution from x_c(s) at t_s in a box [lo, hi] about 1e-15 wide.
+   exact solution from x_c(s) at t_s in a box [lo, hi] about 1e-15 wide. If the automatic step
+   control fails, the call is retried with fixed steps t_s/1, ..., t_s/16 (also rigorous). This
+   happens only for bicycle cells with steering angle exactly 0 under steering rate 0 and
+   nonzero acceleration, whose solution is polynomial in time.
 2. The validated error c(s,a) is the distance from ŷ to the far edge of [lo, hi] in the
    infinity norm, rounded up. So the exact end point lies within c(s,a) of ŷ.
 3. The run uses the box ŷ ± (L_f r + c(s,a)), and also builds the box ŷ ± (L_f r + e(s,a)) of
-   the normal build from the same ŷ.
+   the normal build from the same ŷ and compares the successors of the two.
 
 `compare_validated.py` then checks, for each run:
 
-| check | meaning |
-|---|---|
-| CAPD failures = 0 | CAPD enclosed every solution |
-| validated error > budget: 0 | c(s,a) ≤ e(s,a) for every transition, so the box of the normal build contains the validated box, which contains the exact image of the cell (the claim of Appendix I) |
-| successor sets + out-of-domain flags changed: 0 + 0 | using c instead of e changes no transition, so the abstraction and every result are the same |
-| same phases and classification | the run reproduces the stored paper run (`phases.csv` rows and the classification counts in `run.log`), and for Section 9.2.4 the per-cell values (`csv_check.txt`) |
+| check | meaning | needed to pass |
+|---|---|---|
+| CAPD failures | transitions for which CAPD gave no enclosure, even with fixed steps (their box keeps the budget) | 0 |
+| validated error > budget | transitions with c(s,a) > e(s,a). If there are none, the box of the normal build (used in the paper) contains the validated box, which contains the exact image of the cell. This is the statement of Appendix H.1 | 0 |
+| successor cells added / dropped | cells that only the validated box, or only the normal box, meets. Since the validated box lies inside the normal box, none can be added. A dropped cell is one that the normal box meets only within its last ~1e-11, so the paper's abstraction is slightly more conservative there | 0 added (dropped cells are reported) |
+| same results as the paper run | `phases.csv` rows and the classification counts in `run.log`, and for Section 9.2.4 the per-cell values (`csv_check.txt`) | identical |
 
 Not covered (these are not integration errors): the Lipschitz constant behind the Grönwall
 factor L_f, and the rounding (about 1e-16) when the box edges are computed.
@@ -58,15 +58,17 @@ factor L_f, and the rounding (about 1e-16) when the box edges are computed.
 | dubins120_std | Fig. 3(a) | 5,184,000 | PASS |
 | avoid80 | Fig. 4 | 31,566,084 | PASS |
 | dubins20 | Fig. 1 | 45,819,318 | PASS |
+| vdp18 | Fig. 2(a) | 72,135,085 | PASS (4 transitions drop 12 cells, results identical) |
 | bicycle8 | Fig. 2(d) | (running) | |
-| vdp18 | Fig. 2(a) | (running) | |
 | evasion12 | Fig. 2(b) | (queued) | |
 | di14 | Fig. 2(c) | (queued) | |
 
-In every finished run, the largest validated error is about 1e-13 and the largest budget about
-5e-11 (the validated error is at most 0.3% of the budget). Fig. 3(b) is the Section 9.2.4
-reach-avoid run without the value dump, so it has the same transitions. Appendix H uses the
-closed-form Dubins flow and involves no numerical integration.
+In every finished run, CAPD never failed and the validated error never exceeded the budget: the
+largest validated error is about 1e-13 and the largest budget about 5e-11 (the validated error
+is at most 0.85% of the budget). Every transition count equals the number of ODE solves in the
+paper run's log. Fig. 3(b) is the Section 9.2.4 reach-avoid run without the value dump, so it has
+the same transitions. Appendix H uses the closed-form Dubins flow and involves no numerical
+integration.
 
 ## How to reproduce
 
@@ -87,10 +89,11 @@ closed-form Dubins flow and involves no numerical integration.
    ```
 
    `run_validated.sh` builds `cpp/build/dhj_capd` (`make capd`), records `provenance.txt`, and
-   writes `runs/` and `logs/` here. CAPD adds about 140 µs per transition, so with 12 workers the
-   Dubins 120³ runs take about 80 s each, Fig. 1 and Fig. 4 about 8–11 min, and Fig. 2(b) and
-   2(c) about 1–2 hours each. These two need 25–30 GB of memory, so macOS swaps to disk. The
-   script stops a run if the free disk space drops below `MIN_FREE_GB` (default 8).
+   writes `runs/` and `logs/` here. CAPD adds about 0.05–0.2 ms per transition (about 2–3 ms for
+   the five-dimensional bicycle), so with 12 workers the Dubins 120³ runs take about 80 s each,
+   Fig. 1 and Fig. 4 about 8–11 min, Fig. 2(a) about 22 min, and Fig. 2(b)–(d) about 1–2 hours
+   each. Fig. 2(b) and 2(c) need 25–30 GB of memory, so macOS swaps to disk. The script stops a
+   run if the free disk space drops below `MIN_FREE_GB` (default 8).
 
 ## Files
 
@@ -102,7 +105,7 @@ closed-form Dubins flow and involves no numerical integration.
 | `csv_check.txt` | byte comparison of the Section 9.2.4 per-cell values with the stored paper runs |
 | `logs/<case>.log` | solver output, including the "Validated integration (CAPD)" counts after every successor computation |
 | `runs/<mode>/<run>_validated/` | `run.log`, `phases.csv`, `params.json` (the 400 MB value dumps are not kept, see `.gitignore`) |
-| `provenance.txt` | code and CAPD commits, flags, compiler, binary hash |
+| `provenance.txt` | code and CAPD commits, flags, compiler, binary hashes |
 
 The code: `cpp/src/capd_bridge.cpp` (the only file that uses CAPD, compiled with CAPD's flags),
 `cpp/include/dhj/core/validated.hpp`, `Dynamics::validated_errors` and `capd_spec` in

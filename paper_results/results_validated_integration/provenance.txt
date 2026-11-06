@@ -1,9 +1,21 @@
-Runs qv_ra, qv_avoid, dubins120_std, avoid80, dubins20, bicycle8, vdp18 (2026-11-06, 12:10-13:xx CST) were made
+Runs qv_ra, qv_avoid, dubins120_std, avoid80, dubins20, vdp18 (2026-11-06, 12:10-13:23 CST) were made
 with a scratch copy of run_validated.sh (same arguments, same binary) before the code was committed.
 The solver source is that of the commit that added this folder (it was uncommitted while they ran).
-binary: cpp/build/dhj_capd, sha256 b0c10bfa4635ef7481c97d2f4fc1ab20459597b3016978ac20a58865370e76b5
+binary of these six runs: cpp/build/dhj_capd, sha256 b0c10bfa4635ef7481c97d2f4fc1ab20459597b3016978ac20a58865370e76b5
 CAPD: 6.1.0, github.com/CAPDGroup/CAPD at commit 37057e5, cmake -DCMAKE_BUILD_TYPE=Release -DCAPD_INTERVAL_TYPE=NATIVE
 CAPD flags: -std=c++17 -O2 -frounding-math -D__USE_NATIVE__ 
 compiler: Apple clang version 16.0.0 (clang-1600.0.26.6)
 machine: Apple M3 Pro, 18 GB RAM, 12 workers
+These six runs had no CAPD failures. A later commit (a0218c2) added the fixed-step retry and keeps the
+budget box when CAPD fails (the first bicycle run had given failed transitions an unbounded box and ran
+out of memory). The retry runs only after a failure, so these six runs are unaffected. bicycle8,
+evasion12 and di14 were run by run_validated.sh with the rebuilt binary, recorded below.
 
+date: Fri Nov  6 13:23:31 CST 2026
+cases: bicycle8 evasion12 di14
+git commit: 1c0b88cdc13c4f8f08874b928631b52ca4628b45 (validated-integration)
+uncommitted solver changes: 
+CAPD: /private/tmp/claude-502/-Users-i-k-tabbara-Documents-Reach-Avoid-Reachability-Analysis/ad7f189b-6e9d-476b-837d-dfabdcfabdcc/scratchpad/third_party/CAPD at commit 37057e5
+CAPD flags: -std=c++17 -O2 -frounding-math -D__USE_NATIVE__ 
+compiler: Apple clang version 16.0.0 (clang-1600.0.26.6)
+binary sha256: 2c809f2e1fd91b16317dca98b818782f8dde3f181b50963e610c82c791ce82cb
